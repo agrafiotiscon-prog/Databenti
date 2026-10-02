@@ -90,7 +90,7 @@ trades = load_session(dl, "trades", date(2024, 3, 5), rth_only=True)
 
 - **Cost guard:** every download first calls `metadata.get_cost` for all missing chunks
   together and prints each estimate and the total. Above `DATABENTO_MAX_COST_USD` (default
-  **$5**) it downloads nothing. Every estimate goes to `cache/spend_log.csv`.
+  **$5**) it downloads nothing. Every estimate (dry runs too) goes to `cache/spend_log.csv`; only real downloads go to `cache/download_log.csv`, so sum that one for actual spend.
 - **Cache:** one file per `(dataset, schema, symbol, UTC day)`.
   - Each UTC day of MBO starts with Databento's 00:00 UTC book snapshot, so every chunk is
     self-contained.
@@ -102,7 +102,8 @@ trades = load_session(dl, "trades", date(2024, 3, 5), rth_only=True)
   early closes will come from the `status` schema (Phase 1b).
 - **Rolls:**
   - `ES.c.0` stays on the expiring contract until expiry, so we use `ES.c.0` normally and
-    `ES.c.1` from the roll Thursday (8 days before expiry) through expiry.
+    `ES.c.1` from the Monday of expiry week (4 days before expiry) through expiry. This was
+    measured on 27 real rolls (`scripts/roll_history.py`, decision D-016).
   - One contract per session, and contracts are never mixed in one frame.
   - The roll offset is configurable, and it will be checked against real liquidity data,
     because the evidence conflicts (see the vault).

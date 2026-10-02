@@ -1,4 +1,5 @@
 from datetime import date
+from pathlib import Path
 
 import pytest
 
@@ -76,6 +77,17 @@ def test_spend_log_written(tmp_path, fake_client):
     assert "estimated_cost_usd" in log and "trades" in log
 
 
+def test_download_log_only_records_real_downloads(tmp_path, fake_client):
+    dl = make(tmp_path, fake_client)
+    dl.estimate("trades", [date(2024, 3, 5)])                  # dry run: estimate only
+    assert not (tmp_path / "download_log.csv").exists()
+    dl.fetch_days("trades", [date(2024, 3, 5)])
+    dl.fetch_days("trades", [date(2024, 3, 5)])                # cached: no second entry
+    rows = (tmp_path / "download_log.csv").read_text().strip().splitlines()
+    assert len(rows) == 2 and "trades" in rows[1]
+    assert rows[1].split(",")[6] != ""                          # carries the cost estimate
+
+
 def test_session_fetch_covers_two_utc_days(tmp_path, fake_client):
     # Tue 2024-03-05 session: Mon 17:00 CT (23:00 UTC) -> Tue 16:00 CT (22:00 UTC)
     make(tmp_path, fake_client).fetch_sessions("trades", [date(2024, 3, 5)])
@@ -91,3 +103,25 @@ def test_rth_only_needs_one_utc_day(tmp_path, fake_client):
 def test_unsupported_schema(tmp_path, fake_client):
     with pytest.raises(ValueError):
         make(tmp_path, fake_client).fetch_days("bogus", [date(2024, 3, 5)])
+
+
+def test_retry_after_interrupted_download(tmp_path, fake_client):
+    # the real client raises FileExistsError if the .part path exists, and a cut stream leaves one
+    real_get_range = fake_client.timeseries.get_range
+
+    def strict(path=None, **kw):
+        if Path(path).exists():
+            raise FileExistsError(path)
+        return real_get_range(path=path, **kw)
+
+    def cut(path=None, **kw):
+        Path(path).write_bytes(b"half")
+        raise ConnectionError("response ended prematurely")
+
+    dl = make(tmp_path, fake_client)
+    fake_client.timeseries.get_range = cut
+    with pytest.raises(ConnectionError):
+        dl.fetch_days("trades", [date(2024, 3, 5)])
+    fake_client.timeseries.get_range = strict
+    paths = dl.fetch_days("trades", [date(2024, 3, 5)])
+    assert paths[0].read_bytes() == b"fake-dbn"

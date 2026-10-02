@@ -34,7 +34,31 @@ def test_verify_summaries_and_report():
 def test_roll_summary_compares_with_rule():
     days = verify_data.roll_window_days("2024-03")
     assert days[0] == date(2024, 2, 29) and days[-1] == date(2024, 3, 15)
-    rows = [{"date": d, "c0_sided_volume": 100 if d < date(2024, 3, 7) else 10,
-             "c1_sided_volume": 10 if d < date(2024, 3, 7) else 100} for d in days]
+    rows = [{"date": d, "c0_sided_volume": 100 if d < date(2024, 3, 11) else 10,
+             "c1_sided_volume": 10 if d < date(2024, 3, 11) else 100} for d in days]
     rep = verify_data.summarize_roll(rows)
     assert rep["agrees"].all()
+
+
+def test_roll_history_finds_crossover_and_scores_rules():
+    from scripts.roll_history import roll_table, summarize
+    exp = date(2024, 3, 15)
+    days = [d.date() for d in pd.bdate_range("2024-02-29", "2024-03-15")]
+    c1_from = date(2024, 3, 11)                                    # Monday of expiry week
+    v0 = pd.Series([100 if d < c1_from else 10 for d in days], index=days)
+    v1 = pd.Series([10 if d < c1_from else 100 for d in days], index=days)
+    v1[date(2024, 3, 1)] = 200                                     # an early blip is not the crossover
+    t = roll_table(v0, v1, [exp])
+    assert t.loc[0, "crossover"] == c1_from and t.loc[0, "weekday"] == "Mon"
+    # the 03-01 blip is one wrong day for every calendar rule
+    assert t.loc[0, "wrong_cal4"] == 1
+    assert t.loc[0, "wrong_cal8"] == 3                             # blip + Thu + Fri too early
+    assert t.loc[0, "wrong_prevday_volume"] == 3                   # blip, day after blip, crossover day
+    assert summarize(t).index[0] == "wrong_cal4"
+
+
+def test_roll_history_folds_weekend_bars_into_monday():
+    from scripts.roll_history import to_trading_dates
+    idx = pd.DatetimeIndex(["2024-03-08", "2024-03-10", "2024-03-11"], tz="UTC")   # Fri, Sun, Mon
+    out = to_trading_dates(pd.Series([5, 1, 7], index=idx))
+    assert out.to_dict() == {date(2024, 3, 8): 5, date(2024, 3, 11): 8}

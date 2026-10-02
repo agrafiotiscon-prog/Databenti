@@ -1,7 +1,7 @@
 ---
 type: topic
 tags: [databento]
-updated: 2026-10-02
+updated: 2026-10-02 (session 5)
 ---
 # Databento symbology and contract rolls
 
@@ -25,36 +25,46 @@ Databento's docs show `ES.c.0` → instrument 206299 until **2023-03-19**. ESH3 
 2023-03-17, so the continuous symbol stayed on the expiring contract through expiry. [doc]
 
 ## The problem with `ES.c.0` (a change from the original brief)
-ES liquidity moves to the next contract on **roll day: the Thursday eight days before the
-third-Friday expiry** (usually the 2nd Thursday of Mar/Jun/Sep/Dec). [doc: broker and
-education sources] `ES.c.0` keeps pointing at the expiring contract for about **six more
-trading days**, while its volume collapses. Order-flow features computed on that contract during
+Market convention says ES liquidity moves on **the Thursday eight days before the third-Friday
+expiry**. [doc: broker and education sources; **contradicted by our data**, see below: the
+real crossover is the Monday of expiry week] Either way `ES.c.0` keeps pointing at the
+expiring contract until it expires, while its volume collapses. Order-flow features computed on that contract during
 the roll window (thin book, spread widening, roll-related spread trades) would be garbage.
 
 `ES.v.0` follows volume, but uses the **previous day's** volume, so it switches one day after
-the liquidity moved (typically the Friday). That causes no lookahead, but it does put one bad
-day per quarter into the data.
+the liquidity moved. That causes no lookahead, but it does put one bad day per quarter into the
+data.
 
-## Open question: when does ES liquidity actually cross? [conflicting evidence]
-- **Market convention:** the roll Thursday, 8 days before expiry. Rollover calendars and broker
-  education pages say volume shifts on that day.
-- **Databento's own `ES.v.0` example (March 2025, `ohlcv-1d`):** instrument 5002 (ESH5, closing
-  near cash) stayed volume-front through Tuesday 2025-03-18, with **723k contracts on Monday
-  3/17**. The switch to 4916 (ESM5, about +50 pt carry) came on 3/19. Because `v` uses the
-  previous day's volume, the crossover happened on Tuesday of **expiry week**, not on Thursday
-  3/13.
-- **Likely explanation [inferred]:** in roll week, calendar-spread trading (`ESH5-ESM5`)
-  produces leg trades in *both* outrights, which inflates the expiring contract's raw volume
-  even after directional trading has moved.
-- **Resolution plan (Phase 1b, real data):** for each day of a roll window, compare the two
-  contracts on *outright-only* activity: trades with side ≠ N, top-of-book depth, quote update
-  counts, and spread width. Then set `roll_days_before` in `data/contracts.py` from the data.
-  The parameter is configurable for exactly this reason.
+## Resolved: when does ES liquidity actually cross? [data, session 5]
+Measured with `scripts/roll_history.py` → [roll-history-ES](../results/roll-history-ES.md)
+(daily volume of `ES.c.0` vs `ES.c.1`, 27 rolls 2019-03..2025-09, weekend bars folded into
+Monday's session):
+- **2022-06 → 2025-09: 14 rolls in a row crossed on the Monday of expiry week** (expiry − 4).
+- 2019 → 2022-03: usually the **Friday before** expiry week (expiry − 7); 2020-03 and 2020-06
+  were already Monday.
+- The "roll Thursday" convention (expiry − 8) was **never** the crossover day in this sample.
+  Spread legs print the same quantity in both outrights, so they cancel out of "which contract
+  trades more". The earlier [inferred] explanation (spread legs inflate the expiring contract)
+  was therefore not the cause.
+- Cross-checks: the 2024-03 RTH trades check ([verify-roll-2024-03](../results/verify-roll-2024-03.md))
+  shows c.0 ahead 3:1 on Fri 03-08 and c.1 ahead from Mon 03-11. Databento's March 2025
+  `ES.v.0` example (switch visible on 3/19 = one day after a Monday-3/17 crossover, since `v`
+  uses the previous day) also fits.
+
+| Rule | Wrong-contract days (27 rolls) | Last 14 rolls |
+|---|---|---|
+| **expiry − 4 (Monday of expiry week), our rule** | **11** | **0** |
+| expiry − 7 (Friday before) | 16 | 14 |
+| expiry − 8 (roll Thursday) | 43 | 28 |
+| previous-day volume (`ES.v.0`-like) | 27 | 14 |
+
+Decision: [D-016](../_memory/decisions.md). Re-run the script yearly; if the regime moves again,
+change `DEFAULT_ROLL_DAYS_BEFORE_EXPIRY`.
 
 ## Our policy
 1. **Contract choice per CME trading date** (the session starting 17:00 CT the day before):
-   - Before the roll Thursday: front contract (`ES.c.0`).
-   - From the roll Thursday through the expiry Friday: next contract (`ES.c.1`).
+   - Before the Monday of expiry week: front contract (`ES.c.0`).
+   - From the Monday of expiry week through the expiry Friday: next contract (`ES.c.1`).
    - The rule uses only the calendar, so it causes no lookahead. Implemented in
      `data/contracts.py`.
 2. A **whole session uses one contract.** Order-flow state (cumulative delta, profile, book) is

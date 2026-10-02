@@ -15,6 +15,7 @@ Flow for every call:
 """
 from __future__ import annotations
 
+import csv
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterable
@@ -84,12 +85,32 @@ class Downloader:
         for req, path in missing:
             path.parent.mkdir(parents=True, exist_ok=True)
             part = cache.part_path(path)
-            self.client.timeseries.get_range(
-                dataset=req.dataset, schema=req.schema, symbols=req.symbols,
-                stype_in=req.stype_in, start=req.start, end=req.end, path=part,
-            )
+            part.unlink(missing_ok=True)       # leftover from an interrupted run; the client refuses to overwrite
+            try:
+                self.client.timeseries.get_range(
+                    dataset=req.dataset, schema=req.schema, symbols=req.symbols,
+                    stype_in=req.stype_in, start=req.start, end=req.end, path=part,
+                )
+            except BaseException:
+                part.unlink(missing_ok=True)
+                raise
             cache.finalize(path)
+            self._log_download(req, path)
             print(f"  [download] {path.relative_to(self.cache_dir)}")
+
+    def _log_download(self, req: Request, path: Path) -> None:
+        """Record a completed download. spend_log.csv holds every estimate (dry runs too);
+        download_log.csv holds only what was actually fetched, i.e. what was billed."""
+        log = self.cache_dir / "download_log.csv"
+        new = not log.exists()
+        with log.open("a", newline="") as f:
+            w = csv.writer(f)
+            if new:
+                w.writerow(["downloaded_at_utc", "dataset", "schema", "symbols", "start", "end",
+                            "estimated_cost_usd", "bytes"])
+            cost = self.guard.last_costs.get(req)
+            w.writerow([datetime.now(timezone.utc).isoformat(), req.dataset, req.schema, req.symbols,
+                        req.start, req.end, "" if cost is None else f"{cost:.6f}", path.stat().st_size])
 
     def session_plan(self, trading_days: Iterable[date], symbol: str | None = None,
                      root: str = DEFAULT_ROOT, rth_only: bool = False,

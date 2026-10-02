@@ -26,7 +26,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from data.contracts import continuous_rank, front_expiry, roll_date   # noqa: E402
+from data.contracts import continuous_rank, front_expiry               # noqa: E402
 from data.flags import F_MAYBE_BAD_BOOK, F_SNAPSHOT                     # noqa: E402
 from data.sessions import CT, trading_dates                             # noqa: E402
 
@@ -84,7 +84,7 @@ def summarize_status(status: pd.DataFrame) -> pd.DataFrame:
 def roll_window_days(month: str) -> list[date]:
     y, m = map(int, month.split("-"))
     exp = front_expiry(date(y, m, 1))
-    start = roll_date(exp) - timedelta(days=7)
+    start = exp - timedelta(days=15)      # fixed window, independent of the roll rule
     return trading_dates(start, exp)
 
 

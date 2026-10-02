@@ -9,10 +9,11 @@ Why this exists (see vault/01-databento/symbology-and-rolls.md):
       trading_date <  roll_date(front)  -> rank 0  (ES.c.0 = front contract)
       roll_date    <= trading_date <= expiry -> rank 1  (ES.c.1 = next contract)
 
-  roll_date defaults to expiry - 8 calendar days (the Thursday before the
-  expiry week), the common market convention. The offset is configurable
-  because the actual liquidity crossover must be verified on real data
-  (Databento's own ES.v.0 example for March 2025 switched later).
+  roll_date defaults to expiry - 4 calendar days: the MONDAY of expiry week.
+  Measured on real data (scripts/roll_history.py, vault/results/roll-history-ES.md):
+  every ES roll from 2022-06 to 2025-09 (14 in a row) crossed on that Monday. The old
+  market convention (the Thursday 8 days before expiry) was wrong on 2 days per roll.
+  Before mid-2022 the crossover was usually the Friday before (expiry - 7).
 
 The rule uses only the calendar, so it introduces no lookahead.
 Known limitation: if the 3rd Friday is an exchange holiday the real expiry
@@ -24,7 +25,7 @@ from datetime import date, timedelta
 
 QUARTER_MONTHS = (3, 6, 9, 12)
 MONTH_CODES = {3: "H", 6: "M", 9: "U", 12: "Z"}
-DEFAULT_ROLL_DAYS_BEFORE_EXPIRY = 8
+DEFAULT_ROLL_DAYS_BEFORE_EXPIRY = 4
 
 
 def third_friday(year: int, month: int) -> date:

@@ -20,39 +20,41 @@ def test_third_friday(y, m, expected):
     assert expected.weekday() == 4
 
 
-def test_roll_date_is_thursday_eight_days_before():
+def test_roll_date_is_monday_of_expiry_week():
+    # measured: vault/results/roll-history-ES.md (14 rolls in a row, 2022-06..2025-09)
     exp = third_friday(2024, 3)
-    assert roll_date(exp) == date(2024, 3, 7)
-    assert roll_date(exp).weekday() == 3
+    assert roll_date(exp) == date(2024, 3, 11)
+    assert roll_date(exp).weekday() == 0
 
 
-def test_rank_switches_on_roll_thursday_and_back_after_expiry():
-    assert continuous_rank(date(2024, 3, 6)) == 0
-    assert continuous_rank(date(2024, 3, 7)) == 1   # roll Thursday
+def test_rank_switches_on_expiry_monday_and_back_after_expiry():
+    assert continuous_rank(date(2024, 3, 8)) == 0   # Friday before expiry week: still front
+    assert continuous_rank(date(2024, 3, 11)) == 1  # Monday of expiry week (real crossover)
     assert continuous_rank(date(2024, 3, 15)) == 1  # expiry Friday: still on next contract
     assert continuous_rank(date(2024, 3, 18)) == 0  # Monday after expiry: new front month
-    assert continuous_symbol(date(2024, 3, 7), "NQ") == "NQ.c.1"
+    assert continuous_symbol(date(2024, 3, 11), "NQ") == "NQ.c.1"
 
 
 def test_roll_offset_is_configurable():
-    # e.g. if real data shows liquidity crosses later in expiry week
-    assert continuous_rank(date(2025, 3, 17), days_before=4) == 1
-    assert continuous_rank(date(2025, 3, 14), days_before=4) == 0
+    # the pre-2022 regime crossed on the Friday before expiry week
+    assert continuous_rank(date(2024, 3, 8), days_before=7) == 1
+    assert continuous_rank(date(2024, 3, 7), days_before=7) == 0
 
 
 def test_active_contract_labels():
-    assert active_contract(date(2024, 3, 6)) == ("H", 2024)
-    assert active_contract(date(2024, 3, 7)) == ("M", 2024)
+    assert active_contract(date(2024, 3, 8)) == ("H", 2024)
+    assert active_contract(date(2024, 3, 11)) == ("M", 2024)
     assert active_contract(date(2024, 12, 20)) == ("H", 2025)   # year rollover in roll window
     assert front_expiry(date(2024, 12, 23)) == date(2025, 3, 21)
 
 
 def test_fetch_sessions_across_roll_uses_next_contract(tmp_path, fake_client, capsys):
     dl = Downloader(client=fake_client, cache_dir=tmp_path, max_cost_usd=5.0)
-    dl.fetch_sessions("trades", [date(2024, 3, 6), date(2024, 3, 7)])
+    dl.fetch_sessions("trades", [date(2024, 3, 8), date(2024, 3, 11)])
     got = sorted((c["symbols"], c["start"][:10]) for c in fake_client.download_calls)
-    assert got == [("ES.c.0", "2024-03-05"), ("ES.c.0", "2024-03-06"),
-                   ("ES.c.1", "2024-03-06"), ("ES.c.1", "2024-03-07")]
+    # Fri 03-08 session = Thu 23:00 UTC .. Fri; Mon 03-11 session = Sun 23:00 UTC .. Mon
+    assert got == [("ES.c.0", "2024-03-07"), ("ES.c.0", "2024-03-08"),
+                   ("ES.c.1", "2024-03-10"), ("ES.c.1", "2024-03-11")]
     # priced once, as one combined total, before any download
     assert len(fake_client.cost_calls) == 4
     assert capsys.readouterr().out.count("TOTAL") == 1

@@ -64,8 +64,8 @@ Confidence tags used throughout:
 
 1. **Causality uses `ts_recv` plus our latency.** Nothing may act on an event before
    `ts_recv + latency`. → [timestamps](01-databento/timestamps-and-causality.md)
-2. **Never trade the expiring ES contract in roll week.** Switch on the CME roll Thursday, eight
-   days before expiry. → [rolls](01-databento/symbology-and-rolls.md)
+2. **Never trade the expiring ES contract in roll week.** Switch on the **Monday of expiry
+   week** (measured on 27 rolls; the "roll Thursday" convention is wrong, D-016). → [rolls](01-databento/symbology-and-rolls.md)
 3. **Costs are about 1.4 ticks per ES round trip even before slippage**, if both entry and exit
    are market orders. A strategy whose gross edge per trade is below that is dead on arrival.
    → [costs](02-market-structure/costs-fees-slippage.md)

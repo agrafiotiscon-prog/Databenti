@@ -33,6 +33,7 @@ class CostGuard:
         self.client = client
         self.max_cost_usd = max_cost_usd
         self.log_path = log_path
+        self.last_costs: dict[Request, float] = {}   # estimates from the latest check()
 
     def estimate(self, req: Request) -> float:
         return float(
@@ -51,6 +52,7 @@ class CostGuard:
         total = 0.0
         for req in requests:
             cost = self.estimate(req)
+            self.last_costs[req] = cost
             total += cost
             print(f"  [cost] {req.schema:9s} {req.symbols} {req.start[:10]} -> ${cost:,.4f}")
             self._log(req, cost)

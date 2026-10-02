@@ -12,7 +12,7 @@ updated: 2026-10-02
 | Tick | 0.25 pt = **$12.50** | 0.25 pt = **$1.25** | 0.25 pt = **$5.00** | 0.25 pt = **$0.50** |
 | Months | H, M, U, Z (quarterly) | same | same | same |
 | Expiry | 3rd Friday of the contract month; final settlement at the Special Opening Quotation that morning | same | same | same |
-| Roll day (market convention) | **Thursday, 8 days before expiry** | same | same | same |
+| Roll day (market convention) | Thursday, 8 days before expiry (**ES data: Monday of expiry week**, D-016) | same | same | same |
 | Matching algorithm | **FIFO** (CME algorithm "F") | FIFO | FIFO | FIFO |
 | Exchange margin (mid-2026, varies) | about $22k–24k maintenance | about 1/10 of ES | — | — |
 

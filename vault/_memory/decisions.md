@@ -24,6 +24,7 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 ## D-003 — Do not use bare `ES.c.0`; use a roll-date rule (2026-10-02)
 - **Decision:** `ES.c.0` before the roll Thursday (8 days before expiry), `ES.c.1` from then
   until expiry. One contract per session. The offset is configurable.
+  *(Offset superseded by D-016: Monday of expiry week, 4 days before expiry.)*
 - **Why:** Databento's `c` rule rolls only at expiry, so the data would sit on a dying contract
   for about a week each quarter.
 - **Alternatives:** `ES.v.0` (lags a day, and may be distorted by spread-leg volume), or raw
@@ -107,4 +108,10 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 ## D-015 — Broker fees: IBKR default, switchable (2026-10-02)
 - **Decision:** config/costs.toml holds per-broker profiles. Default ibkr_tiered (ES $2.255/side all-in). Other brokers are added when the user picks one.
 - **Why:** User not sure yet (session 4). IBKR figures are verified from its fee pages; the exchange fee is the same for all non-members, so only the commission differs.
+- **Status:** active.
+
+## D-016 — ES roll rule: Monday of expiry week (days_before 8 -> 4) (2026-10-02)
+- **Decision:** DEFAULT_ROLL_DAYS_BEFORE_EXPIRY = 4 in data/contracts.py: from the Monday of expiry week to expiry, use ES.c.1. This replaces the roll-Thursday convention (8) from the brief and the research note.
+- **Why:** Real data. scripts/roll_history.py (ohlcv-1d, ES.c.0 vs ES.c.1, 27 rolls 2019-03..2025-09, $0.04): every roll from 2022-06 to 2025-09 (14 in a row) crossed on the Monday of expiry week. Wrong-contract days: rule 4 = 11 (all in the old regime), rule 7 = 16, rule 8 = 43, previous-day volume (like ES.v.0) = 27. The 2024-03 RTH trades check (verify-roll-2024-03) agrees: c.0 still out-traded c.1 3:1 on Fri 03-08, and c.1 led from Mon 03-11. Calendar-spread legs print equally in both outrights, so they cancel in the comparison. The rule uses only the calendar (no lookahead). The data ends 2025-10-01, before the future 12-month holdout; daily bars do not freeze holdout_start (D-014 is about tier-A order-flow pulls).
+- **Alternatives:** 8 (Thursday convention): 2 wrong days per recent roll. 7: right before mid-2022, 1 day early since. ES.v.0: always 1 day late. A per-roll data-driven switch: lookahead risk.
 - **Status:** active.

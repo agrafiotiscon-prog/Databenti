@@ -9,7 +9,7 @@ updated: 2026-10-02
 
 | # | Original brief | Changed to | Why (evidence) |
 |---|---|---|---|
-| 1 | Use `ES.c.0` | Roll-date rule: `ES.c.0` before the roll Thursday, `ES.c.1` from roll Thursday to expiry; one contract per session | `c` rolls only at expiry, so the data would sit in a dying contract for about a week per quarter ([rolls](01-databento/symbology-and-rolls.md)) |
+| 1 | Use `ES.c.0` | Roll-date rule: `ES.c.0` before the Monday of expiry week, `ES.c.1` from then to expiry (measured, D-016); one contract per session | `c` rolls only at expiry, so the data would sit in a dying contract for about a week per quarter ([rolls](01-databento/symbology-and-rolls.md)) |
 | 2 | Limit fills via MBO queue model everywhere | **Two tiers.** L1 data over years with pessimistic `trade_through` fills, and MBO over recent months with an exact FIFO queue to *calibrate* | MBO is the most expensive schema, and the $199 plan includes only 1 month of it; years are needed for 200+ trades and per-year stats ([data plan](01-databento/pricing-and-data-plan.md)) |
 | 3 | Build our own tick backtester including the MBO queue | Own **small L1 engine** + **hftbacktest** (`L3FIFOQueueModel` + latency) for MBO | A purpose-built, Databento-compatible L3 FIFO engine exists, so writing our own adds bug risk for no gain ([engines](04-backtesting/engines-compared.md)) |
 | 4 | Slippage as a configurable constant | **Latency model** (default 100 ms; stress 250/500 ms) + book at arrival + empirical slippage measurement | Slippage is correlated with signals that fire in fast markets ([costs](02-market-structure/costs-fees-slippage.md)) |
