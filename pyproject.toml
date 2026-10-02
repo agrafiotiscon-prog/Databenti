@@ -1,0 +1,9 @@
+[project]
+name = "databenti"
+version = "0.1.0"
+description = "Order-flow research and backtesting for CME index futures using Databento data"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
