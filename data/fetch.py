@@ -7,22 +7,27 @@ Examples
 
   # Download (asks for confirmation if total > $5):
   python -m data.fetch --schemas trades ohlcv-1m --start 2024-03-05 --end 2024-03-07
+
+By default the contract is chosen per trading date by the roll rule
+(ES.c.0 normally, ES.c.1 from the roll Thursday to expiry). Pass --symbol to
+force one symbol.
 """
 from __future__ import annotations
 
 import argparse
 from datetime import date
 
-from .config import DEFAULT_SYMBOL, DEFAULT_STYPE_IN, SUPPORTED_SCHEMAS
+from .config import DEFAULT_ROOT, DEFAULT_STYPE_IN, SUPPORTED_SCHEMAS
 from .cost_guard import CostLimitExceeded
 from .download import Downloader
-from .sessions import trading_dates, utc_days_for_session
+from .sessions import trading_dates
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--schemas", nargs="+", default=["trades"], choices=SUPPORTED_SCHEMAS)
-    ap.add_argument("--symbol", default=DEFAULT_SYMBOL)
+    ap.add_argument("--symbol", default=None, help="force a symbol (default: roll rule per date)")
+    ap.add_argument("--root", default=DEFAULT_ROOT, help="product root for the roll rule, e.g. ES, NQ")
     ap.add_argument("--stype-in", default=DEFAULT_STYPE_IN)
     ap.add_argument("--start", required=True, type=date.fromisoformat, help="first trading date")
     ap.add_argument("--end", required=True, type=date.fromisoformat, help="last trading date (inclusive)")
@@ -32,11 +37,13 @@ def main(argv=None) -> int:
 
     dl = Downloader()
     tdays = trading_dates(args.start, args.end)
-    utc_days = sorted({d for td in tdays for d in utc_days_for_session(td, args.rth_only)})
+    plan = dl.session_plan(tdays, args.symbol, args.root, args.rth_only)
     print(f"Trading dates: {[d.isoformat() for d in tdays]}")
+    for sym, days in plan.items():
+        print(f"  {sym}: UTC days {[d.isoformat() for d in sorted(days)]}")
 
     # Price everything up front so the user sees one combined total.
-    total = sum(dl.estimate(s, utc_days, args.symbol, args.stype_in) for s in args.schemas)
+    total = sum(dl.estimate(s, days, sym, args.stype_in) for s in args.schemas for sym, days in plan.items())
     print(f"\nGRAND TOTAL estimated cost for missing data: ${total:,.4f}")
     if args.dry_run:
         return 0
@@ -51,7 +58,8 @@ def main(argv=None) -> int:
 
     try:
         for s in args.schemas:
-            dl.fetch_days(s, utc_days, args.symbol, args.stype_in, allow_over_limit=allow)
+            dl.fetch_sessions(s, tdays, args.symbol, args.stype_in, args.rth_only,
+                              allow_over_limit=allow, root=args.root)
     except CostLimitExceeded as e:
         print(e)
         return 1

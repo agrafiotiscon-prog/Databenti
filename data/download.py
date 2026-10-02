@@ -20,7 +20,9 @@ from pathlib import Path
 from typing import Iterable
 
 from . import cache
-from .config import DATASET, DEFAULT_STYPE_IN, DEFAULT_SYMBOL, SUPPORTED_SCHEMAS, get_client, load_settings
+from .config import (DATASET, DEFAULT_ROOT, DEFAULT_STYPE_IN, DEFAULT_SYMBOL, SUPPORTED_SCHEMAS,
+                     get_client, load_settings)
+from .contracts import DEFAULT_ROLL_DAYS_BEFORE_EXPIRY, continuous_symbol
 from .cost_guard import CostGuard, Request
 from .sessions import utc_days_for_session
 
@@ -74,6 +76,11 @@ class Downloader:
             return all_paths
         # Always price before downloading. Raises CostLimitExceeded if too expensive.
         self.guard.check([r for r, _ in missing], allow_over_limit=allow_over_limit)
+        self._download(missing)
+        return all_paths
+
+    def _download(self, missing: list[tuple[Request, Path]]) -> None:
+        """Download already-priced chunks (callers must run the cost guard first)."""
         for req, path in missing:
             path.parent.mkdir(parents=True, exist_ok=True)
             part = cache.part_path(path)
@@ -83,16 +90,39 @@ class Downloader:
             )
             cache.finalize(path)
             print(f"  [download] {path.relative_to(self.cache_dir)}")
-        return all_paths
 
-    def fetch_sessions(self, schema: str, trading_days: Iterable[date], symbol: str = DEFAULT_SYMBOL,
-                       stype_in: str = DEFAULT_STYPE_IN, rth_only: bool = False,
-                       allow_over_limit: bool = False) -> list[Path]:
-        """Fetch all UTC-day chunks covering the given CME trading sessions."""
-        days: set[date] = set()
+    def session_plan(self, trading_days: Iterable[date], symbol: str | None = None,
+                     root: str = DEFAULT_ROOT, rth_only: bool = False,
+                     roll_days_before: int = DEFAULT_ROLL_DAYS_BEFORE_EXPIRY) -> dict[str, set[date]]:
+        """Map symbol -> UTC days needed. With symbol=None the contract is chosen
+        per trading date by the roll rule (ES.c.0 normally, ES.c.1 in roll week)."""
+        plan: dict[str, set[date]] = {}
         for td in trading_days:
-            days.update(utc_days_for_session(td, rth_only))
-        return self.fetch_days(schema, days, symbol, stype_in, allow_over_limit)
+            sym = symbol or continuous_symbol(td, root, roll_days_before)
+            plan.setdefault(sym, set()).update(utc_days_for_session(td, rth_only))
+        return plan
+
+    def fetch_sessions(self, schema: str, trading_days: Iterable[date], symbol: str | None = None,
+                       stype_in: str = DEFAULT_STYPE_IN, rth_only: bool = False,
+                       allow_over_limit: bool = False, root: str = DEFAULT_ROOT,
+                       roll_days_before: int = DEFAULT_ROLL_DAYS_BEFORE_EXPIRY) -> list[Path]:
+        """Fetch all UTC-day chunks covering the given CME trading sessions.
+
+        All missing chunks (across symbols) are priced together before anything
+        is downloaded, so the $ limit applies to the whole request.
+        """
+        all_paths: list[Path] = []
+        missing: list[tuple[Request, Path]] = []
+        for sym, days in self.session_plan(trading_days, symbol, root, rth_only, roll_days_before).items():
+            paths, miss = self.plan(schema, days, sym, stype_in)
+            all_paths += paths
+            missing += miss
+        if not missing:
+            print(f"  [cache] {schema}: all {len(all_paths)} chunk(s) cached")
+            return all_paths
+        self.guard.check([r for r, _ in missing], allow_over_limit=allow_over_limit)
+        self._download(missing)
+        return all_paths
 
     def roll_calendar(self, start: date, end: date, symbol: str = DEFAULT_SYMBOL):
         """Free symbology lookup: which instrument_id the continuous symbol maps to per day."""

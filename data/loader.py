@@ -3,9 +3,12 @@
   * Prices are converted to floats (index points).
   * Index is the record's `ts_recv` (or `ts_event` for OHLCV) in UTC.
   * Optionally converted to parquet next to the DBN file for faster reloads.
-  * `load_session()` returns exactly one CME trading session, tagged with
+  * `load_session()` returns exactly one CME trading session from the
+    contract chosen by the roll rule (data.contracts), tagged with
     `trading_date` / `session` and a `contract_segment` column that
-    increments at contract rolls.
+    increments if the instrument changes (should never happen within a
+    session; a value > 1 indicates a data/roll problem).
+  * Record order is preserved exactly as delivered by Databento.
 """
 from __future__ import annotations
 
@@ -34,11 +37,21 @@ def load_chunk(path: Path, use_parquet: bool = True) -> pd.DataFrame:
 
 
 def load_chunks(paths: Iterable[Path], use_parquet: bool = True) -> pd.DataFrame:
+    """Concatenate UTC-day chunks of ONE symbol in date order.
+
+    Records are NOT re-sorted: Databento's file order carries CME FIFO
+    priority (messages for an instrument are never reordered), and snapshot
+    records carry F_BAD_TS_RECV timestamps. Mixing symbols (e.g. ES.c.0 and
+    ES.c.1) in one frame is refused to avoid stitching contracts together.
+    """
+    paths = sorted(Path(p) for p in paths)  # file names are ISO dates -> chronological
+    symbols = {p.parent.name for p in paths}
+    if len(symbols) > 1:
+        raise ValueError(f"load_chunks got several symbols {sorted(symbols)}; load them separately")
     frames = [f for f in (load_chunk(p, use_parquet) for p in paths) if not f.empty]
     if not frames:
         return pd.DataFrame()
-    df = pd.concat(frames).sort_index(kind="stable")
-    return df
+    return pd.concat(frames)
 
 
 def slice_session(df: pd.DataFrame, trading_date: date, rth_only: bool = False) -> pd.DataFrame:

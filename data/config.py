@@ -15,9 +15,16 @@ from dotenv import load_dotenv
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 DATASET = "GLBX.MDP3"
-DEFAULT_SYMBOL = "ES.c.0"          # front month, calendar roll
+DEFAULT_ROOT = "ES"
+# Used only by low-level fetch_days(). Session-level fetches pick ES.c.0 / ES.c.1
+# per trading date via data.contracts (ES.c.0 alone stays on the expiring
+# contract through roll week -- see vault/01-databento/symbology-and-rolls.md).
+DEFAULT_SYMBOL = "ES.c.0"
 DEFAULT_STYPE_IN = "continuous"
-SUPPORTED_SCHEMAS = ("trades", "mbp-10", "mbo", "ohlcv-1m", "ohlcv-1d", "definition")
+SUPPORTED_SCHEMAS = (
+    "trades", "tbbo", "mbp-1", "bbo-1s", "bbo-1m", "mbp-10", "mbo",
+    "ohlcv-1s", "ohlcv-1m", "ohlcv-1d", "definition", "statistics", "status",
+)
 DEFAULT_MAX_COST_USD = 5.0
 
 
