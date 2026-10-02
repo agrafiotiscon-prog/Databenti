@@ -58,6 +58,7 @@ def summarize_mbo(mbo: pd.DataFrame) -> dict:
     snap = mbo[(flags & F_SNAPSHOT) != 0]
     resting_fill = int(ann.loc[ann["kind"] == "fill", "size"].astype("int64").sum())
     explained = int(ann["fill_explained"].sum())
+    hidden, aggr = int(ann["fill_hidden"].sum()), int(ann["fill_aggressor"].sum())
     return {
         "records": int(len(mbo)),
         "snapshot_records": int(len(snap)),
@@ -68,6 +69,9 @@ def summarize_mbo(mbo: pd.DataFrame) -> dict:
         "fill_explained": explained,
         "fill_unexplained_open": int(ann.attrs.get("unexplained_fill_open", 0)),
         "fill_reconciliation_ratio": explained / resting_fill if resting_fill else float("nan"),
+        "fill_hidden (iceberg reserve)": hidden,
+        "fill_aggressor (modified into market)": aggr,
+        "fill_accounted_ratio": (explained + hidden + aggr) / resting_fill if resting_fill else float("nan"),
         "book_anomalies": int(ann.attrs.get("book_anomalies", 0)),
         "unknown_order_records": int((ann["kind"] == "unknown_order").sum()),
         "native_icebergs": int(len(native_icebergs(ann))),

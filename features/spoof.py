@@ -33,7 +33,7 @@ def spoof_like_events(ann: pd.DataFrame, min_size: int = 50, min_dist_ticks: flo
     max_life = pd.Timedelta(max_lifetime)
 
     relevant = {"add", "cancel", "fill", "fill_removal", "partial_fill_cancel", "modify_down_fill",
-                "modify_price", "modify_up", "refill", "clear"}
+                "modify_price", "modify_price_fill", "modify_up", "refill", "clear"}
     live: dict[int, dict] = {}
     out = []
     for i in np.flatnonzero(np.isin(kind, list(relevant))):
@@ -51,7 +51,8 @@ def spoof_like_events(ann: pd.DataFrame, min_size: int = 50, min_dist_ticks: flo
         st = live.get(o)
         if st is None:
             continue
-        if k in ("fill", "fill_removal", "partial_fill_cancel", "modify_down_fill", "refill", "modify_price"):
+        if k in ("fill", "fill_removal", "partial_fill_cancel", "modify_down_fill", "refill", "modify_price",
+                 "modify_price_fill"):
             live.pop(o)                                   # traded or moved -> not a clean pull
             continue
         if k == "cancel" and new[i] == 0:

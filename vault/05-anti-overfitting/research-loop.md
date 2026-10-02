@@ -38,7 +38,10 @@ automatically, but "improvement" is defined as **passing the gates in
 - **Never:** the cost model (except to make it more conservative), the fill mode toward
   optimistic, the data splits, the holdout, or the gate thresholds.
 
-## Scheduling (later, once Phases 3–4 exist)
+## Scheduling (active since session 5, D-017)
+Live version: an hourly routine following [research/ROUTINE.md](../../research/ROUTINE.md) and
+working through [research/QUEUE.md](../../research/QUEUE.md). Until Phases 3–4 exist it builds
+them; afterwards it runs hypotheses through the gates. The original plan:
 A scheduled cloud routine (e.g. weekly) that:
 1. Optionally pulls new tier-A data. It goes through the **cost guard**, with a fixed monthly
    budget and no MBO without approval.

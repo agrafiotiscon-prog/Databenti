@@ -21,30 +21,32 @@ tags: [memory, state]
   months** (frozen at the first multi-month pull, `config/splits.toml`). Broker **not chosen**
   → IBKR fees as the default profile (`config/costs.toml`).
 
-## Current state (2026-10-02)
-- Phase 0 (research vault): done. Phase 1 (data layer): done and patched.
-- **Phase 2 (features): code complete, tested on synthetic data only.** 97 tests, including
-  no-lookahead tests with negative controls. Status table:
-  [feature-definitions](../03-order-flow/feature-definitions.md#implementation-status-session-4-2026-10-02).
-- Phase 1b tooling ready: `scripts/verify_data.py` (writes to `vault/results/`).
-  `scripts/plot_day.py` is the Plotly viewer.
-- **No real data yet.** `DATABENTO_API_KEY` is not set in the cloud environment (the user adds it
-  under environment settings → variables; never paste it in chat).
+## Current state (2026-10-02, session 5)
+- Phases 0–1 done. **Phase 2 features: validated on the first real day** (2024-03-05, ES).
+- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **$10.06** so
+  far ($10.02 before `cache/download_log.csv` existed + $0.04 logged there; `spend_log.csv`
+  also logs dry runs, so never sum it). Cached
+  locally (not in git): 2024-03-05 trades/tbbo/mbo/status, trades for the 2024-03 roll window
+  (c.0 + c.1), ES daily bars 2019–2025-09.
+- Findings → [results](../results/README.md): roll crossover = **Monday of expiry week**
+  (D-016, rule changed 8 → 4 days); MBO needed a **book warm-up** from the 00:00 UTC snapshot
+  (fixed); MBO fill accounting is **exact** (1.0) once hidden iceberg reserve and
+  modify-into-market aggressor fills are recorded; side-N share ≈ 0.002% (negligible).
+- **Hourly research routine** active (D-017, `trig_01SxDd7cr6pA7egPMDYvJNAH`, :15 UTC): it
+  follows `research/ROUTINE.md` and works through `research/QUEUE.md`. Budget ≤ $1/firing,
+  ≤ $3/day, ≤ $25 total; keeps a strategy only if it passes G1–G11.
 
-## Next step (needs the API key)
-1. `python -m data.fetch --schemas trades tbbo mbo status --start 2024-03-05 --end 2024-03-05 --rth-only --dry-run`
-2. If ≤ $5: run `scripts/verify_data.py --date ... --schemas trades mbo status` and
-   `--roll 2024-03`. Then fix whatever the real data contradicts (fill reconciliation, roll
-   offset, side-N share).
-3. `scripts/plot_day.py` for a visual check, then Phase 2 sign-off by the user → Phase 3
-   (backtester).
+## Next step
+- The routine continues with `research/QUEUE.md`: R2.2–R2.4 (iceberg refills, spoof/iceberg
+  calibration, visual check), then Phase 3 (L1 backtester), Phase 4 (framework), Phase 5 (H-001).
+- **Needs the user:** a data budget for real backtests. One year of ES trades ≈ $140 on
+  pay-as-you-go (more than the ~$115 left); Standard plan $199/mo includes 1 year of L1.
 
-## Open questions (verify on real data)
-- ES roll liquidity crossover day → [rolls](../01-databento/symbology-and-rolls.md)
-- MBO fill reconciliation ratio (should be ≈ 1.0) → [MBO](../01-databento/mbo-book-building.md)
-- How native iceberg refills actually appear in Databento MBO (M same size? M up?)
+## Open questions
+- How native iceberg refills appear in Databento MBO (3,018 `refill` records on 2024-03-05 RTH)
+- Spoof `min_size` (50) and synthetic-iceberg `dt` (5 ms → 44,893/day looks far too many)
 - CME fees after 2026-10-01 (SER #9799) → [costs](../02-market-structure/costs-fees-slippage.md)
-- Spoof `min_size` default (50) and iceberg `dt` (5 ms) need calibration on real data
+- Roll rule for NQ/MES/MNQ not measured (ES only)
 
 ## Key numbers
 - ES: tick 0.25 = $12.50. Fees about $2.26/side, $4.51 per round turn. Market-in/market-out ≈
@@ -55,3 +57,4 @@ tags: [memory, state]
 ## Where things are
 - [decisions](decisions.md) · [journal/](../journal/) · [inbox/](../inbox/) · [results/](../results/README.md) · [roadmap](../06-roadmap.md)
 - Code: `data/` (Phase 1) · `features/` (Phase 2) · `scripts/` · `config/` · `tools/vault.py`
+- Routine: `research/ROUTINE.md` (rules) · `research/QUEUE.md` (work) · `research/CHANGELOG.md`

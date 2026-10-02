@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 
 _TRACKED = {"add", "fill", "modify_up", "refill", "cancel", "fill_removal", "partial_fill_cancel",
-            "modify_down_fill", "modify_price", "modify_down", "clear"}
+            "modify_down_fill", "modify_price", "modify_price_fill", "modify_down", "clear"}
 
 
 def native_icebergs(ann: pd.DataFrame) -> pd.DataFrame:
@@ -54,7 +54,7 @@ def native_icebergs(ann: pd.DataFrame) -> pd.DataFrame:
         elif k == "refill" or (k == "modify_up" and st["filled"] > 0 and price[i] == st["price"]):
             st["peak"] = max(st["peak"], int(new[i]))
             evidence = "refill_after_fill"
-        elif k == "modify_price":
+        elif k in ("modify_price", "modify_price_fill"):
             st["price"] = price[i]
         if evidence and not st["detected"]:
             st["detected"] = True

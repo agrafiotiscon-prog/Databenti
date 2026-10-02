@@ -301,3 +301,32 @@ def test_warmup_heatmap_starts_at_session_with_full_book():
     first = hm[hm["known_at"] == hm["known_at"].min()]
     assert sorted(zip(first["side"], first["price"], first["size"])) == [
         ("A", 5000.25, 4), ("B", 4999.75, 2), ("B", 5000.00, 5)]       # warm orders are in the book
+
+
+# ----------------------------------------------------------------------- fill accounting (session 5)
+def test_hidden_iceberg_fill_is_recorded_on_removal():
+    rows = base_book() + [
+        (10, "T", "A", 5000.00, 8, 99, 0),
+        (10, "F", "B", 5000.00, 8, 1, 0),      # displayed 5, filled 8 -> 3 from the hidden reserve
+        (10, "C", "B", 5000.00, 5, 1, L)]      # displayed part removed
+    ann = annotate_mbo(mbo_df(rows))
+    assert ann["kind"].iloc[-1] == "fill_removal"
+    assert ann["fill_explained"].iloc[-1] == 5 and ann["fill_hidden"].iloc[-1] == 3
+    assert ann["exceeds_display"].iloc[-2]                       # still iceberg evidence
+    assert (ann["fill_explained"] + ann["fill_hidden"] + ann["fill_aggressor"]).sum() == 8
+
+
+def test_order_modified_into_market_is_aggressor_not_iceberg():
+    # order 2 (bid 3 @ 5000.00) is re-priced to 5000.25 for 13 and trades 10 against the ask
+    rows = base_book() + [(5, "A", "A", 5000.25, 10, 4, L),
+        (10, "T", "B", 5000.25, 10, 98, 0),
+        (10, "F", "B", 5000.25, 10, 2, 0),     # fill reported on order 2 before its book update
+        (10, "M", "B", 5000.25, 3, 2, L)]      # ...which moves it to the fill price with 3 left
+    ann = annotate_mbo(mbo_df(rows))
+    assert ann["kind"].iloc[-1] == "modify_price_fill" and ann["fill_aggressor"].iloc[-1] == 10
+    assert not ann["exceeds_display"].iloc[-2]                    # not hidden size
+    assert native_icebergs(ann).empty
+    # negative control: same fill followed by a same-price removal IS iceberg evidence
+    rows2 = rows[:-1] + [(10, "C", "B", 5000.00, 3, 2, L)]
+    assert ann.shape[0] == annotate_mbo(mbo_df(rows2)).shape[0]
+    assert annotate_mbo(mbo_df(rows2))["exceeds_display"].iloc[-2]

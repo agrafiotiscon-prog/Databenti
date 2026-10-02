@@ -128,13 +128,20 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
     Added columns:
       event_id      increments after every F_LAST record
       kind          snapshot | clear | add | cancel | fill_removal | partial_fill_cancel |
-                    modify_price | modify_up | modify_down | modify_down_fill | refill |
+                    modify_price | modify_price_fill | modify_up | modify_down | modify_down_fill | refill |
                     trade | fill | none | unknown_order
       prev_size / new_size   the order's size before / after the record
       orig_size     size the order had when added (for removal rows; the clip size)
       exceeds_display  (fill rows) unexplained fills on the order > its displayed size
-      fill_explained   fill quantity this record accounts for (removals/reductions/refills);
-                       on real data sum(fill_explained) should equal resting-order fill volume
+      fill_explained   fill quantity this record accounts for (removals/reductions/refills)
+      fill_hidden      on the record that takes an order out of the book: fills on it that no
+                       size reduction explained = quantity executed beyond the displayed size
+                       (native iceberg reserve)
+      fill_aggressor   on a modify_price_fill record: fills that preceded the order being
+                       re-priced to the fill price in the same event (an order modified into
+                       the market, i.e. aggressor fills, not resting fills)
+      Real data (2024-03-05, vault/results/mbo-fill-reconciliation-2024-03-05.md):
+      explained + hidden + aggressor == resting fill volume.
       best_bid / best_ask    touch as of the last COMPLETED event before this record
 
     Fill accounting: F records do not change the book, so each order keeps an
@@ -153,6 +160,9 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
     orig = np.zeros(n, np.int64)
     exceeds = np.zeros(n, bool)
     explained = np.zeros(n, np.int64)
+    hidden = np.zeros(n, np.int64)
+    aggressor = np.zeros(n, np.int64)
+    fill_rows: dict[int, list[int]] = {}    # oid -> F rows of the current event (for exceeds_display)
     bb = np.full(n, np.nan)
     ba = np.full(n, np.nan)
     event = np.zeros(n, np.int64)
@@ -175,6 +185,7 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
             if o in book.orders:
                 unexplained[o] = unexplained.get(o, 0) + q
                 exceeds[i] = unexplained[o] > book.orders[o][2]
+                fill_rows.setdefault(o, []).append(i)
         elif a == "N":
             kind[i] = "none"
         elif a == "R":
@@ -213,7 +224,14 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
                 kind[i] = "add"
                 orig_size[o] = q
             elif old_price != p:
-                kind[i] = "modify_price"
+                if bal > 0:                          # re-priced into the market: aggressor fills
+                    kind[i] = "modify_price_fill"
+                    aggressor[i] = bal
+                    for j in fill_rows.get(o, ()):
+                        if event[j] == ev:           # same event: not evidence of hidden size
+                            exceeds[j] = False
+                else:
+                    kind[i] = "modify_price"
                 unexplained[o] = 0
             elif bal > 0:
                 expected = prev[i] - bal
@@ -226,15 +244,18 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
         else:
             kind[i] = "none"
         if o not in book.orders:
-            unexplained.pop(o, None)
+            left = unexplained.pop(o, 0)
+            if left > 0 and a in ("C", "M"):
+                hidden[i] = left
         if f & F_LAST:
             cur_bb, cur_ba = book.best_bid(), book.best_ask()
             ev += 1
+            fill_rows.clear()
 
     out = mbo.copy()
     out["event_id"], out["kind"], out["prev_size"], out["new_size"] = event, kind, prev, new
     out["orig_size"], out["exceeds_display"], out["best_bid"], out["best_ask"] = orig, exceeds, bb, ba
-    out["fill_explained"] = explained
+    out["fill_explained"], out["fill_hidden"], out["fill_aggressor"] = explained, hidden, aggressor
     out.attrs["unexplained_fill_open"] = int(sum(unexplained.values()))
     out.attrs["book_anomalies"] = book.anomalies
     if "warmup" in out.columns:                    # book rebuilt; keep only the session itself

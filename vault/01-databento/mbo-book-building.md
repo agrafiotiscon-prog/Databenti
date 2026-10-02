@@ -85,3 +85,13 @@ value their priority. Databento's bias family:
 `p_k(x) = x^(1+k)` for `k ≤ 0` (and `1-(1-x)^(1-k)` for `k > 0`).
 In their ES example `k ≈ -0.8 … -0.95` tracked the true MBO queue much better than uniform
 (`k=0`). hftbacktest's `PowerProbQueueModel` is the same idea.
+
+## Real-data findings (session 5, 2024-03-05) [data]
+- Databento's MBO snapshot is at **00:00 UTC of each daily file** only. Replaying a time slice
+  loses the resting book (7,828 unknown orders in RTH), so always replay from the snapshot →
+  [mbo-warmup-2024-03-05](../results/mbo-warmup-2024-03-05.md).
+- Fill accounting is exact once two cases are recorded: hidden iceberg reserve (F beyond the
+  displayed size, then removal; 0.48% of fill volume) and orders modified into the market
+  (F reported on the order *before* the M that moves it to the fill price; 0.12%) →
+  [mbo-fill-reconciliation-2024-03-05](../results/mbo-fill-reconciliation-2024-03-05.md).
+
