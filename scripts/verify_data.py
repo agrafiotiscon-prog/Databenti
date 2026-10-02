@@ -179,7 +179,9 @@ def main(argv=None) -> int:
             sections["mbo"] = summarize_mbo(df)
         elif schema == "status":
             sections["status transitions"] = summarize_status(df)
-    p = save(f"verify-{a.date.isoformat()}.md", render(f"Data verification {a.date}", sections))
+    tag = "-rth" if a.rth_only else ""
+    p = save(f"verify-{a.date.isoformat()}{tag}.md",
+             render(f"Data verification {a.date}{' (RTH only)' if a.rth_only else ' (full session)'}", sections))
     print(Path(p).read_text())
     print(f"saved {p}")
     return 0
