@@ -86,3 +86,25 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
   (2019). Its claim that passing these steps means "deploy live" is rejected: the holdout and
   paper trading are still required.
 - **Status:** planned (Phase 4).
+
+## D-012 — Target instrument: ES (2026-10-02)
+- **Decision:** Research and cost model target ES first (fees ~0.36 tick/RT). MES results can be reported under its own cost profile later.
+- **Why:** User choice (session 4). ES fees per tick are ~2.8x lower than MES, so small order-flow edges have a chance; capital (~$22-24k margin) is the user's concern for later.
+- **Alternatives:** MES (1/10 margin, ~1 tick/RT fees); research ES and trade MES.
+- **Status:** active.
+
+## D-013 — Databento billing: pay-as-you-go (2026-10-02)
+- **Decision:** Usage-based billing, starting with the $125 free credit. The $5 per-request cost guard stays; ask before anything larger.
+- **Why:** User choice (session 4). Cheapest way through Phase 1b-2; the Standard plan can be revisited when multi-month L1 pulls start.
+- **Alternatives:** Standard plan $199/mo (1y L1 + 1m MBO included).
+- **Status:** active.
+
+## D-014 — Final holdout = most recent 12 months (2026-10-02)
+- **Decision:** Reserve the last 12 months of available tier-A data as the final holdout. The exact start date is frozen in config/splits.toml at the first multi-month data pull. The loader will refuse those dates without research/HOLDOUT_UNLOCK (Phase 4).
+- **Why:** User choice (session 4). This tests on the newest regime, the one that would actually be traded.
+- **Status:** active.
+
+## D-015 — Broker fees: IBKR default, switchable (2026-10-02)
+- **Decision:** config/costs.toml holds per-broker profiles. Default ibkr_tiered (ES $2.255/side all-in). Other brokers are added when the user picks one.
+- **Why:** User not sure yet (session 4). IBKR figures are verified from its fee pages; the exchange fee is the same for all non-members, so only the commission differs.
+- **Status:** active.

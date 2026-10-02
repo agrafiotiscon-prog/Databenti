@@ -1,0 +1,13 @@
+# Data split policy (decision D-014). Enforced by the research framework in Phase 4.
+# The holdout is the most recent `holdout_months` of available tier-A data. Its start date is
+# frozen the first time a multi-month dataset is pulled, and must never move afterwards.
+
+holdout_months = 12
+holdout_start = ""          # frozen ISO date, e.g. "2025-10-01" -- empty until first multi-month pull
+unlock_file = "research/HOLDOUT_UNLOCK"   # created only by the user
+
+[walk_forward]
+train_months = 12
+test_months = 3
+step_months = 3
+embargo_days = 1

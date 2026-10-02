@@ -111,3 +111,30 @@ Plotly figure for one session:
 - an optional heatmap layer
 
 Markers are always drawn at `known_at`, so lookahead is visible to the eye.
+
+## Implementation status (session 4, 2026-10-02)
+| # | Feature | Module | Tests | Differences from the spec above |
+|---|---|---|---|---|
+| 1–2 | Footprint, delta, cum delta, divergence | `features/footprint.py` | hand-made + no-lookahead | none |
+| 3 | Developing profile, session levels, VWAP + bands | `features/profile.py` | hand-made + no-lookahead | VWAP variance is computed on prices centred at the first trade, for numerical precision |
+| 4 | Diagonal and stacked imbalances | `features/imbalance.py` | hand-made + no-lookahead | none |
+| 5 | Heatmap (MBP-10 and MBO) | `features/book.py` | hand-made + no-lookahead | MBO heatmap rows get `consistent=False` if a bucket boundary falls inside an event. We never peek ahead to the event's end |
+| 6 | Absorption | `features/absorption.py` | hand-made + no-lookahead | v1 uses trades/TBBO only. The MBO replenishment refinement is still to do |
+| 7 | Icebergs (native, synthetic) | `features/iceberg.py` | hand-made + negative cases + no-lookahead | native also detects **same-size refills** via fill accounting (see below) |
+| 8 | Spoof-like | `features/spoof.py` | hand-made + negatives + no-lookahead | orders that are price-modified or traded are dropped; non-snapshot clears drop all tracking |
+| 9 | Day viewer | `scripts/plot_day.py` | smoke test | markers are drawn at `known_at` |
+
+**Fill accounting (`annotate_mbo`).** F records don't change the book, so a native iceberg that
+refills to the *same* displayed size would look like a no-op modify. Each order therefore
+carries an *unexplained fill* balance:
+- A later C/M that reduces the order by that amount is fill-driven (`fill_removal` /
+  `modify_down_fill`).
+- A same-price M leaving more than `displayed − filled` is a `refill`.
+- `fill_explained` records how much fill each record accounts for. On real data,
+  `sum(fill_explained)` should equal the resting-fill volume. `scripts/verify_data.py`
+  reports that ratio.
+
+**Causality safeguard:** `tests/causality.py` truncates and perturbs the data after random cut
+times. Two deliberately leaky features (today's completed POC, and a centred moving average) are
+tests that **must fail** it, and they do. MBO causality tests assert that the fixture produces
+output, so the check can't pass vacuously.

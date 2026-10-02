@@ -39,7 +39,7 @@ updated: 2026-10-02
    - native-iceberg sightings
    - `F_MAYBE_BAD_BOOK` occurrences
 
-**Phase 2: features** exactly as in [feature definitions](03-order-flow/feature-definitions.md),
+**Phase 2: features** (✅ code complete on synthetic data, session 4; awaiting real-data validation) exactly as in [feature definitions](03-order-flow/feature-definitions.md),
 plus `features/book.py` (MBO book) and the Plotly day viewer. Each feature gets hand-made unit
 tests, truncation tests and perturbation tests.
 
@@ -56,7 +56,7 @@ the sensitivity heatmaps, the trial log, red flags and the gate report.
 fade; fixed stop and target). Run it through all gates, give an honest verdict, then switch on
 the [research loop](05-anti-overfitting/research-loop.md) as a scheduled routine.
 
-## Decisions needed from you
+## Decisions needed from you (✅ answered in session 4: ES, pay-as-you-go, 12-month holdout, IBKR default; see decisions D-012..D-015)
 1. **Instrument:** ES (fees 0.36 tick per round turn; about $22–24k margin) vs MES (fees about
    1 tick per round turn; about 1/10 the margin). Research on ES is cheaper in cost terms; MES is
    cheaper in capital.

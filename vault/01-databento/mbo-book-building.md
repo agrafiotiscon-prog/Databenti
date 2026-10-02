@@ -57,10 +57,11 @@ ignores `T/F/N`.
 3. **Separate fills from cancels. [inferred, verify on real data]** Because `T/F` do not touch
    the book, a resting order that gets fully filled must be removed by a later `C` (or reduced
    by an `M`) in the same event. A naive "cancel" counter will therefore count **fills as
-   cancels**. Rule: within one event (records up to and including `F_LAST`), any `C` or `M`
-   size reduction on an `order_id` that had an `F` in that event is a **fill-removal**, not a
-   cancellation. A test on real data must confirm the volumes reconcile: fill sizes should
-   equal the `C`/`M` reductions on the same `order_id`.
+   cancels**. Implemented rule (`features/book.annotate_mbo`): each order keeps an
+   *unexplained fill* balance, which can carry across events. `C`/`M` reductions covered by
+   that balance are fill-removals. A same-price `M` that leaves more than `displayed − filled`
+   is an iceberg **refill**. `fill_explained` must sum to the fill volume, and
+   `scripts/verify_data.py` checks this on real data.
 4. **Native icebergs show the same `order_id` refilling.** See
    [ES contract](../02-market-structure/es-contract-and-sessions.md#icebergs). A Fill larger than
    the order's displayed size, or a size-increasing `M` right after fills, identifies a native

@@ -15,8 +15,8 @@ from the original brief, and the reasons, are in [`vault/06-roadmap.md`](vault/0
 |---|---|---|
 | 0 | Research vault | **done** |
 | 1 | Data layer: cost guard, cache, sessions, roll rule, flags | **done** (patched after research) |
-| 1b | First real data (≤ $5) plus verification scripts | needs your API key |
-| 2 | Features (footprint, delta, profile/VWAP, imbalances, heatmap, absorption, icebergs, spoof-like) | planned, specified in `vault/03-order-flow/feature-definitions.md` |
+| 1b | First real data (≤ $5) plus verification (`scripts/verify_data.py`) | tooling ready; needs `DATABENTO_API_KEY` |
+| 2 | Features (footprint, delta, profile/VWAP, imbalances, heatmap, absorption, icebergs, spoof-like) + viewer | **code complete, tested on synthetic data**; awaiting real-data validation |
 | 3 | Backtester: own L1 engine plus hftbacktest L3 FIFO calibration | planned |
 | 4 | Anti-overfitting framework (walk-forward, DSR, PBO, sensitivity, trial log, gates) | planned |
 | 5 | One example strategy plus a gated, logged research loop | planned |
@@ -39,7 +39,20 @@ Databenti/
 │   ├── rolls.py          # roll detection, roll calendar parsing, back-adjustment
 │   ├── flags.py          # Databento flag bits (F_LAST, F_SNAPSHOT, …) and helpers
 │   └── fetch.py          # CLI: python -m data.fetch ...
-├── features/  backtest/  research/  scripts/   # later phases
+├── features/             # Phase 2 (spec: vault/03-order-flow/feature-definitions.md)
+│   ├── common.py         # tick grid, bars, side conventions
+│   ├── footprint.py      # footprint, delta, cumulative delta, divergence
+│   ├── profile.py        # developing POC/value area, session levels, VWAP + bands
+│   ├── imbalance.py      # diagonal and stacked imbalances
+│   ├── absorption.py     # causal absorption events (trades/TBBO)
+│   ├── book.py           # MBO order book, annotate_mbo (fill vs cancel, refills), heatmaps
+│   ├── iceberg.py        # native and synthetic iceberg detection
+│   └── spoof.py          # large-order / spoof-like pull detection
+├── scripts/
+│   ├── verify_data.py    # Phase 1b real-data checks → vault/results/
+│   └── plot_day.py       # Plotly day viewer (markers at known_at) → reports/
+├── config/               # costs.toml (fee profiles), splits.toml (holdout policy)
+├── backtest/  research/  # Phases 3–5
 ├── tests/                # pytest, fully offline
 └── cache/                # downloaded data (gitignored)
 ```
@@ -48,7 +61,8 @@ Databenti/
 
 ```bash
 pip install -r requirements.txt
-cp .env.example .env        # then put DATABENTO_API_KEY in .env (never commit it)
+cp .env.example .env        # local: put DATABENTO_API_KEY in .env (never commit it)
+# cloud sessions: set DATABENTO_API_KEY as an environment variable in the environment settings
 python -m pytest            # all tests run offline
 ```
 

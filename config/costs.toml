@@ -1,0 +1,36 @@
+# Transaction-cost profiles (per contract, per side, USD).
+# Sources and derivation: vault/02-market-structure/costs-fees-slippage.md
+# CME changed fees effective 2026-10-01 (SER #9799) -- verify against a real broker statement.
+
+default_profile = "ibkr_tiered"
+
+[instruments.ES]
+tick = 0.25
+tick_value = 12.50
+[instruments.MES]
+tick = 0.25
+tick_value = 1.25
+[instruments.NQ]
+tick = 0.25
+tick_value = 5.00
+[instruments.MNQ]
+tick = 0.25
+tick_value = 0.50
+
+# Interactive Brokers, tiered, <= 1,000 contracts/month (verified 2026-10-02).
+[profiles.ibkr_tiered]
+verified = true
+source = "IBKR CME fee pass-through + futures commission pages"
+[profiles.ibkr_tiered.per_side]
+#            exchange  nfa    commission
+ES  = { exchange = 1.385, nfa = 0.02, commission = 0.85 }
+MES = { exchange = 0.352, nfa = 0.02, commission = 0.25 }
+NQ  = { exchange = 1.385, nfa = 0.02, commission = 0.85 }
+MNQ = { exchange = 0.352, nfa = 0.02, commission = 0.25 }
+
+# Execution assumptions shared by all profiles (stress-tested in every report).
+[execution]
+latency_ms = 100                 # decision -> exchange arrival
+stress_latency_ms = [250, 500]
+fee_multipliers = [1.0, 1.5, 2.0]
+extra_slippage_ticks = 0         # latency + book at arrival model slippage; +1 used as stress
