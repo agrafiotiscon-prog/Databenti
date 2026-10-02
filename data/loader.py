@@ -8,10 +8,15 @@
     `trading_date` / `session` and a `contract_segment` column that
     increments if the instrument changes (should never happen within a
     session; a value > 1 indicates a data/roll problem).
+  * MBO is different: the book is state. A time slice drops every order that was
+    resting before the cut, so `load_session(..., "mbo")` keeps the records from the
+    start of the first chunk (Databento's 00:00 UTC snapshot) and marks them
+    `warmup=True`. `features.book` replays them and then drops them.
   * Record order is preserved exactly as delivered by Databento.
 """
 from __future__ import annotations
 
+import warnings
 from datetime import date
 from pathlib import Path
 from typing import Iterable
@@ -19,6 +24,7 @@ from typing import Iterable
 import pandas as pd
 
 from . import cache
+from .flags import F_SNAPSHOT
 from .rolls import contract_segments
 from .sessions import session_bounds, tag_sessions
 
@@ -72,4 +78,27 @@ def load_session(downloader, schema: str, trading_date: date, rth_only: bool = F
                  **fetch_kwargs) -> pd.DataFrame:
     """Fetch (cost-checked, cached) and load one trading session."""
     paths = downloader.fetch_sessions(schema, [trading_date], rth_only=rth_only, **fetch_kwargs)
-    return slice_session(load_chunks(paths), trading_date, rth_only)
+    df = load_chunks(paths)
+    if schema == "mbo":
+        return with_book_warmup(df, trading_date, rth_only)
+    return slice_session(df, trading_date, rth_only)
+
+
+def with_book_warmup(mbo: pd.DataFrame, trading_date: date, rth_only: bool = False) -> pd.DataFrame:
+    """One MBO session plus everything before it back to the opening snapshot.
+
+    Rows before the session start get `warmup=True`; they exist only to rebuild the
+    resting book. Measured on 2024-03-05: slicing first lost the whole resting book at
+    the RTH open (vault/results/mbo-warmup-2024-03-05.md).
+    """
+    if mbo.empty:
+        return mbo
+    start, end = session_bounds(trading_date, rth_only)
+    flags = mbo["flags"].to_numpy().astype("int64")
+    if not flags[0] & F_SNAPSHOT:
+        warnings.warn("MBO data does not start with a snapshot: the replayed book may miss resting orders")
+    warm = mbo[mbo.index < start]
+    sess = slice_session(mbo, trading_date, rth_only)
+    warm = warm.assign(trading_date=pd.NaT, session="warmup").assign(warmup=True)
+    sess = sess.assign(warmup=False)
+    return pd.concat([warm, sess])

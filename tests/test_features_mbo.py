@@ -256,3 +256,48 @@ def test_mbo_features_no_lookahead(feature):
     df = random_mbo()
     assert len(feature(df)) > 0, "fixture should produce some output for a meaningful check"
     assert_causal(feature, df)
+
+
+# ----------------------------------------------------------------------- book warm-up (session 5)
+def _warmup_frame():
+    """Snapshot + an add before the 08:30 CT RTH open, then RTH records touching those orders."""
+    from datetime import date
+    from data.loader import with_book_warmup
+    rows = [(-3_600_000, "R", "N", np.nan, 0, 0, SNAP),
+            (-3_600_000, "A", "B", 5000.00, 5, 1, SNAP | L),           # snapshot order
+            (-60_000, "A", "A", 5000.25, 4, 3, L),                      # added before the open
+            (10, "C", "B", 5000.00, 5, 1, L),                           # RTH: cancel the snapshot order
+            (20, "T", "B", 5000.25, 4, 98, 0),
+            (20, "F", "A", 5000.25, 4, 3, 0),
+            (20, "C", "A", 5000.25, 4, 3, L)]                           # fill removal of order 3
+    raw = mbo_df(rows)
+    return raw, with_book_warmup(raw, date(2024, 3, 5), rth_only=True)
+
+
+def test_warmup_rebuilds_resting_book():
+    raw, warm = _warmup_frame()
+    assert warm["warmup"].tolist() == [True] * 3 + [False] * 4
+    ann = annotate_mbo(warm)
+    assert len(ann) == 4 and not ann["warmup"].any()                  # warm-up rows dropped
+    assert ann["kind"].tolist() == ["cancel", "trade", "fill", "fill_removal"]
+    assert ann["best_bid"].iloc[0] == 5000.00 and ann["best_ask"].iloc[0] == 5000.25
+    assert int(ann["fill_explained"].sum()) == 4
+    # negative control: slicing first loses the resting orders
+    cold = annotate_mbo(raw[raw.index >= T0])
+    assert (cold["kind"] == "unknown_order").sum() == 2 and int(cold["fill_explained"].sum()) == 0
+
+
+def test_warmup_heatmap_starts_at_session_with_full_book():
+    from datetime import date
+    from data.loader import with_book_warmup
+    rows = [(-3_600_000, "R", "N", np.nan, 0, 0, SNAP),
+            (-3_600_000, "A", "B", 5000.00, 5, 1, SNAP | L),
+            (-60_000, "A", "A", 5000.25, 4, 3, L),
+            (10, "A", "B", 4999.75, 2, 4, L),                           # first RTH record
+            (1_500, "N", "N", np.nan, 0, 0, L)]                         # closes the first 1 s bucket
+    warm = with_book_warmup(mbo_df(rows), date(2024, 3, 5), rth_only=True)
+    hm = mbo_heatmap(warm, freq="1s", n_levels=5)
+    assert hm["known_at"].min() > T0                                   # nothing before the open
+    first = hm[hm["known_at"] == hm["known_at"].min()]
+    assert sorted(zip(first["side"], first["price"], first["size"])) == [
+        ("A", 5000.25, 4), ("B", 4999.75, 2), ("B", 5000.00, 5)]       # warm orders are in the book

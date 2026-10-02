@@ -51,9 +51,11 @@ def summarize_mbo(mbo: pd.DataFrame) -> dict:
     from features.iceberg import native_icebergs, synthetic_icebergs
     from features.spoof import spoof_like_events
 
+    ann = annotate_mbo(mbo)                       # replays warm-up rows, returns session rows
+    if "warmup" in mbo.columns:
+        mbo = mbo[~mbo["warmup"].to_numpy(bool)]
     flags = mbo["flags"].astype("int64")
     snap = mbo[(flags & F_SNAPSHOT) != 0]
-    ann = annotate_mbo(mbo)
     resting_fill = int(ann.loc[ann["kind"] == "fill", "size"].astype("int64").sum())
     explained = int(ann["fill_explained"].sum())
     return {
@@ -67,6 +69,7 @@ def summarize_mbo(mbo: pd.DataFrame) -> dict:
         "fill_unexplained_open": int(ann.attrs.get("unexplained_fill_open", 0)),
         "fill_reconciliation_ratio": explained / resting_fill if resting_fill else float("nan"),
         "book_anomalies": int(ann.attrs.get("book_anomalies", 0)),
+        "unknown_order_records": int((ann["kind"] == "unknown_order").sum()),
         "native_icebergs": int(len(native_icebergs(ann))),
         "synthetic_icebergs": int(len(synthetic_icebergs(ann))),
         "spoof_like": int(len(spoof_like_events(ann))),

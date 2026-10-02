@@ -11,7 +11,8 @@ Book state is only consistent right after a record with F_LAST.
 separating TRUE cancels from fill-driven removals (CME removes filled resting
 orders with later C/M records in the same event) and tagging snapshot records
 (F_SNAPSHOT, e.g. Databento's 00:00 UTC snapshot) so activity features can
-exclude them. The fill/cancel split is [inferred] from the docs and must be
+exclude them. Rows with `warmup=True` (data.loader.with_book_warmup) are replayed to
+rebuild the resting book and then dropped from the output. The fill/cancel split is [inferred] from the docs and must be
 reconciled on real data (scripts/verify_data.py).
 """
 from __future__ import annotations
@@ -236,6 +237,8 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
     out["fill_explained"] = explained
     out.attrs["unexplained_fill_open"] = int(sum(unexplained.values()))
     out.attrs["book_anomalies"] = book.anomalies
+    if "warmup" in out.columns:                    # book rebuilt; keep only the session itself
+        out = out[~out["warmup"].to_numpy(bool)]
     return out
 
 
@@ -268,7 +271,10 @@ def mbo_heatmap(mbo: pd.DataFrame, freq: str = "1s", n_levels: int | None = 50) 
         book.apply(act[i], side[i], px[i], int(sz[i]), int(oid[i]))
         consistent = bool(flg[i] & F_LAST)
         seen_last |= consistent
-    return pd.DataFrame(rows, columns=cols)
+    out = pd.DataFrame(rows, columns=cols)
+    if "warmup" in mbo.columns and (~mbo["warmup"].to_numpy(bool)).any():
+        out = out[out["known_at"] > ts[~mbo["warmup"].to_numpy(bool)][0]]
+    return out.reset_index(drop=True)
 
 
 def mbp10_heatmap(mbp10: pd.DataFrame, freq: str = "1s") -> pd.DataFrame:
