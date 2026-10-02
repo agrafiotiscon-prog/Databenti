@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [market-structure]
+updated: 2026-10-02
+---
 # Costs, fees and slippage: the numbers that kill most order-flow strategies
 
 ## Fees per contract per side (retail, Interactive Brokers, read 2026-10)

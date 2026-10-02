@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [order-flow]
+updated: 2026-10-02
+---
 # Feature definitions (causal, testable): the spec for Phase 2
 
 Conventions for all features:

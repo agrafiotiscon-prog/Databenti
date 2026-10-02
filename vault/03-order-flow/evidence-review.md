@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [order-flow]
+updated: 2026-10-02
+---
 # What the evidence says about order flow (read this before getting excited)
 
 ## 1. Order flow explains price changes *contemporaneously*

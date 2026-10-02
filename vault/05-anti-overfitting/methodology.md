@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [anti-overfitting]
+updated: 2026-10-02
+---
 # Anti-overfitting methodology
 
 > "Standard statistical techniques designed to prevent regression over-fitting, such as
@@ -60,6 +65,42 @@ For the mean trade PnL (OOS), we require t ≥ 3 for "strong" and t ≥ 2 for "w
 - Show 2-D heatmaps for each parameter pair (net PnL, Sharpe, trades).
 - **Plateau test:** the median of the neighbours must be ≥ 50% of the centre's net PnL, and no
   neighbour may flip the sign. Sharp peaks fail.
+- **What the heatmap should look like:**
+  - *Overfit*: an isolated bright cell or a thin ridge surrounded by losses (an "island").
+  - *Robust*: a broad, smooth region of similar colour (a "plateau").
+- Also map the heatmap over the **full grid**, not just ±20%, at coarse resolution, so a
+  plateau's edges are visible.
+
+## 6b. Monte Carlo on **every** parameter set (not just the winner)
+Running MC only on the chosen parameter set is selection after the fact. It tells you about the
+path of a winner you already picked. Instead, run it for **every grid point** and turn the MC
+*percentiles* into heatmaps of their own. Four MC types, each answering a different question:
+
+| MC type | What is randomised | Answers | Note |
+|---|---|---|---|
+| Trade-order shuffle | the order of trades | drawdown and losing-streak distribution | **does not change total PnL.** It says nothing about whether the edge exists |
+| Stationary block bootstrap | blocks of *daily* PnL (block ≈ 5–10 days) | distribution of Sharpe, net PnL, max DD | keeps autocorrelation and volatility clustering. This is the main MC |
+| Execution MC | per-trade latency and slippage draws from the measured distribution, fee multiplier U[1, 1.5], and **randomly skipping 5–20% of trades** (missed fills) | sensitivity to execution luck | approximated at the trade level (no full re-simulation) |
+| Parameter jitter | each parameter ± small noise per trial | local robustness | complements the heatmap |
+
+Per grid point, store: P(net PnL < 0), the **5th-percentile** Sharpe and net PnL, and the
+**95th-percentile** max drawdown. Selection ranks on the **5th percentile, not the mean**.
+That is a robust objective.
+
+## 6c. Cluster analysis (meta-analysis of all trials)
+1. **Cluster the trials by the correlation of their daily PnL** (hierarchical clustering, or
+   the ONC algorithm from López de Prado & Lewis, 2019).
+2. **Effective number of trials K** = the number of clusters. Use K (not just the raw N) in the
+   DSR's expected-max-Sharpe term, together with the variance of the cluster-level Sharpes.
+   Report **both** the raw-N and K-based DSR. N overstates independence, but K must not be
+   gamed by adding redundant variants.
+3. **Cluster in parameter space**, with performance as a feature, to find **regions**. A
+   candidate is credible if it sits inside a cluster where most members (≥ 70%) are profitable
+   OOS and have positive 5th-percentile MC PnL.
+4. **Pick the cluster's medoid** (its most central member), not the single best point. The best
+   point is the one most inflated by luck.
+5. Report how many clusters exist and how each one performs. If one cluster is profitable and its
+   neighbours are deeply negative, that is an island, and islands are not trusted.
 
 ## 7. Red flags (automatic, shown at the top of every report)
 - < 200 trades.
@@ -81,6 +122,21 @@ For the mean trade PnL (OOS), we require t ≥ 3 for "strong" and t ≥ 2 for "w
 | G6 | Not concentrated (red flags clear) |
 | G7 | Positive in ≥ 60% of years in the OOS segments |
 | G8 | Tier-B fill check does not flip the sign |
+| G9 | Monte Carlo (block bootstrap + execution MC): **5th-percentile net PnL > 0** and P(loss) ≤ 10%, at 1.5× fees |
+| G10 | The chosen set is a **cluster medoid**: ≥ 70% of its cluster is profitable OOS, and the cluster is not an island |
+| G11 | DSR ≥ 0.95 using the **cluster-based effective K**, with the raw-N DSR also reported |
 
 Only then: **one** holdout evaluation, with the user's sign-off, reported as-is. Nothing is
 re-tuned after the holdout.
+
+Passing the holdout is still **not** "ready to deploy live". The next step is **paper trading**,
+comparing live fills against simulated fills. See [going live later](../07-live-later.md). A
+four-step checklist (heatmap → MC on every set → clusters → IS/OOS + walk-forward) is necessary
+but not sufficient. It cannot detect lookahead bias, optimistic fills or wrong costs. Those are
+covered by sections 1–5 and the [pitfalls checklist](../01-databento/pitfalls.md).
+
+## Sources for 6b/6c
+- López de Prado & Lewis (2019), *Detection of false investment strategies using unsupervised
+  learning methods*, Quantitative Finance 19(9). Uses clustering to estimate the effective number
+  of trials.
+- A user-supplied video checklist (summary in [inbox](../inbox/2026-10-02-video-four-robustness-steps.md)).

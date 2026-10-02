@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [backtesting]
+updated: 2026-10-02
+---
 # Backtest engines compared (decision record)
 
 | | Own Python event engine | hftbacktest 2.4.4 | NautilusTrader 1.221 | vectorbt / bar-based |

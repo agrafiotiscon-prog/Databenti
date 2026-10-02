@@ -1,3 +1,8 @@
+---
+type: sources
+tags: [sources]
+updated: 2026-10-02
+---
 # Sources (accessed 2026-10-02)
 
 ## Databento (primary documentation)

@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [market-structure]
+updated: 2026-10-02
+---
 # ES (and NQ) contract, sessions, matching
 
 ## Contract specs

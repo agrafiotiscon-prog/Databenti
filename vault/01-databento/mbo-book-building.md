@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [databento]
+updated: 2026-10-02
+---
 # Databento MBO: building the book correctly (CME)
 
 ## Action semantics [doc]

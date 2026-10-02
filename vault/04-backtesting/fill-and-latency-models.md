@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [backtesting]
+updated: 2026-10-02
+---
 # Fill and latency models
 
 ## Timeline of one order

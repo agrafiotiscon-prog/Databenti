@@ -17,3 +17,7 @@ venv/
 # Outputs
 reports/
 *.html
+
+# Obsidian per-user state
+vault/.obsidian/workspace*.json
+vault/.obsidian/cache

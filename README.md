@@ -25,7 +25,9 @@ from the original brief, and the reasons, are in [`vault/06-roadmap.md`](vault/0
 
 ```
 Databenti/
-├── vault/                # researched knowledge base (read first)
+├── CLAUDE.md             # auto-loaded by Claude Code; imports vault/_memory/MEMORY.md
+├── tools/vault.py        # vault upkeep: journal | decide | inbox | search | check
+├── vault/                # researched knowledge base + Claude's persistent memory (Obsidian-compatible)
 ├── data/                 # Phase 1
 │   ├── config.py         # settings, API key loading (never printed), client factory
 │   ├── cost_guard.py     # get_cost before every download, $5 limit, spend log

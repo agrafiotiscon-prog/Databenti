@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [databento]
+updated: 2026-10-02
+---
 # Timestamps, causality and latency
 
 ## What each timestamp is [doc]

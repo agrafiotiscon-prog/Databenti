@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [planning]
+updated: 2026-10-02
+---
 # Going live later (explicitly out of scope now)
 
 The brief says no live trading or broker connections. This note only records what was learned,

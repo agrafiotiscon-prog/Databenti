@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [databento]
+updated: 2026-10-02
+---
 # Pre-flight checklist (run through before trusting any feature or backtest)
 
 Data

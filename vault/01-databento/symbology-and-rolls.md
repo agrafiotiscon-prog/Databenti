@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [databento]
+updated: 2026-10-02
+---
 # Databento symbology and contract rolls
 
 ## Symbology types [doc]

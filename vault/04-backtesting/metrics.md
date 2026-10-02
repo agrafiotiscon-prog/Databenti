@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [backtesting]
+updated: 2026-10-02
+---
 # Metrics: exact definitions used in every report
 
 Net PnL is always **after fees and modelled slippage**, in USD, for 1 contract unless stated.

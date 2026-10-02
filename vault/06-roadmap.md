@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [planning]
+updated: 2026-10-02
+---
 # Roadmap, revised after research
 
 ## What changed vs the original brief, and why

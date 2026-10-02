@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [databento]
+updated: 2026-10-02
+---
 # Pricing and the data plan
 
 ## How Databento charges [doc]

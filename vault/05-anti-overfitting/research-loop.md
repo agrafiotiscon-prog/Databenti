@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [anti-overfitting]
+updated: 2026-10-02
+---
 # The automated research loop ("constantly improving"), done safely
 
 Unconstrained "keep tweaking until it's profitable" is the **definition of overfitting**. With
@@ -15,7 +20,10 @@ automatically, but "improvement" is defined as **passing the gates in
    this.
 3. **Trial log** (`research/trials.jsonl`, append-only): every variant, including failures,
    with its daily PnL saved. Logging is never optional, and the count is never reset.
-4. **Evaluator**: computes the DSR (with the true N), PBO, sensitivity, red flags and the gates.
+4. **Evaluator**: computes the DSR (with the true N and the cluster-based effective K), PBO,
+   sensitivity heatmaps, **Monte Carlo on every parameter set** (block bootstrap plus execution
+   MC, with percentile heatmaps), **cluster analysis** of all trials (picking cluster medoids
+   and flagging islands), red flags, and gates G1–G11.
 5. **Report**: a Markdown/HTML report per run covering what was tried, how many trials (per
    family and all-time), the gate table, cost and latency stress, and per-year and per-month
    breakdowns. It ends with a plain-English verdict: *promising / not promising / insufficient

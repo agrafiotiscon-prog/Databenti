@@ -1,3 +1,8 @@
+---
+type: index
+tags: [index]
+updated: 2026-10-02
+---
 # Knowledge vault: order-flow research with Databento (ES/NQ)
 
 This vault holds what was researched before any further code was written. Each note gives the
@@ -12,10 +17,30 @@ Confidence tags used throughout:
   exists or is planned for it.
 - **[assumption]**: a modelling choice. It is configurable and gets stress-tested.
 
+## How this vault works (Claude's persistent memory)
+- **Claude maintains it.** `CLAUDE.md` at the repo root is auto-loaded into every Claude Code
+  session and imports [MEMORY](_memory/MEMORY.md), so the current state, decisions and open
+  questions survive context compaction and new sessions.
+- [MEMORY](_memory/MEMORY.md): short, always-loaded state (who the user is, where we are,
+  what's next).
+- [decisions](_memory/decisions.md): append-only decision log (D-001…).
+- [project brief](_memory/project-brief.md): the user's own requirements, verbatim.
+- `journal/`: one note per session (what was asked, done and found).
+- `inbox/`: material the user shares (transcripts, links), each with a summary, an assessment,
+  and where it was integrated.
+- Tooling: `python tools/vault.py journal|decide|inbox|search|check`. `check` runs in pytest,
+  so broken links fail the build.
+- **Open in Obsidian:** "Open folder as vault" → `vault/`. Links are relative Markdown links, so
+  they work in Obsidian and on GitHub. Durable storage is git: every change is committed and
+  pushed.
+
 ## Map
 
 | # | Note | Use it for |
 |---|---|---|
+| ★ | [MEMORY](_memory/MEMORY.md) · [decisions](_memory/decisions.md) · [brief](_memory/project-brief.md) | State, why things are the way they are, what the user asked for |
+| ★ | [Journal: session 1](journal/2026-10-02-s1-phase1-data-layer.md) · [session 2](journal/2026-10-02-s2-research-vault.md) · [session 3](journal/2026-10-02-s3-memory-and-robustness.md) | Session history |
+| ★ | [Inbox: video, four robustness steps](inbox/2026-10-02-video-four-robustness-steps.md) | User-supplied material |
 | 1 | [Databento: schemas, fields, flags](01-databento/schemas-and-fields.md) | What every field means; side/aggressor; flags; prices |
 | 1 | [Databento: MBO and book building](01-databento/mbo-book-building.md) | Reconstructing the book, FIFO, snapshots, fills vs cancels |
 | 1 | [Databento: symbology and rolls](01-databento/symbology-and-rolls.md) | Why `ES.c.0` is wrong in roll week, and what we do instead |
@@ -62,3 +87,7 @@ Confidence tags used throughout:
    using the true trial count. → [methodology](05-anti-overfitting/methodology.md)
 10. **The holdout is touched once per candidate, with the user's sign-off.** Nothing is tuned
     after that.
+11. **Robustness is judged across the whole parameter grid, not at one point.** That means
+    heatmaps, Monte Carlo on *every* parameter set (selecting on the 5th percentile), and
+    clustering of all trials. Choose cluster medoids and reject islands.
+    → [methodology §6–6c](05-anti-overfitting/methodology.md)

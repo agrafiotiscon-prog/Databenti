@@ -1,3 +1,8 @@
+---
+type: topic
+tags: [databento]
+updated: 2026-10-02
+---
 # Databento: schemas, fields, flags
 
 Dataset: **`GLBX.MDP3`**. Databento captures CME Globex MDP 3.0 over UDP multicast in Aurora (DC3).
