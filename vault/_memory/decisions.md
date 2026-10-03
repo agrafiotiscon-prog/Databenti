@@ -180,3 +180,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-005, H-006, H-008 (no edge) and H-007 (trial budget spent). H-007 (pre-FOMC drift, 24 h window) is the best candidate (6/11 gates) but is NOT promoted. Its next step needs the user: a single holdout evaluation (create research/HOLDOUT_UNLOCK) and/or forward paper trading of the fixed rule. No re-tuning on development data.
 - **Why:** Single evaluations (D-026). H-007 OOS 98 trades, +$21.3k, t = 1.95, 8/13 years positive, PBO 0.002, cluster-K DSR 0.98, survives stress; fails G1 (few events), G3 (raw-N DSR with 126 trials), G5/G10 (2-variant space), G6 (concentration). H-005 t = 0.12, H-006 t = 0.59 (0/4 variants positive full period), H-008 t = 0.18 (0/8). Report: vault/results/leaderboard.md.
 - **Status:** active.
+
+## D-029 — User: keep researching without confirmation requests; batch H-009..H-011 registered (2026-10-03)
+- **Decision:** Per the user (session 6: 'only confirm if you are sure ... continue'): no confirmation requests; notify only when a candidate passes ALL gates G1-G11 (ROUTINE.md step 7 updated). H-007 holdout/paper steps stay parked until something is certain. Registered before any result: H-009 overnight drift (4), H-010 daily reversal (4) on 15 y hourly bars (D-023 protocol), H-011 VWAP-deviation fade (4) on the cached trades (D-020 protocol). Global hypothesis trials after this batch: 138.
+- **Why:** User instruction; batch registration fixes the family before results.
+- **Status:** active.

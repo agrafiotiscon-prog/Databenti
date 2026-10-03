@@ -1,0 +1,20 @@
+id: H-010
+title: Daily reversal - fade the previous RTH move the next day
+mechanism: >
+  Short-term return reversal compensates liquidity providers for absorbing demand shocks; it is
+  stronger when liquidity is scarce (Nagel 2012 RFS "Evaporating liquidity"; Grossman & Miller
+  1988). For the index, part of a large RTH move reflects temporary price pressure that reverts the
+  next session. Who pays: traders demanding immediacy on the previous day. Prior: low-moderate.
+direction: fade
+horizon: "1 RTH session: enter at entry_at, exit 15:00 CT"
+features: [hourly_closes]
+fixed:
+  data: ES ohlcv-1h both ranks 2010-06..2025-09 (D-023 protocol), same contract for signal and trade
+  signal: previous trading day's 09:00 -> 15:00 CT return (same contract); trade against its sign
+  execution: 1 tick adverse per side + fees (stress 2 ticks + fees x1.5)
+space:
+  min_abs_bp: [0, 50]
+  entry_at: ["09:00", "10:00"]
+trial_budget: 4
+registered: 2026-10-03
+status: open

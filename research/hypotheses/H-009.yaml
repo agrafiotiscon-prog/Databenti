@@ -1,0 +1,22 @@
+id: H-009
+title: Overnight drift - hold ES from the cash close to the next morning
+mechanism: >
+  US equity index returns accrue disproportionately overnight, while intraday returns are close to
+  zero or negative (Cliff, Cooper & Gulen 2008; Lou, Polk & Skouras 2019 JFE "A tug of war").
+  Lou et al. attribute it to persistent intraday trading pressure by institutions versus overnight
+  demand by other clienteles. Who pays: traders who systematically sell into the close and buy at
+  the open. Prior: moderate (robust historically; costs per round trip are large relative to a
+  few bp of daily drift, and the effect may be priced in futures).
+direction: follow
+horizon: "overnight: cash close 15:00 CT -> 08:00 or 09:00 CT next trading day"
+features: [hourly_closes]
+fixed:
+  data: ES ohlcv-1h both ranks 2010-06..2025-09 (D-023 protocol); entry day's contract for both prices
+  entry: long at the 15:00 CT close (close of the 14:00-15:00 bar); exit at the close of the bar ending at exit_at
+  execution: 1 tick adverse per side + fees (stress 2 ticks + fees x1.5)
+space:
+  exit_at: ["08:00", "09:00"]
+  skip_weekends: [false, true]
+trial_budget: 4
+registered: 2026-10-03
+status: open

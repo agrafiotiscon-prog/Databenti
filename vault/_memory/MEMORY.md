@@ -12,7 +12,8 @@ tags: [memory, state]
 - Wants an **automated, continuously-improving research routine** that logs everything it tries.
 - Wants everything **researched before building**, and has authorised overriding their own
   brief when the research is stronger. Wants this vault to be Claude's persistent memory.
-- Works in phases: stop after each phase and wait for their OK.
+- Works in phases, but (session 6) wants the research to **keep going without confirmation
+  requests**: contact them only when sure, i.e. a candidate passes ALL gates G1–G11.
 - Shares outside material (e.g. video transcripts) → it goes into `vault/inbox/`.
 - Full brief: [project-brief](project-brief.md).
 

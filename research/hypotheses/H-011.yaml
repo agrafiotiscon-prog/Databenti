@@ -1,0 +1,23 @@
+id: H-011
+title: Fade large deviations from the session VWAP, target VWAP
+mechanism: >
+  The session VWAP is the main execution benchmark for institutional orders; large deviations from
+  it are often caused by impatient one-sided flow, and benchmark-driven execution plus liquidity
+  providers lean against the deviation, pulling price back toward VWAP (temporary price pressure,
+  Hendershott & Menkveld 2014). Who pays: impatient traders who move price away from fair value.
+  Prior: low (practitioner idea; no direct peer-reviewed evidence for ES).
+direction: fade
+horizon: "minutes to 30 min (target = VWAP at entry, stop, 30 min time stop)"
+features: [vwap]
+fixed:
+  vwap: "session VWAP from the RTH open; deviation sd = std of (price - VWAP) over all trades since 08:30 CT (causal, expanding)"
+  evaluation: "1-minute bar closes from 09:30 CT; no entries after 14:25 CT"
+  entry: "market order against the deviation when |z| >= k (+100 ms); target = VWAP at entry, in ticks"
+  exits: "target, stop, 30 min time stop, flat 14:55 CT; one position at a time"
+  data: "238 cached RTH trade days (quotes rebuilt from trades); D-020 protocol"
+space:
+  k: [2.0, 3.0]
+  stop_ticks: [8, 16]
+trial_budget: 4
+registered: 2026-10-03
+status: open

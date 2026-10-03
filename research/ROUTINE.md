@@ -19,9 +19,9 @@ is [research-loop](../vault/05-anti-overfitting/research-loop.md); the gates are
    to `vault/results/`; decisions go through `python tools/vault.py decide`.
 6. Update `QUEUE.md` (tick the item, add follow-ups) and `MEMORY.md` (state + next step), add
    a journal entry, then commit and push to the session branch.
-7. Notify the user (push notification) only when: a phase finishes, a candidate passes all
-   gates, the budget blocks progress, or something is broken that needs them. Otherwise, stay
-   quiet.
+7. Notify the user (push notification) ONLY when a candidate passes all gates G1–G11, or
+   something is broken that blocks all progress (user, session 6: "only confirm if you are
+   sure"). No confirmation requests otherwise; keep working through the queue.
 
 ## What "keep it if it is more profitable" means
 - A strategy variant is **kept** (written to `research/CHAMPION.md`) only if it passes **every
