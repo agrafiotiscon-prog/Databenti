@@ -94,4 +94,5 @@ In their ES example `k ≈ -0.8 … -0.95` tracked the true MBO queue much bette
   displayed size, then removal; 0.48% of fill volume) and orders modified into the market
   (F reported on the order *before* the M that moves it to the fill price; 0.12%) →
   [mbo-fill-reconciliation-2024-03-05](../results/mbo-fill-reconciliation-2024-03-05.md).
-
+- Native iceberg refill = `F` then a same-price `M` on the **same order id in the same event**
+  (100% of 3,018 refills; mostly 1-lot clips) → [mbo-iceberg-refills-2024-03-05](../results/mbo-iceberg-refills-2024-03-05.md).

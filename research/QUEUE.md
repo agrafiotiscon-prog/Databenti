@@ -7,7 +7,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
       accounting; confirm `fill_accounted_ratio` ≈ 1.0 and write
       `vault/results/mbo-fill-reconciliation-2024-03-05.md` (diagnosis already done in session 5:
       0.48% hidden iceberg reserve, 0.12% orders modified into the market).
-- [ ] R2.2 (removed: 1,544 → 1,540 RTH, 1,850 → 1,843 full) Describe
+- [x] R2.2 (s6: same-order M in the fill's event; see mbo-iceberg-refills-2024-03-05) (removed: 1,544 → 1,540 RTH, 1,850 → 1,843 full) Describe
       how native refills really look in Databento MBO (answers an open question in MEMORY).
 - [ ] R2.3 Calibrate on the real distribution: spoof `min_size` (default 50) and synthetic-iceberg
       `dt` (5 ms; 44,893 synthetic icebergs in one RTH looks far too many). Record the choice and
