@@ -40,7 +40,7 @@ tags: [memory, state]
   ≤ $3/day, ≤ $25 total; keeps a strategy only if it passes G1–G11.
 
 ## Next step
-- The routine continues with `research/QUEUE.md`: Phase 3 (L1 backtester, R3.1 first), Phase 4 (framework), Phase 5 (H-001).
+- The routine continues with `research/QUEUE.md`: Phase 3 (R3.1 engine done → R3.2 limit/stop orders), Phase 4 (framework), Phase 5 (H-001).
 - **Needs the user:** a data budget for real backtests. One year of ES trades ≈ $140 on
   pay-as-you-go (more than the ~$115 left); Standard plan $199/mo includes 1 year of L1.
 
@@ -57,5 +57,5 @@ tags: [memory, state]
 
 ## Where things are
 - [decisions](decisions.md) · [journal/](../journal/) · [inbox/](../inbox/) · [results/](../results/README.md) · [roadmap](../06-roadmap.md)
-- Code: `data/` (Phase 1) · `features/` (Phase 2) · `scripts/` · `config/` · `tools/vault.py`
+- Code: `data/` (Phase 1) · `features/` (Phase 2) · `backtest/` (Phase 3) · `scripts/` · `config/` · `tools/vault.py`
 - Routine: `research/ROUTINE.md` (rules) · `research/QUEUE.md` (work) · `research/CHANGELOG.md`

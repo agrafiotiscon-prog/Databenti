@@ -57,3 +57,13 @@ case must be simulated.
 - No reaction of other participants to our orders.
 - Queue position for our own order is modelled, not observed.
 - Exchange-side events (e.g. self-match prevention, price bands) are only approximated.
+
+## Implementation status (session 6, routine R3.1)
+- `backtest/engine.py`: L1 replay in file order, strategy callback gets one record at a time,
+  orders arrive at `t + latency`, **market orders** fill at the worse of the last book before
+  arrival and the first book at/after it (TBBO shows the book only just before each trade),
+  1-contract position limit, conservative flatten at the end. `backtest/costs.py` reads
+  `config/costs.toml`. Limit/stop orders, `trade_through`/`queue_l1`: R3.2.
+- Null baseline on 2024-03-05 RTH (buy every 10 min, exit after 5 min): 39 trades, −2.95 ticks
+  gross per trade (≈ −1.5 drift on a falling day, −1 spread, rest latency/conservatism), fees
+  $4.51 per round trip exactly. Logged in `research/trials.jsonl` (family `engine-sanity`).

@@ -16,7 +16,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
       or summary to `vault/results/`.
 
 ## Phase 3: backtester (vault/04-backtesting/)
-- [ ] R3.1 L1 event engine skeleton: replay trades/tbbo in file order, strategy callback sees
+- [x] R3.1 (s6: backtest/engine.py + costs.py; null baseline in trials.jsonl) L1 event engine skeleton: replay trades/tbbo in file order, strategy callback sees
       only data with `ts_recv + latency <= now`; market orders fill at the book seen at
       arrival (+ latency); fees from `config/costs.toml`. Tests: no-lookahead (negative
       control), fee arithmetic, one-contract position limits.
