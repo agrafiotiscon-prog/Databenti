@@ -11,3 +11,4 @@
 - 2026-10-03 R4.1: holdout lock (provisional until frozen at first multi-month tier-A pull; enforced in downloads + loads) and walk-forward splitter with embargo; 6 tests. $0.
 - 2026-10-03 R4.2: hypothesis registry (YAML, validated) + hash-chained append-only trial log enforcing declared space and budget; 5 tests incl. tamper detection. $0.
 - 2026-10-03 R4.3: research/stats.py (DSR, PBO-CSCV, plateau, stationary block bootstrap, execution MC, shuffle DD); 7 tests incl. best-of-200-noise negative control. $0.
+- 2026-10-03 R4.4: trial clustering (effective K, medoids, islands) + G1-G11 gate report (missing evidence fails). Phase 4 complete. D-019 budget: buying ~1 year RTH trades; stage 1 (Jul-Sep 2025) running.

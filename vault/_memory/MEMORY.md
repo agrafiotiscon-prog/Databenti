@@ -37,15 +37,15 @@ tags: [memory, state]
   iceberg refill = same-order `M` in the fill's event (mostly 1-lot clips).
   Calibration (D-018): synthetic icebergs ≈ chance → experimental; spoof label is descriptive only.
 - **Hourly research routine** active (D-017, `trig_01SxDd7cr6pA7egPMDYvJNAH`, :15 UTC): it
-  follows `research/ROUTINE.md` and works through `research/QUEUE.md`. Budget ≤ $1/firing,
-  ≤ $3/day, ≤ $25 total; keeps a strategy only if it passes G1–G11.
+  follows `research/ROUTINE.md` and works through `research/QUEUE.md`. Budget per D-019
+  (cap $120 total); keeps a strategy only if it passes G1–G11.
 
 ## Next step
 - The routine continues with `research/QUEUE.md`: Phase 3 done (engine, metrics, hftbacktest adapter; tier-B calibration run R3.5 deferred to
-  Phase 5), then **Phase 4** (R4.1–R4.3 done: holdout, walk-forward, trial log, registry, DSR/PBO/plateau/MC →
-  R4.4 clusters + gate report), Phase 5 (H-001).
-- **Needs the user:** a data budget for real backtests. One year of ES trades ≈ $140 on
-  pay-as-you-go (more than the ~$115 left); Standard plan $199/mo includes 1 year of L1.
+  Phase 5), then **Phase 4** **done** (holdout, walk-forward, trial log, registry, DSR/PBO/plateau/MC, clusters,
+  G1–G11 report), Phase 5 (H-001).
+- **Budget (D-019):** user approved spending the whole $125 credit; hard cap $120 in code. Buying
+  RTH trades 2024-11-01..2025-09-30 (~$103) + ~8 TBBO days (~$6). One year cannot pass G7.
 
 ## Open questions
 - Recheck detector calibration (D-018) on more MBO days (needs the user's OK for MBO)

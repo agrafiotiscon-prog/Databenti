@@ -154,3 +154,7 @@ covered by sections 1–5 and the [pitfalls checklist](../01-databento/pitfalls.
   `block_bootstrap` (stationary, mean block 7 days), `execution_mc` (fees × U[1,1.5], 5–20%
   skipped trades, optional slippage draws), `shuffle_drawdown`. Negative controls in the tests:
   the best of 200 noise strategies has PSR > 0.9 but DSR < 0.5; PBO of pure noise ≈ 0.5.
+- R4.4 `research/clusters.py` (correlation distance, average linkage, k by silhouette → effective
+  K, medoids, island check) and `research/gates.py` (G1–G11 table; **missing evidence = FAIL**;
+  verdict promising / not promising / insufficient data — fewer than 2 years or 200 OOS trades is
+  "insufficient data").

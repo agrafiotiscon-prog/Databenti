@@ -34,12 +34,14 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] R4.2 (s6: research/trials.py hash-chained + budget/space checks; research/registry.py) Append-only trial log `research/trials.jsonl` + hypothesis registry
       `research/hypotheses/*.yaml` (mechanism, space, budget written first).
 - [x] R4.3 (s6: research/stats.py; noise negative controls pass) DSR, PBO (CSCV), plateau test, Monte Carlo (block bootstrap + execution MC).
-- [ ] R4.4 Cluster analysis of trials (effective K, medoids) and the G1–G11 gate report.
+- [x] R4.4 (s6: research/clusters.py + research/gates.py; missing evidence = FAIL) Cluster analysis of trials (effective K, medoids) and the G1–G11 gate report.
 
 ## Phase 5: first hypothesis
 - [ ] R5.1 Registry entry H-001: absorption at a profile level + delta divergence → fade; fixed
       stop/target; declared space and budget.
-- [ ] R5.2 Price the L1 data it needs (trades/tbbo, RTH). Within the routine budget, use what is
+- [ ] R5.2 (D-019) Download RTH trades 2024-11-01..2025-09-30 via `Downloader.fetch_rth` in stages
+      (stage 1 Jul-Sep 2025 started s6) + ~8 TBBO calibration days; cumulative cap $120.
+      Old text: Price the L1 data it needs (trades/tbbo, RTH). Within the routine budget, use what is
       affordable; a meaningful test needs years (see "Needs the user").
 - [ ] R5.3 Run, gate, verdict (promising / not promising / insufficient data).
 
