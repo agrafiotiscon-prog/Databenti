@@ -1,0 +1,30 @@
+id: H-001
+title: Fade absorption at a developing value-area boundary when delta diverges
+mechanism: >
+  At an accepted value boundary (developing VAL/VAH/POC of the session, within level_tol ticks),
+  aggressive sellers (buyers) hit the bid (lift the offer) heavily, but passive liquidity absorbs
+  them - price does not trade through the level - while cumulative delta keeps falling (rising)
+  without a new price low (high). The aggressors are then trapped on the wrong side of a level the
+  market accepts as fair value; their stop-outs and covering move price back into value, which
+  pays the fader. Who pays: late aggressive momentum traders who must exit. Prior is LOW: the
+  evidence review found little peer-reviewed support for footprint absorption or delta divergence
+  (vault/03-order-flow/evidence-review.md).
+direction: fade
+horizon: "1-30 min (bracket exit, 30 min time stop, flat by 14:55 CT)"
+features: [absorption, developing_profile, value_area, bar_delta, delta_divergence]
+fixed:
+  session: RTH 08:30-14:55 CT, ES, 1 contract, max 1 position
+  entry: market order at the absorption event's known_at (+100 ms latency); worse-of-book fills
+  exits: stop and target brackets in ticks from the fill; 30 min time stop; flatten 14:55 CT
+  absorption_window: 30s
+  bars: 1min
+  data: RTH trades (bid/ask rebuilt from aggressor prints, D-019); fills trade_through
+space:
+  min_vol: [150, 300, 500]          # aggressive volume absorbed at the level within 30 s
+  level_tol: [1, 2]                 # ticks from developing VAL/VAH/POC
+  div_lookback: [10, 20]            # 1-min bars for delta divergence
+  stop_ticks: [6, 10]
+  target_ticks: [6, 10, 16]
+trial_budget: 72
+registered: 2026-10-03
+status: open

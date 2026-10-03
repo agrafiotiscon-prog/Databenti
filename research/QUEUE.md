@@ -37,7 +37,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] R4.4 (s6: research/clusters.py + research/gates.py; missing evidence = FAIL) Cluster analysis of trials (effective K, medoids) and the G1–G11 gate report.
 
 ## Phase 5: first hypothesis
-- [ ] R5.1 Registry entry H-001: absorption at a profile level + delta divergence → fade; fixed
+- [x] R5.1 (s6: research/hypotheses/H-001.yaml, 72 variants, committed before any result) Registry entry H-001: absorption at a profile level + delta divergence → fade; fixed
       stop/target; declared space and budget.
 - [ ] R5.2 (D-019) Download RTH trades 2024-11-01..2025-09-30 via `Downloader.fetch_rth` in stages
       (stage 1 Jul-Sep 2025 started s6) + ~8 TBBO calibration days; cumulative cap $120.

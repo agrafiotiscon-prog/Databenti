@@ -12,3 +12,4 @@
 - 2026-10-03 R4.2: hypothesis registry (YAML, validated) + hash-chained append-only trial log enforcing declared space and budget; 5 tests incl. tamper detection. $0.
 - 2026-10-03 R4.3: research/stats.py (DSR, PBO-CSCV, plateau, stationary block bootstrap, execution MC, shuffle DD); 7 tests incl. best-of-200-noise negative control. $0.
 - 2026-10-03 R4.4: trial clustering (effective K, medoids, islands) + G1-G11 gate report (missing evidence fails). Phase 4 complete. D-019 budget: buying ~1 year RTH trades; stage 1 (Jul-Sep 2025) running.
+- 2026-10-03 R5.1: H-001 registered (fade absorption at developing VA boundary + delta divergence; 72-variant space, budget 72) before any result.

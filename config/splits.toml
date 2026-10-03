@@ -3,7 +3,7 @@
 # frozen the first time a multi-month dataset is pulled, and must never move afterwards.
 
 holdout_months = 12
-holdout_start = ""          # frozen ISO date, e.g. "2025-10-01" -- empty until first multi-month pull
+holdout_start = "2025-10-03"          # frozen ISO date, e.g. "2025-10-01" -- empty until first multi-month pull
 unlock_file = "research/HOLDOUT_UNLOCK"   # created only by the user
 
 [walk_forward]
