@@ -240,3 +240,9 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Register H-019 (fade the month-to-date ES move over the last 4 trading days; 2 variants; G12 placebo vs the same fade at non-month-end times).
 - **Why:** R6.3: strongest remaining idea with a stated payer (calendar-driven pension/balanced-fund rebalancing, Harvey, Mazzoleni & Melone 2025) testable on cached hourly bars at $0. ES-only proxy (no bond data) is a known weakness; ~12 events/yr means G1 (>= 200 OOS trades) is unlikely - recorded in advance.
 - **Status:** active.
+
+## D-041 — H-019 run 1 had a data bug; fixed and re-run once (2026-10-03)
+- **Decision:** Keep run 1 logged (2 trials, report kept as h019-report-run1-buggy.md), fix the bug, raise H-019's trial budget 2 -> 4 and re-run exactly once; all 4 trials count in the global N.
+- **Why:** Run 1 used only 63 of 183 month-ends: (a) holiday sessions halted before 15:00 CT were treated as trading days, so any month containing one had no signal; (b) the chained daily returns broke at Databento's post-expiry rank shift (c.0 has no 15:00 close on expiry Friday). The loss was systematic (most quarterly-expiry months and holiday months dropped), not random. The fix only restores the registered definition (same contract's 15:00 closes; trading days = days with a 15:00 close) - no parameter or rule change. Run 1 looked good (7/12 gates, placebo p 0.029, 30 OOS trades), so the re-run is NOT motivated by a bad result; both results are reported. Same issue can drop a few trades per year in earlier bar modules that use prev_date across expiry weekends or holidays (no directional bias expected; noted in QUEUE as a check).
+- **Alternatives:** Report run 1 as is (rejected: it tested a different, data-filtered sample)
+- **Status:** active.

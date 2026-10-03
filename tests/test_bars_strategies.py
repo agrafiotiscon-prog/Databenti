@@ -238,8 +238,19 @@ def test_month_end_fade_windows_signal_and_placebo(monkeypatch):
     for d in days:
         lvl += -10 if d in ends else 2
         rows.append((d, {"p1500": lvl}))
-    P = {"ES.c.0": table(rows), "ES.c.1": table([])}
+    P = {"ES.c.0": table(rows), "ES.c.1": table(rows)}
     t = H19.trades(P, days, {"min_abs_bp": 0}, 0.0, 0.0, 50.0)
     assert len(t) == len(w) and (t["side"] == -1).all() and (t["gross_pnl"] == 40 * 50).all()
     assert H19.trades(P, days, {"min_abs_bp": 1000}, 0.0, 0.0, 50.0).empty
     assert H19.placebo(P, days, {"min_abs_bp": 0}, 0.0, 0.0, 50.0, days, n_draws=500) == 0.0
+
+
+def test_same_contract_px_follows_the_contract_across_databento_rank_shift(monkeypatch):
+    import strategies.bars_common as B
+    monkeypatch.setattr(B, "sym_of", lambda d: "ES.c.0")
+    feb, mar = date(2025, 2, 28), date(2025, 3, 25)               # 2025-03-21 expiry in between
+    P = {"ES.c.0": table([(feb, {"p1500": 6000.0}), (mar, {"p1500": 6100.0})]),
+         "ES.c.1": table([(feb, {"p1500": 6050.0}), (mar, {"p1500": 6150.0})])}
+    assert B.same_contract_px(P, mar, feb, "p1500") == 6050.0        # June contract was rank 1 in Feb
+    assert B.same_contract_px(P, feb, mar, "p1500") is None          # March contract has expired by then
+    assert B.same_contract_px(P, mar, mar, "p1500") == 6100.0

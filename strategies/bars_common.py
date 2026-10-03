@@ -54,3 +54,16 @@ def placebo_p(real: list, pool: list, n_draws: int = 10000, seed: int = 5):
     rng = np.random.default_rng(seed)
     draws = np.array([rng.choice(pool, size=len(real), replace=False).mean() for _ in range(n_draws)])
     return float((draws >= np.mean(real)).mean())
+
+
+def _qi(exp) -> int:
+    return exp.year * 4 + exp.month // 3
+
+
+def same_contract_px(P: dict, ref, d, col: str):
+    """Price on date d of the contract we trade on date ref (sym_of(ref)), read from whichever
+    continuous rank holds that contract on d (Databento's c.0 = nearest expiry on or after d)."""
+    from data.contracts import front_expiry
+    k = _qi(front_expiry(ref)) + int(sym_of(ref)[-1])
+    r = k - _qi(front_expiry(d))
+    return px(P, f"ES.c.{r}", d, col) if r in (0, 1) else None
