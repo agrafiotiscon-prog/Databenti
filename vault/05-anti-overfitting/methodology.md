@@ -149,3 +149,8 @@ covered by sections 1–5 and the [pitfalls checklist](../01-databento/pitfalls.
   tier-A request spanning ≥ 60 days; it never moves afterwards.
 - `research/walkforward.py`: rolling folds from `[walk_forward]` in `config/splits.toml`
   (12 m train → 3 m test, step 3 m, 1 trading-day embargo), development dates only.
+- R4.3 `research/stats.py`: `dsr` (SR0 from the variance of all trial SRs and N), `pbo_cscv`
+  (S blocks, λ = logit of the IS winner's OOS rank, degradation slope), `plateau_test`,
+  `block_bootstrap` (stationary, mean block 7 days), `execution_mc` (fees × U[1,1.5], 5–20%
+  skipped trades, optional slippage draws), `shuffle_drawdown`. Negative controls in the tests:
+  the best of 200 noise strategies has PSR > 0.9 but DSR < 0.5; PBO of pure noise ≈ 0.5.

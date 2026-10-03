@@ -42,7 +42,8 @@ tags: [memory, state]
 
 ## Next step
 - The routine continues with `research/QUEUE.md`: Phase 3 done (engine, metrics, hftbacktest adapter; tier-B calibration run R3.5 deferred to
-  Phase 5), then **Phase 4** (R4.1 holdout + walk-forward, R4.2 trial log + registry done → R4.3 DSR/PBO/MC), Phase 5 (H-001).
+  Phase 5), then **Phase 4** (R4.1–R4.3 done: holdout, walk-forward, trial log, registry, DSR/PBO/plateau/MC →
+  R4.4 clusters + gate report), Phase 5 (H-001).
 - **Needs the user:** a data budget for real backtests. One year of ES trades ≈ $140 on
   pay-as-you-go (more than the ~$115 left); Standard plan $199/mo includes 1 year of L1.
 
