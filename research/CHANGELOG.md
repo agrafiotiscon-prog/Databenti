@@ -29,3 +29,4 @@
 - 2026-10-03 H-015 macro-announcement days: 0/12 gates, t -0.28, placebo p 0.53; closed. 154 trials.
 - 2026-10-03 R6.6 H-016 pre-holiday 0/12 (p 0.54), H-017 OPEX week 5/12 (t 0.83, p 0.43), H-018 Monday reversal 5/12 (t 1.64, p 0.24 vs Tue-Fri); all closed (D-039). 160 trials.
 - 2026-10-03 H-019 month-end rebalancing: run 1 buggy (63/183 months; 7/12, p 0.029), fixed re-run 1/12, t -0.34, p 0.41; closed (D-041/D-042). Registry gains bugfix_reruns. 164 trials.
+- 2026-10-03 R6.7 coverage audit: H-007 122/122 FOMC days; other modules 85-100% for known, non-directional reasons; nothing changes.

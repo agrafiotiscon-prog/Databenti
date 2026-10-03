@@ -60,7 +60,7 @@ tags: [memory, state]
   Lesson: check event coverage first. Total hypothesis trials: 164.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
-  paper trading); next queue item R6.7 coverage audit of H-005..H-018, then R6.3 more ideas.
+  paper trading); coverage audit done (H-007 sample complete, 122/122); next R6.3 more ideas.
 - **Budget (D-019):** whole $125 credit approved; hard cap $120 in code; **spent $118.92** →
   only $1.08 left. No more data purchases without the user. One year cannot pass G7.
 
