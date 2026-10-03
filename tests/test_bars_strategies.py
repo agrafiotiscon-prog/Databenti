@@ -220,3 +220,26 @@ def test_monday_reversal_only_after_friday(monkeypatch):
     gap = {"ES.c.0": table([(date(2025, 2, 6), {"p0900": 6000.0, "p1500": 6060.0}),
                             (mon, {"p0900": 6050.0, "p1500": 6030.0})]), "ES.c.1": table([])}
     assert H18.trades(gap, [date(2025, 2, 6), mon], {"min_abs_bp": 0}, 0.0, 0.0, 50.0).empty   # no Friday session
+
+
+def test_month_end_fade_windows_signal_and_placebo(monkeypatch):
+    import strategies.h019 as H19
+    monkeypatch.setattr(H19, "sym_of", lambda d: "ES.c.0")
+    days = [d.date() for d in pd.bdate_range("2025-01-02", "2025-06-30")]
+    w = H19.month_windows(days)
+    m0, ie, ix = w[0]
+    assert days[m0] == date(2025, 1, 31) and days[ix] == date(2025, 2, 28) and ix - ie == 4
+    bad = H19.turn_days(days)
+    assert days.index(date(2025, 2, 28)) in bad and days.index(date(2025, 3, 3)) in bad
+    assert days.index(date(2025, 3, 4)) in bad and days.index(date(2025, 3, 5)) not in bad
+    # price drifts up during each month, then falls in its last 4 days -> fade (short) wins at every month-end
+    lvl, rows = 6000.0, []
+    ends = {days[i] for _, ie, ix in w for i in range(ie + 1, ix + 1)}
+    for d in days:
+        lvl += -10 if d in ends else 2
+        rows.append((d, {"p1500": lvl}))
+    P = {"ES.c.0": table(rows), "ES.c.1": table([])}
+    t = H19.trades(P, days, {"min_abs_bp": 0}, 0.0, 0.0, 50.0)
+    assert len(t) == len(w) and (t["side"] == -1).all() and (t["gross_pnl"] == 40 * 50).all()
+    assert H19.trades(P, days, {"min_abs_bp": 1000}, 0.0, 0.0, 50.0).empty
+    assert H19.placebo(P, days, {"min_abs_bp": 0}, 0.0, 0.0, 50.0, days, n_draws=500) == 0.0
