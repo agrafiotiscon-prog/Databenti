@@ -26,4 +26,4 @@ How hard is Sharpe 1.0 after costs? [inferred from public indices; assumption-le
 
 Route chosen (D-048): **diversify** - many markets (26 CME futures, 7 sectors) and independent,
 published premia (trend, carry), each weak alone. Portfolio Sharpe grows roughly with the square root
-of the number of independent bets. First test: [H-022](../results/h022-report.md).
+of the number of independent bets. First test: H-022 (report pending: `vault/results/h022-report.md`).
