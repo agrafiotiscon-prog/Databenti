@@ -210,3 +210,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-005 and H-009 fail the placebo (p 0.84 and 0.51): their totals are equity drift. Register H-014 time-series momentum (long/short, 4 variants, D-023 protocol + G12 random-sign-timing placebo) before any result. Global trials after it: 148.
 - **Why:** scripts/placebo_bars.py results; H-014 chosen because it is long/short (immune to pure drift) with a strong published literature and enough round trips over 13 OOS years.
 - **Status:** active.
+
+## D-035 — H-014 closed (not promising) (2026-10-03)
+- **Decision:** Close H-014 time-series momentum.
+- **Why:** Single evaluation: 361 OOS trades, +$47.7k, t = 0.51, 5/13 years positive, lookback choice unstable across folds; all variants positive full-period consistent with long bias in a rising market. Trials: 148.
+- **Status:** active.

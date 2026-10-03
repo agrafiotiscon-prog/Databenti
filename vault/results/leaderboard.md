@@ -5,7 +5,7 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **144** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **148** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 | Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
@@ -14,6 +14,7 @@ passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 | ~~1=~~ | [H-012](h012-report.md) FOMC-cycle even weeks | 15 y hourly | 6/11 | 226 | +$82,006 | 1.23 | **DEMOTED by placebo: 22/30 shifted calendars do as well (p ≈ 0.74) - the profit is equity drift, not a Fed effect**; passes G1 (226 trades); fails G3 (t < 2, DSR), G4/G10 (2-variant space), G6 (2023-24 = +$61k), G11 |
 | ~~2~~ | [H-009](h009-report.md) overnight drift | 15 y hourly | 5/11 | 2,552 | +$68,478 | 1.05 | **placebo: overnight earns exactly its time share of the drift (p = 0.51)** - not promising: negative at 2 ticks/side, PBO 0.63; 9/13 years > 0, all variants > 0 |
 | 3 | [H-010](h010-report.md) daily reversal | 15 y hourly | 5/11 | 1,074 | +$82,956 | 1.38 | not promising: 2020 alone +$75k (concentrated), 6/13 years |
+| 3b | [H-014](h014-report.md) time-series momentum (long/short) | 15 y hourly | 4/12 | 361 | +$47,697 | 0.51 | not promising: 5/13 years, unstable lookback choice |
 | 4 | [H-011](h011-report.md) VWAP-deviation fade | 1 y trades | 3/11 | 256 | +$4,070 | 0.68 | not promising (0/4 variants > 0 full period) |
 | 5 | [H-003](h003-report.md) last-hour momentum | 15 y hourly | 2/11 | 2,095 | +$7,177 | 0.21 | not promising |
 | 6 | [H-004](h004-report.md) follow sweeps | 1 y trades | 2/11 | 202 | −$6,124 | −5.47 | not promising (reliably negative) |

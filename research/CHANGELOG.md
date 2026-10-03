@@ -25,3 +25,4 @@
 - 2026-10-03 H-012 (FOMC cycle even weeks: 226 OOS trades, +$82k, t 1.23, 6/11 - co-leader) and H-013 (intraday periodicity: t -2.14, 0/4) evaluated once. 144 trials.
 - 2026-10-03 (routine 12:15) Placebo tests: H-007 real FOMC days $324/trade vs $50 random (p 0.063); H-012 not exceptional vs shifted calendars (22/30 as good, p 0.74) -> demoted. New gate G12 (D-032).
 - 2026-10-03 G12 placebo: H-005 p 0.84, H-009 p 0.51 (drift); H-014 TSMOM registered.
+- 2026-10-03 H-014 TSMOM evaluated once: not promising (t 0.51, 5/13 years). 148 trials.
