@@ -129,3 +129,19 @@ def test_intraday_periodicity_uses_previous_days_only():
     t = H13.trades(P, days, {"lookback": 10, "min_abs_bp": 0}, 0.0, 0.0, 50.0)
     last = t[t["trading_date"] == days[-1]]
     assert len(last) == 1 and last.iloc[0]["side"] == 1 and last.iloc[0]["gross_pnl"] < 0   # signal from earlier days
+
+
+def test_tsmom_signal_is_lagged_and_rolls_are_charged(monkeypatch):
+    import strategies.h014 as H14
+    days = [d.date() for d in pd.bdate_range("2025-01-02", periods=8)]
+    prices = [100, 101, 102, 103, 102, 101, 100, 99]
+    P = {"ES.c.0": table([(d, {"p0900": float(p), "p1500": float(p)}) for d, p in zip(days, prices)]),
+         "ES.c.1": table([(d, {"p0900": float(p) + 10, "p1500": float(p) + 10}) for d, p in zip(days, prices)])}
+    monkeypatch.setattr(H14, "sym_of", lambda d: "ES.c.0")
+    s = H14.signals(P, days, 2)
+    assert s[:2] == [0, 0] and s[2] == 1 and s[5] == -1             # uses closes up to that day only
+    t = H14.segments(P, days, s, 0.0, 0.0, 1.0)
+    assert list(t["side"]) == [1, -1] and t.iloc[0]["gross_pnl"] == 101 - 103   # long at day 3 open, flat signal on day 4 -> exit day 5 open
+    monkeypatch.setattr(H14, "sym_of", lambda d: "ES.c.1" if d >= days[5] else "ES.c.0")
+    t2 = H14.segments(P, days, [1] * 8, 0.0, 0.0, 1.0)
+    assert len(t2) == 2                                             # roll splits the position (extra round trip)
