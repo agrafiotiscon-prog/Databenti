@@ -14,7 +14,8 @@ is [research-loop](../vault/05-anti-overfitting/research-loop.md); the gates are
 4. Code changes need tests. `python -m pytest` and `python tools/vault.py check` must pass before
    committing. A failing test is never skipped or deleted to get green.
 5. Log: one line in `research/CHANGELOG.md` (date, item, outcome); every backtest variant goes
-   to `research/trials.jsonl` (append-only, failures included, count never reset); results go
+   to `research/trials.jsonl` **only via `research.trials.append()`** (hash-chained, checks the
+   hypothesis's declared space and trial budget; failures included, count never reset); results go
    to `vault/results/`; decisions go through `python tools/vault.py decide`.
 6. Update `QUEUE.md` (tick the item, add follow-ups) and `MEMORY.md` (state + next step), add
    a journal entry, then commit and push to the session branch.

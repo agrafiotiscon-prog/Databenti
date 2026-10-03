@@ -57,3 +57,11 @@ Given the [evidence review](../03-order-flow/evidence-review.md), the most likel
 loop is a well-documented series of "**not promising**" verdicts. That is valuable: it is cheap
 compared with losing money live. If something does pass every gate and then the holdout, it
 deserves paper trading next, not real money.
+
+## Implementation (session 6, routine R4.2)
+- `research/registry.py`: `research/hypotheses/H-xxx.yaml`, validated (mechanism ≥ 40 chars,
+  direction, non-empty declared space, `trial_budget` ≤ space size, status).
+- `research/trials.py`: `append()` is the only way to log a trial. It refuses parameters outside
+  the declared space, a closed hypothesis, or a spent budget, and **hash-chains** every record
+  (`prev_sha`), so `verify()` detects edited or deleted lines. The two session-6 engine-sanity
+  lines predate the chain and are accepted as its prefix.

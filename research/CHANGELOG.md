@@ -9,3 +9,4 @@
 - 2026-10-03 R3.3: backtest/metrics.py (trade stats, daily PnL with zero days, Sharpe/Lo/PSR, drawdown, concentration, breakdowns, markouts, exposure) + 7 hand-computed tests; scipy avoided. $0.
 - 2026-10-03 R3.4: hftbacktest adapter (drops N, vectorised); hftbacktest book == our book on 3,600/3,600 real samples. Phase 3 code complete (R3.5 calibration run deferred). $0.
 - 2026-10-03 R4.1: holdout lock (provisional until frozen at first multi-month tier-A pull; enforced in downloads + loads) and walk-forward splitter with embargo; 6 tests. $0.
+- 2026-10-03 R4.2: hypothesis registry (YAML, validated) + hash-chained append-only trial log enforcing declared space and budget; 5 tests incl. tamper detection. $0.
