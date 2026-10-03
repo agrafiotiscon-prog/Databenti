@@ -11,6 +11,10 @@ Required fields (vault/05-anti-overfitting/research-loop.md):
   trial_budget  max number of trials (<= the size of the space)
   registered    ISO date
   status        open | closed
+Optional:
+  bugfix_reruns list of decision ids (D-xxx), one per re-run forced by a DATA/CODE BUG found after a run;
+                each allows one more evaluation of the whole space (trial_budget may grow by space_size).
+                Earlier trials stay logged and count in every DSR.
 """
 from __future__ import annotations
 
@@ -43,6 +47,7 @@ class Hypothesis:
     trial_budget: int
     registered: date
     status: str
+    bugfix_reruns: tuple[str, ...] = ()
 
     @property
     def space_size(self) -> int:
@@ -71,9 +76,12 @@ def parse(doc: dict) -> Hypothesis:
     h = Hypothesis(str(doc["id"]), str(doc["title"]), str(doc["mechanism"]).strip(), doc["direction"],
                    str(doc["horizon"]), tuple(doc["features"]), space, int(doc["trial_budget"]),
                    doc["registered"] if isinstance(doc["registered"], date) else date.fromisoformat(str(doc["registered"])),
-                   str(doc["status"]))
-    if not 0 < h.trial_budget <= h.space_size:
-        raise RegistryError(f"trial_budget must be in 1..{h.space_size} (size of the declared space)")
+                   str(doc["status"]), tuple(str(x) for x in doc.get("bugfix_reruns") or ()))
+    if not all(x.startswith("D-") for x in h.bugfix_reruns):
+        raise RegistryError("bugfix_reruns must cite decision ids (D-xxx)")
+    cap = h.space_size * (1 + len(h.bugfix_reruns))
+    if not 0 < h.trial_budget <= cap:
+        raise RegistryError(f"trial_budget must be in 1..{cap} (size of the declared space x (1 + bug-fix re-runs))")
     if h.status not in ("open", "closed"):
         raise RegistryError("status must be open | closed")
     return h

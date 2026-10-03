@@ -70,3 +70,13 @@ def test_legacy_unchained_prefix_is_accepted_and_chain_continues(env):
 
 def test_real_trial_log_is_intact():
     assert trials.verify() >= 2
+
+
+def test_bugfix_reruns_widen_the_budget_only_with_a_cited_decision():
+    with pytest.raises(registry.RegistryError):
+        registry.parse({**H, "trial_budget": 12})
+    assert registry.parse({**H, "trial_budget": 12, "bugfix_reruns": ["D-041"]}).trial_budget == 12
+    with pytest.raises(registry.RegistryError):
+        registry.parse({**H, "trial_budget": 13, "bugfix_reruns": ["D-041"]})
+    with pytest.raises(registry.RegistryError):
+        registry.parse({**H, "trial_budget": 12, "bugfix_reruns": ["oops"]})

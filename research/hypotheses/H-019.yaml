@@ -21,5 +21,6 @@ fixed:
 space:
   min_abs_bp: [0, 200]
 trial_budget: 4   # raised from 2 by D-041 (bug-fix re-run; run 1 trials stay logged)
+bugfix_reruns: [D-041]
 registered: 2026-10-03
 status: open
