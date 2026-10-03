@@ -3,8 +3,9 @@ title: Fade absorption at a developing value-area boundary when delta diverges
 mechanism: >
   At an accepted value boundary (developing VAL/VAH/POC of the session, within level_tol ticks),
   aggressive sellers (buyers) hit the bid (lift the offer) heavily, but passive liquidity absorbs
-  them - price does not trade through the level - while cumulative delta keeps falling (rising)
-  without a new price low (high). The aggressors are then trapped on the wrong side of a level the
+  them - price does not trade through the level - and in the preceding 5 minutes a new price low
+  (high) was NOT confirmed by cumulative delta (bullish/bearish divergence as implemented in
+  features.footprint.delta_divergence). The aggressors are then trapped on the wrong side of a level the
   market accepts as fair value; their stop-outs and covering move price back into value, which
   pays the fader. Who pays: late aggressive momentum traders who must exit. Prior is LOW: the
   evidence review found little peer-reviewed support for footprint absorption or delta divergence
@@ -17,6 +18,7 @@ fixed:
   entry: market order at the absorption event's known_at (+100 ms latency); worse-of-book fills
   exits: stop and target brackets in ticks from the fill; 30 min time stop; flatten 14:55 CT
   absorption_window: 30s
+  divergence_recency: any completed 1-min bar with known_at in (t - 5 min, t]
   bars: 1min
   data: RTH trades (bid/ask rebuilt from aggressor prints, D-019); fills trade_through
 space:
@@ -28,3 +30,5 @@ space:
 trial_budget: 72
 registered: 2026-10-03
 status: open
+amendments:
+  - "2026-10-03 (before any result): mechanism text aligned with the implemented divergence definition (new extreme not confirmed by cum delta); divergence recency fixed at 5 min."
