@@ -1,0 +1,22 @@
+id: H-017
+title: Option-expiration week (long from the Friday before OPEX week to the Thursday before expiration)
+mechanism: >
+  Stivers & Sun (2013, "Returns and option activity over the option-expiration week") report
+  abnormally high equity returns during the monthly option-expiration week, consistent with the
+  unwinding of option-dealer hedges and pinning-related flows as open interest decays. Who pays:
+  hedgers rebalancing delta exposure into expiration. Prior: low. Exit Thursday to avoid the
+  expiry-Friday morning settlement and the quarterly contract roll. Long only -> G12 placebo built in.
+direction: follow
+horizon: "4 trading days (Friday close -> Thursday close)"
+features: [calendar, hourly_closes]
+fixed:
+  opex: third Friday of each month (data/contracts.third_friday)
+  window: 15:00 CT close of the Friday one week before OPEX -> 15:00 CT close of the Thursday before OPEX
+  data: ES ohlcv-1h both ranks 2010-06..2025-09; entry day's contract for both prices; D-023 protocol
+  execution: 1 tick adverse per side + fees; long only
+  g12: random 4-trading-day holds not overlapping OPEX weeks, same count, 10,000 draws, OOS dates
+space:
+  months: [all, quarterly]
+trial_budget: 2
+registered: 2026-10-03
+status: open

@@ -1,0 +1,20 @@
+id: H-016
+title: Pre-holiday effect (long into the last trading day before an exchange holiday)
+mechanism: >
+  Ariel (1990, JF) and Kim & Park (1994, JFQA) find abnormally high index returns on the trading day
+  before market holidays, attributed to short covering and investor optimism/cash positioning
+  before the break. Who pays: short sellers and hedgers who close positions before a holiday.
+  Prior: low (old anomaly, few events, likely weakened). Long only -> G12 placebo built in.
+direction: follow
+horizon: "1 day before the holiday"
+features: [exchange_calendar, hourly_closes]
+fixed:
+  holiday: "a weekday with no ES hourly bars at all (08:00-15:00 CT) in either contract series; the schedule is published by the exchange in advance"
+  data: ES ohlcv-1h both ranks 2010-06..2025-09; entry day's contract; D-023 protocol
+  execution: 1 tick adverse per side + fees; long only
+  g12: random non-pre-holiday days, same window and count, 10,000 draws, OOS dates
+space:
+  window: [c2c, rth]     # c2c: 15:00 CT day before -> 15:00 CT; rth: 09:00 -> 15:00 CT on the day
+trial_budget: 2
+registered: 2026-10-03
+status: open

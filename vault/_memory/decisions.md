@@ -225,3 +225,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-015.
 - **Why:** Single evaluation: 165 OOS trades, -$6.1k, t = -0.28, 0/12 gates; G12 placebo p = 0.53 (jobs/CPI days not better than random days). Trials: 154.
 - **Status:** active.
+
+## D-038 — Batch H-016..H-018 registered before any result (2026-10-03)
+- **Decision:** Weaker calendar ideas: H-016 pre-holiday (2), H-017 option-expiration week (2), H-018 Monday reversal (2); D-023 protocol, G12 placebo built in for the long-only H-016/H-017. Global trials after this batch: 160.
+- **Why:** User: continue testing. Remaining published calendar effects testable on cached data at $0; priors low and stated.
+- **Status:** active.

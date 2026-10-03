@@ -1,0 +1,20 @@
+id: H-018
+title: Monday reversal - fade Friday's RTH move during Monday's RTH session
+mechanism: >
+  The weekend effect: Monday returns are low on average (French 1980 JFE) and depend on the
+  preceding Friday (Abraham & Ikenberry 1994 JFQA: Monday returns follow Friday's sign, driven by
+  individual investors' selling). Here we test the reversal form: a large Friday move partly
+  reverses on Monday as weekend-held liquidity demand unwinds. Who pays: investors who traded
+  impatiently into the weekend. Prior: low (mixed evidence; the sign is not settled).
+direction: fade
+horizon: "Monday RTH: 09:00 -> 15:00 CT"
+features: [hourly_closes]
+fixed:
+  signal: previous trading day's (Friday's) 09:00 -> 15:00 CT return, same contract series; only Mondays after a Friday session
+  data: ES ohlcv-1h both ranks 2010-06..2025-09; D-023 protocol
+  execution: 1 tick adverse per side + fees
+space:
+  min_abs_bp: [0, 50]
+trial_budget: 2
+registered: 2026-10-03
+status: open
