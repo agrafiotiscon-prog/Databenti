@@ -1,0 +1,23 @@
+id: H-015
+title: Macro-announcement-day premium (jobs report and CPI days)
+mechanism: >
+  Savor & Wilson (2013, JFQA) show that US equity returns are much higher on days of scheduled
+  macro announcements (employment, inflation, FOMC) than on other days, consistent with a risk
+  premium for bearing announcement risk; Ai & Bansal (2018, Econometrica) give a theory of this
+  announcement premium. Who pays: investors who reduce risk before announcements (hedgers
+  and de-risking funds), selling the premium to those who hold through the news. Prior:
+  moderate. The FOMC part is H-007; this tests the BLS releases (8:30 ET, before the RTH open).
+direction: follow
+horizon: "1 day: previous cash close -> announcement-day cash close (or 08:00 -> 15:00 CT on the day)"
+features: [macro_calendar, hourly_closes]
+fixed:
+  dates: config/macro_dates.csv (BLS employment situation and CPI release dates)
+  data: ES ohlcv-1h both ranks 2010-06..2025-09; contract of the entry day for both prices; D-023 protocol
+  execution: 1 tick adverse per side + fees (stress 2 ticks + fees x1.5); long only
+  g12: "placebo p = share of 10,000 random draws of non-event, non-FOMC days (same window, same count) whose mean net >= the real mean, over the OOS period 2013-06..2025-09"
+space:
+  events: [both, empsit, cpi]
+  window: [c2c, post_release]   # c2c: 15:00 CT day before -> 15:00 CT; post_release: 08:00 -> 15:00 CT on the day
+trial_budget: 6
+registered: 2026-10-03
+status: open

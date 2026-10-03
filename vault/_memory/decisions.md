@@ -215,3 +215,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-014 time-series momentum.
 - **Why:** Single evaluation: 361 OOS trades, +$47.7k, t = 0.51, 5/13 years positive, lookback choice unstable across folds; all variants positive full-period consistent with long bias in a rising market. Trials: 148.
 - **Status:** active.
+
+## D-036 — H-015 macro-announcement premium registered; G12 measured inside the run (2026-10-03)
+- **Decision:** Register H-015 (6 variants, D-023 protocol). The bars runner now computes G12 when a strategy module provides placebo(); H-015's placebo draws random non-event, non-FOMC days with the same window. Release dates: config/macro_dates.csv from bls.gov. Global trials after it: 154.
+- **Why:** Savor & Wilson 2013 / Ai & Bansal 2018 give a published mechanism with ~24 events per year (G1 reachable over 13 OOS years). Long-only, so the placebo is mandatory (lesson of D-032). Note: one fetch to bls.gov carried the user's email in its User-Agent by mistake; not repeated.
+- **Status:** active.
