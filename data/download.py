@@ -28,7 +28,7 @@ from .cost_guard import CostGuard, Request
 from .sessions import session_bounds, utc_days_for_session
 
 LEGACY_SPEND_USD = 10.02          # downloaded before download_log.csv existed (session 5)
-DEFAULT_TOTAL_CAP_USD = 120.0     # D-019: the $125 credit minus a $5 margin
+DEFAULT_TOTAL_CAP_USD = 123.0     # D-019 / D-048: inside the $125 credit (raised from 120 for R7 daily bars)
 
 
 def _day_bounds(day: date) -> tuple[str, str]:

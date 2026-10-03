@@ -1,0 +1,32 @@
+id: H-022
+title: Diversified futures portfolio - time-series trend and carry across 26 CME markets, 15% vol target
+mechanism: >
+  Two of the best-documented futures premia, each with a stated payer. Trend (time-series
+  momentum; Moskowitz, Ooi & Pedersen 2012 JFE; Hurst, Ooi & Pedersen 2017): investors under-react
+  to news and hedgers/central banks trade slowly, then over-react; trend followers are paid for
+  providing liquidity to hedgers and as crisis insurance. Carry (Koijen, Moskowitz, Pedersen &
+  Vrugt 2018 JFE): the futures basis compensates whoever absorbs hedging demand (commodity
+  backwardation, interest differentials in FX, term premium in rates). Diversification across
+  ~26 markets in 7 sectors is what turns weak per-market Sharpe (~0.1-0.3) into a portfolio Sharpe
+  of possibly 0.5-1.0. Prior: moderate for positive, low for the user's target (Sharpe >= 1 net,
+  D-048); published trend returns were much weaker after 2010.
+direction: both
+horizon: "weeks to months (daily rebalance, positions change slowly)"
+features: [daily_closes_v0_v1, contract_months]
+fixed:
+  universe: data/universe.py (26 markets, 7 sectors); volume-ranked continuous v.0 (held) and v.1 (next), ohlcv-1d 2010-06-07..2025-09-30
+  returns: per-instrument close-to-close (instrument_id kept per bar; a roll day uses the new instrument's previous close from v.1)
+  trend: sign of the held contract chain's return over the lookback (126 or 252 trading days)
+  carry: sign of log(P_v0 / P_v1) / (years between their expiries from the raw symbols); positive -> long
+  combo: (trend252 + carry) / 2 in {-1, -0.5, 0, 0.5, 1}
+  sizing: per market, target contracts = signal * (capital * 0.15 / sqrt(N_active)) / (sigma_ann * point_value * price); sigma = EWMA(60) of daily returns known at t; portfolio then scaled by 15% / trailing 252-day realised vol of the unscaled book (lagged one day, capped at 2.5x); integer contracts
+  execution: target from day t's close traded at day t+1's close (one full day lag); rolls close the old and open the new instrument at that day's close
+  costs: per contract per side 1 tick + $2.26 fees (stress = 2 ticks + fees x1.5); capital $1,000,000 for gates; $100,000 integer-contract run reported as a realism check (not a gate)
+  protocol: walk-forward 36/12/12 months, variant chosen on train net p5 (D-023); G1 counts contract trades; G3 uses the OOS DAILY t-stat (per-trade t is meaningless for a portfolio)
+  g12: each market's signal circularly shifted by an independent random offset (>= 63 days), 300 draws; OOS net vs shifted OOS net
+  target_metric: annualised OOS net return and Sharpe; user target (D-048) = Sharpe >= 1.0, i.e. ~15%/yr at 15% vol
+space:
+  variant: [trend126, trend252, carry, combo]
+trial_budget: 4
+registered: 2026-10-03
+status: open

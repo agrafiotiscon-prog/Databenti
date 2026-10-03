@@ -276,3 +276,9 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Keep trade_through as the engine's default limit-fill model; queue_l1 only as a sensitivity check; G8 unchanged.
 - **Why:** 77 passive probes on 2024-03-05: maker fills trade_through 49 vs L3 FIFO (hftbacktest, full MBO) 52 vs queue_l1 55; trade_through has the most adverse 60 s markout (median -1.5 ticks) - conservative, close in count to the reference. queue_l1 is mildly optimistic. One day only.
 - **Status:** active.
+
+## D-048 — User target 15%/yr -> Sharpe >= ~1 at a 15% vol target; diversified futures daily data bought (2026-10-03)
+- **Decision:** Translate the user's '15% annually' into: annualised net return at a 15% volatility target, i.e. OOS Sharpe >= ~1.0 after costs, and report it for every candidate. Start Phase R7: a diversified CME futures portfolio (26 markets, daily bars, volume-ranked continuous v.0/v.1, 2010-06..2025-09, ~$2.45). Raise the code cap from $120 to $123 (still inside the user's $125 credit, D-019).
+- **Why:** User (session 6): '11% over 12 years is really bad, it should be like 15% annually; do robust research and engineering'. Return scales with leverage, so the honest target is risk-adjusted: 15%/yr at 15% vol = Sharpe 1.0 net - top-decile for systematic funds (SG Trend index 2010-2024 roughly Sharpe 0.3-0.5). Single-market ES calendar effects are idle ~97% of the time and cannot reach it without dangerous leverage. The best-documented route to Sharpe ~0.7-1 is diversification across many markets and independent signals (time-series momentum, carry; Moskowitz-Ooi-Pedersen 2012, Koijen et al. 2018, Hurst-Ooi-Pedersen 2017). Daily bars for 26 markets cost ~$2.45 (< $5 guard; total stays < $125 the user approved).
+- **Alternatives:** Lever H-007 up (rejected: 8 trades/yr, tail risk, not confirmed); keep mining ES on the same data (rejected: 170 trials already, DSR penalty grows)
+- **Status:** active.
