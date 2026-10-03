@@ -145,3 +145,21 @@ def test_tsmom_signal_is_lagged_and_rolls_are_charged(monkeypatch):
     monkeypatch.setattr(H14, "sym_of", lambda d: "ES.c.1" if d >= days[5] else "ES.c.0")
     t2 = H14.segments(P, days, [1] * 8, 0.0, 0.0, 1.0)
     assert len(t2) == 2                                             # roll splits the position (extra round trip)
+
+
+def test_macro_days_and_placebo(monkeypatch):
+    import strategies.h015 as H15
+    days = [d.date() for d in pd.bdate_range("2025-01-02", periods=40)]
+    ev = {days[5], days[15], days[25]}
+    monkeypatch.setattr(H15, "macro_dates", lambda kind: ev)
+    monkeypatch.setattr(H15, "fomc_dates", lambda: [])
+    # event days rise 10 points, other days are flat -> placebo p must be ~0
+    rows = []
+    for i, d in enumerate(days):
+        base = 6000.0 + 10 * sum(1 for e in ev if e <= d)
+        rows.append((d, {"p0800": base - (10 if d in ev else 0), "p1500": base}))
+    P = {"ES.c.0": table(rows), "ES.c.1": table([])}
+    monkeypatch.setattr(H15, "sym_of", lambda d: "ES.c.0")
+    t = H15.trades(P, days, {"events": "both", "window": "c2c"}, 0.0, 0.0, 50.0)
+    assert len(t) == 3 and (t["gross_pnl"] == 500.0).all()
+    assert H15.placebo(P, days, {"events": "both", "window": "c2c"}, 0.0, 0.0, 50.0, days, n_draws=500) == 0.0

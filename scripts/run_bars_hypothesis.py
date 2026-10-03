@@ -109,6 +109,9 @@ def main(argv=None) -> int:
         "cluster_share_profitable": float(q.loc[fc, "share_profitable"]), "island": not bool(q.loc[fc, "credible"]),
         "dsr_k": stats.dsr(oos_daily, [srs[m] for m in cl["medoids"].values()], n_trials=max(cl["k"], 1)),
     }
+    if hasattr(mod, "placebo"):                         # G12 (D-032), measured on the final variant over the OOS dates
+        evidence["placebo_p"] = mod.placebo(P, dates, grid[fi], 1.0, c.fee(1) * 2, c.point_value,
+                                            [d for f in folds for d in f.test])
     table = gates.evaluate(evidence)
     verdict = gates.verdict(table, evidence)
     dd = ROOT / "research" / "daily" / a.hyp
