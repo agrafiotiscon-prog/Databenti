@@ -49,7 +49,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] R6.1 (s6: H-002 intraday momentum + order-flow filter, 16 variants, D-022) Pick the next hypothesis from vault/03-order-flow/evidence-review.md with the strongest
       published support (not footprint folklore); write its registry entry and protocol BEFORE
       running anything. Count H-001's 72 trials in the family/global trial tally.
-- [ ] R6.2 Generic runner: refactor scripts/run_h001.py into scripts/run_hypothesis.py so new
+- [x] R6.2 (s6: scripts/run_hypothesis.py) Generic runner: refactor scripts/run_h001.py into scripts/run_hypothesis.py so new
       hypotheses only add a strategy module.
 
 ## Later: new hypotheses (one at a time, mechanism first; see vault/03-order-flow/evidence-review.md)

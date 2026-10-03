@@ -16,3 +16,4 @@
 - 2026-10-03 Phase 5 prep: D-020 protocol fixed before results; strategies/h001.py; fast bracket simulator (engine-equivalent); scripts/run_h001.py (single evaluation, all-or-nothing trial logging); dry run on out-of-window days OK (no PnL viewed).
 - 2026-10-03 R5.3: H-001 single evaluation: all gates fail; 70/72 variants lose after costs (median -1.25 ticks/trade); NOT PROMISING; closed (D-021). Total data spend $117.15.
 - 2026-10-03 R6.1: H-002 registered (intraday momentum into the close, Gao et al. 2018 / Baltussen et al. 2021; optional cum-delta filter; 16 variants); protocol D-022 fixed before any result.
+- 2026-10-03 R6.2: generic runner scripts/run_hypothesis.py (strategy module interface, state across days, global-N DSR); strategies/h002.py + causality tests; dry run OK (no PnL viewed).
