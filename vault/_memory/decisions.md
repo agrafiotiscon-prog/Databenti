@@ -190,3 +190,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-009 (overnight drift, 5/11), H-010 (daily reversal, 5/11), H-011 (VWAP fade, 3/11).
 - **Why:** Single evaluations. H-009: 2,552 OOS trades, +$68.5k, t = 1.05, 9/13 years, negative at 2 ticks/side, PBO 0.63. H-010: 1,074 trades, +$83.0k, t = 1.38, 2020 alone +$75k, 6/13 years. H-011: 256 trades, t = 0.68, 0/4 variants positive. Hypothesis trials: 138.
 - **Status:** active.
+
+## D-031 — Batch H-012..H-013 registered before any result (2026-10-03)
+- **Decision:** H-012 FOMC-cycle even weeks (2 variants) and H-013 intraday periodicity (4 variants), both on 15 y hourly bars with the D-023 protocol. Global hypothesis trials after this batch: 144.
+- **Why:** Published mechanisms (Cieslak, Morse & Vissing-Jorgensen 2019; Heston, Korajczyk & Sadka 2010) with many trades -> statistical power on cached data at $0.
+- **Status:** active.

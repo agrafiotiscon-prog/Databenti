@@ -1,0 +1,23 @@
+id: H-012
+title: FOMC-cycle even weeks - long only in even weeks of the FOMC cycle
+mechanism: >
+  Cieslak, Morse & Vissing-Jorgensen (2019, JF 74) show that since 1994 the US equity premium is
+  earned almost entirely in even weeks (weeks 0, 2, 4, 6) of the FOMC cycle, counted from the
+  meeting day, and link it to the Fed's biweekly board meetings and informal communication that
+  resolves uncertainty in a regular rhythm. Who pays: investors who hedge or de-risk ahead of Fed
+  information flow. Prior: moderate (peer reviewed; most of our 2013-2025 OOS is post-publication
+  or overlaps only partly).
+direction: follow
+horizon: "days: long from the cash close before an in-cycle day to the cash close of the last consecutive in-cycle day"
+features: [fomc_calendar, daily_closes]
+fixed:
+  dates: config/fomc_dates.csv (scheduled statements)
+  cycle: "day 0 = statement day; trading day k after the last statement; week w = floor((k + 1) / 5), so day -1 (the trading day before the next statement) starts week 0"
+  position: long over day d (close d-1 -> close d) if d is in an included week; consecutive included days are held as ONE trade (one round trip cost)
+  data: ES ohlcv-1h both ranks (cash close = 15:00 CT bar close); contract of the trade's first day for both prices; D-023 protocol
+  execution: 1 tick adverse per side + fees (stress 2 ticks + fees x1.5)
+space:
+  weeks: [even, w0_w2]          # even: 0,2,4,6 ; w0_w2: 0 and 2 only
+trial_budget: 2
+registered: 2026-10-03
+status: open

@@ -1,0 +1,23 @@
+id: H-013
+title: Intraday periodicity - trade each RTH hour in the direction of its recent average
+mechanism: >
+  Heston, Korajczyk & Sadka (2010, JF 65) find return continuation at exactly daily intervals:
+  an asset's return in a given half-hour predicts its return in the same half-hour on following
+  days, consistent with institutions executing at the same time of day (periodic order flow).
+  Who pays: counterparties of predictable, time-of-day institutional flows. Prior: low-moderate
+  (documented for stocks; for the index future, costs of ~2.36 ticks per hourly round trip are
+  large relative to hourly predictability).
+direction: follow
+horizon: "1 hour, at most one position at a time (hours 09:00-10:00 ... 14:00-15:00 CT)"
+features: [hourly_returns]
+fixed:
+  signal: "for hour h on day d: mean of the same hour's return over the previous lookback trading days (same contract series; days with missing bars skipped); trade its sign"
+  entry_exit: enter at the close of the bar ending at h, exit at the close of the next bar (1 hour); hours 09:00 to 14:00 CT starts
+  data: ES ohlcv-1h both ranks 2010-06..2025-09; contract of day d; D-023 protocol
+  execution: 1 tick adverse per side + fees (stress 2 ticks + fees x1.5)
+space:
+  lookback: [10, 40]
+  min_abs_bp: [0, 5]            # trade only if |mean hourly return| >= this
+trial_budget: 4
+registered: 2026-10-03
+status: open
