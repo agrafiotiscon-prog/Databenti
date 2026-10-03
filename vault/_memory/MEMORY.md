@@ -22,11 +22,11 @@ tags: [memory, state]
   provisional lock from today − 12 months is enforced by `data/holdout.py`). Broker **not chosen**
   → IBKR fees as the default profile (`config/costs.toml`).
 
-## Current state (2026-10-02, session 5)
+## Current state (2026-10-03, session 6)
 - Phases 0–2 done. **Phase 2 features validated on the first real day** (2024-03-05, ES), incl.
   a visual check ([day-check](../results/day-check-2024-03-05-rth.md)).
-- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **$10.06** so
-  far ($10.02 before `cache/download_log.csv` existed + $0.04 logged there; `spend_log.csv`
+- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **$33.30**
+  (after stage 1); earlier ($10.02 before `cache/download_log.csv` existed + $0.04 logged there; `spend_log.csv`
   also logs dry runs, so never sum it). Cached
   locally (not in git): 2024-03-05 trades/tbbo/mbo/status, trades for the 2024-03 roll window
   (c.0 + c.1), ES daily bars 2019–2025-09.
@@ -41,9 +41,11 @@ tags: [memory, state]
   (cap $120 total); keeps a strategy only if it passes G1–G11.
 
 ## Next step
-- The routine continues with `research/QUEUE.md`: Phase 3 done (engine, metrics, hftbacktest adapter; tier-B calibration run R3.5 deferred to
-  Phase 5), then **Phase 4** **done** (holdout, walk-forward, trial log, registry, DSR/PBO/plateau/MC, clusters,
-  G1–G11 report), Phase 5 (H-001).
+- Phases 3–4 done. **Phase 5:** H-001 registered (72 variants), protocol fixed (D-020),
+  `strategies/h001.py` + `scripts/run_h001.py` ready. Data: stage 1 RTH trades Jul–Sep 2025
+  cached (holdout frozen at **2025-10-03**); **stage 2 Nov 2024–Jun 2025 downloading** (≈$76;
+  a routine firing must not start another download while it runs). When complete: run
+  `python scripts/run_h001.py` ONCE (it refuses a second run), report → `vault/results/h001-report.md`.
 - **Budget (D-019):** user approved spending the whole $125 credit; hard cap $120 in code. Buying
   RTH trades 2024-11-01..2025-09-30 (~$103) + ~8 TBBO days (~$6). One year cannot pass G7.
 
