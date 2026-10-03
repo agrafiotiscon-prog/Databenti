@@ -1,0 +1,27 @@
+id: H-021
+title: Buy ES after a sharp 3-day decline (liquidity provision to mechanical de-risking), fixed hold
+mechanism: >
+  Since ~2000 daily US index returns are negatively autocorrelated at short horizons, and large
+  declines are followed by partial rebounds. Proposed payers: mechanical sellers that de-risk
+  after losses or volatility spikes regardless of price - volatility-targeting and risk-parity
+  funds, CTA trend signals flipping, margin-driven deleveraging, and short-gamma dealer hedging -
+  who demand immediacy and pay a liquidity premium to whoever absorbs the flow (Nagel 2012 RFS:
+  returns to liquidity provision rise with volatility; Baltussen et al. 2021 JFE on hedging flows).
+  Long only, so G12 (random entry days) must reject plain drift. Prior: moderate.
+direction: fade
+horizon: "3-5 trading days"
+features: [daily_closes]
+fixed:
+  signal: z = (3-day same-contract return to day i's 15:00 CT close) / (sigma_63 * sqrt(3)), sigma_63 = std of the previous 63 daily same-contract returns ending at day i-3 (no overlap with the signal window)
+  entry: long at day i+1's 09:00 CT price if z <= -z_min; no new entry while a position is open
+  exit: 09:00 CT price hold trading days after entry, same contract (bars_common.same_contract_px); skipped if unavailable
+  data: ES ohlcv-1h both ranks 2010-06..2025-09; D-023 protocol; trading days = days with a 15:00 close
+  execution: 1 tick adverse per side + fees
+  g12: random OOS entry days (not signal days), same hold and count, 10,000 draws
+  coverage: report signal count per year before any PnL (D-042)
+space:
+  z_min: [1.5, 2.0]
+  hold: [3, 5]
+trial_budget: 4
+registered: 2026-10-03
+status: open

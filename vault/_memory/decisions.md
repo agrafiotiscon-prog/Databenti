@@ -261,3 +261,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-020; not promoted.
 - **Why:** One evaluation: OOS 79 trades, +$182k, stress +$180k, PBO 0.001, 9/13 years > 0, cluster-K DSR 1.0, but G12 placebo p 0.118 (circular shifts of the regime with the same long share earn nearly as much), G1 79 < 200, G3 raw-N DSR 0.56 (per-trade t 3.89 is inflated by month-long holds). Coverage 3,815/3,815 daily returns (D-042 check). 166 hypothesis trials.
 - **Status:** active.
+
+## D-045 — H-021 buy-the-selloff registered before any result (2026-10-03)
+- **Decision:** Register H-021 (long ES at next 09:00 after a 3-day decline of z <= -1.5/-2.0 sigmas; hold 3/5 days; 4 variants; G12 random entry days).
+- **Why:** R6.3: a liquidity-provision mechanism with a named payer (mechanical de-risking flows), different from the closed calendar family and from H-010 (1-day, every day). Testable at $0 on cached hourly bars; ~20-40 signals/yr gives a chance at G1.
+- **Status:** active.
