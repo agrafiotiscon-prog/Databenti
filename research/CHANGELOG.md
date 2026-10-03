@@ -14,3 +14,4 @@
 - 2026-10-03 R4.4: trial clustering (effective K, medoids, islands) + G1-G11 gate report (missing evidence fails). Phase 4 complete. D-019 budget: buying ~1 year RTH trades; stage 1 (Jul-Sep 2025) running.
 - 2026-10-03 R5.1: H-001 registered (fade absorption at developing VA boundary + delta divergence; 72-variant space, budget 72) before any result.
 - 2026-10-03 Phase 5 prep: D-020 protocol fixed before results; strategies/h001.py; fast bracket simulator (engine-equivalent); scripts/run_h001.py (single evaluation, all-or-nothing trial logging); dry run on out-of-window days OK (no PnL viewed).
+- 2026-10-03 R5.3: H-001 single evaluation: all gates fail; 70/72 variants lose after costs (median -1.25 ticks/trade); NOT PROMISING; closed (D-021). Total data spend $117.15.

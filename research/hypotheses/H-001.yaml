@@ -29,6 +29,6 @@ space:
   target_ticks: [6, 10, 16]
 trial_budget: 72
 registered: 2026-10-03
-status: open
+status: closed
 amendments:
   - "2026-10-03 (before any result): mechanism text aligned with the implemented divergence definition (new extreme not confirmed by cum delta); divergence recency fixed at 5 min."

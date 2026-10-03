@@ -139,3 +139,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Why:** The default 12/3/3 walk-forward needs >= 15 months; only ~11 months are affordable. 6/1/1 gives ~5 OOS months with monthly re-selection. Selection on the MC 5th percentile follows methodology 6b (robust objective, not the mean). S = 8 because 16 blocks of ~14 days would be too short for stable per-block Sharpe. Fixing all of this now, before the first H-001 number exists, removes the freedom to choose a favourable protocol afterwards.
 - **Alternatives:** Single train/test split (one OOS window, less evidence); 12/3/3 (no folds); selecting on mean IS PnL (luck-prone).
 - **Status:** active.
+
+## D-021 — H-001 closed: not promising (2026-10-03)
+- **Decision:** Close H-001 (status: closed). Its 72 logged trials remain in research/trials.jsonl and count in future DSR deflation.
+- **Why:** Single evaluation per D-020 on 238 RTH days (2024-11-01..2025-09-30): all gates fail; 70 of 72 variants lose after costs (median -1.25 ticks/trade); the 2 positive variants are low-trade noise; PBO 0.16, DSR 0.001 (N=72) / 0.01 (K=18). Gate code reports 'insufficient data' (OOS trades 14 < 200) but the family-wide loss makes the substantive verdict 'not promising'. Report: vault/results/h001-report.md.
+- **Status:** active.

@@ -39,16 +39,24 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 ## Phase 5: first hypothesis
 - [x] R5.1 (s6: research/hypotheses/H-001.yaml, 72 variants, committed before any result) Registry entry H-001: absorption at a profile level + delta divergence → fade; fixed
       stop/target; declared space and budget.
-- [ ] R5.2 (D-019) Download RTH trades 2024-11-01..2025-09-30 via `Downloader.fetch_rth` in stages
+- [x] R5.2 (s6: 238 RTH days cached, total spend $117.15; TBBO calibration days not bought - $2.85 left under the cap) Download RTH trades 2024-11-01..2025-09-30 via `Downloader.fetch_rth` in stages
       (stage 1 Jul-Sep 2025 started s6) + ~8 TBBO calibration days; cumulative cap $120.
       Old text: Price the L1 data it needs (trades/tbbo, RTH). Within the routine budget, use what is
       affordable; a meaningful test needs years (see "Needs the user").
-- [ ] R5.3 (runner ready: scripts/run_h001.py per D-020; run ONCE when stage downloads finish) Run, gate, verdict (promising / not promising / insufficient data).
+- [x] R5.3 (s6: NOT PROMISING - 70/72 variants lose, median -1.25 ticks/trade; H-001 closed, D-021) (runner ready: scripts/run_h001.py per D-020; run ONCE when stage downloads finish) Run, gate, verdict (promising / not promising / insufficient data).
+
+## Next hypotheses ($0: reuse the 238 cached RTH days; one at a time, mechanism first)
+- [ ] R6.1 Pick the next hypothesis from vault/03-order-flow/evidence-review.md with the strongest
+      published support (not footprint folklore); write its registry entry and protocol BEFORE
+      running anything. Count H-001's 72 trials in the family/global trial tally.
+- [ ] R6.2 Generic runner: refactor scripts/run_h001.py into scripts/run_hypothesis.py so new
+      hypotheses only add a strategy module.
 
 ## Later: new hypotheses (one at a time, mechanism first; see vault/03-order-flow/evidence-review.md)
 
 ## Needs the user
-- **Data budget for real backtests.** ES trades cost about $0.55 per full UTC day (tbbo ≈ $0.92):
+- (resolved by D-019: credit spent on 1 year of RTH trades; $117.15 of $120 cap used)
+- **Old: Data budget for real backtests.** ES trades cost about $0.55 per full UTC day (tbbo ≈ $0.92):
   one year of trades ≈ $140, more than the remaining pay-as-you-go credit (~$112 after
   session 5). G1 needs ≥ 200 OOS trades and G7 needs several years. Options: Standard plan
   ($199/mo, 1 year of L1 included), a larger pay-as-you-go budget, or accept "insufficient data"

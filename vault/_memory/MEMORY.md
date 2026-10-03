@@ -25,8 +25,8 @@ tags: [memory, state]
 ## Current state (2026-10-03, session 6)
 - Phases 0–2 done. **Phase 2 features validated on the first real day** (2024-03-05, ES), incl.
   a visual check ([day-check](../results/day-check-2024-03-05-rth.md)).
-- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **$33.30**
-  (after stage 1); earlier ($10.02 before `cache/download_log.csv` existed + $0.04 logged there; `spend_log.csv`
+- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **$117.15**
+  in total; earlier ($10.02 before `cache/download_log.csv` existed + $0.04 logged there; `spend_log.csv`
   also logs dry runs, so never sum it). Cached
   locally (not in git): 2024-03-05 trades/tbbo/mbo/status, trades for the 2024-03 roll window
   (c.0 + c.1), ES daily bars 2019–2025-09.
@@ -41,13 +41,12 @@ tags: [memory, state]
   (cap $120 total); keeps a strategy only if it passes G1–G11.
 
 ## Next step
-- Phases 3–4 done. **Phase 5:** H-001 registered (72 variants), protocol fixed (D-020),
-  `strategies/h001.py` + `scripts/run_h001.py` ready. Data: stage 1 RTH trades Jul–Sep 2025
-  cached (holdout frozen at **2025-10-03**); **stage 2 Nov 2024–Jun 2025 downloading** (≈$76;
-  a routine firing must not start another download while it runs). When complete: run
-  `python scripts/run_h001.py` ONCE (it refuses a second run), report → `vault/results/h001-report.md`.
-- **Budget (D-019):** user approved spending the whole $125 credit; hard cap $120 in code. Buying
-  RTH trades 2024-11-01..2025-09-30 (~$103) + ~8 TBBO days (~$6). One year cannot pass G7.
+- Phases 3–5 done. **H-001 evaluated once (D-020) → NOT PROMISING, closed (D-021)**: 70/72
+  variants lose after costs, median −1.25 ticks/trade → [h001-report](../results/h001-report.md).
+- Data cached: **238 RTH trade days 2024-11-01..2025-09-30** (holdout frozen at 2025-10-03).
+  Next: R6.1 next hypothesis (best-evidenced, mechanism first) on the cached data at $0.
+- **Budget (D-019):** whole $125 credit approved; hard cap $120 in code; **spent $117.15** →
+  only $2.85 left. No more data purchases without the user. One year cannot pass G7.
 
 ## Open questions
 - Recheck detector calibration (D-018) on more MBO days (needs the user's OK for MBO)
