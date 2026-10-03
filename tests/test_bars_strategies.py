@@ -100,3 +100,32 @@ def test_h011_vwap_signal_is_causal():
     ev = H11.prepare_day(tr, d, {})
     assert ev["z"].iloc[:-1].abs().max() < 2                 # nothing extreme before the spike
     assert ev["z"].iloc[-1] > 3 and ev["known_at"].iloc[-1] > pd.Timestamp(idx[-1]).value
+
+
+def test_fomc_cycle_weeks_and_holding_periods(monkeypatch):
+    import strategies.h012 as H12
+    days = [d.date() for d in pd.bdate_range("2025-01-02", "2025-02-28")]
+    monkeypatch.setattr(H12, "fomc_dates", lambda: [date(2025, 1, 29)])
+    wk = H12.cycle_weeks(days)
+    assert wk[date(2025, 1, 28)] == 0                                  # day -1 before the statement
+    assert wk[date(2025, 1, 27)] is None                               # before any statement in the data
+    assert wk[date(2025, 1, 29)] == 0                                  # statement day
+    k = {d: i for i, d in enumerate(days)}
+    i0 = k[date(2025, 1, 29)]
+    assert wk[days[i0 + 3]] == 0 and wk[days[i0 + 4]] == 1 and wk[days[i0 + 9]] == 2
+    P = {"ES.c.0": table([(d, {"p1500": 6000.0 + i}) for i, d in enumerate(days)]), "ES.c.1": table([])}
+    t = H12.trades(P, days, {"weeks": "w0_w2"}, 0.0, 0.0, 50.0)
+    assert (t["gross_pnl"] > 0).all() and len(t) >= 2                 # week 0 and week 2 blocks, one trade each
+
+
+def test_intraday_periodicity_uses_previous_days_only():
+    import strategies.h013 as H13
+    days = [d.date() for d in pd.bdate_range("2025-01-02", periods=15)]
+    rows = []
+    for i, d in enumerate(days):
+        up = 1.0 if i < 14 else -50.0                      # last day: big DOWN move in hour 09:00-10:00
+        rows.append((d, {"p0900": 6000.0, "p1000": 6000.0 + up}))
+    P = {"ES.c.0": table(rows), "ES.c.1": table([])}
+    t = H13.trades(P, days, {"lookback": 10, "min_abs_bp": 0}, 0.0, 0.0, 50.0)
+    last = t[t["trading_date"] == days[-1]]
+    assert len(last) == 1 and last.iloc[0]["side"] == 1 and last.iloc[0]["gross_pnl"] < 0   # signal from earlier days
