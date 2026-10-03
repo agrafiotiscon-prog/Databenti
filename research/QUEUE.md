@@ -63,6 +63,10 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] Placebo tests (s6 routine 12:15, D-032): H-012 demoted (p 0.74, equity drift); H-007 p = 0.063; new gate G12.
 - [x] R6.5 (s6): H-005 p 0.84, H-009 p 0.51 -> equity drift.
 - [x] H-014 (s6): time-series momentum: not promising (t 0.51, 5/13 years).
+- [x] H-015 (s6): macro-announcement days: 0/12 gates, placebo p 0.53; closed.
+- [ ] R6.6 Remaining weaker calendar ideas (each long-only -> G12 placebo built in): pre-holiday
+      (Ariel 1990), option-expiration week (Stivers & Sun 2013), Monday/weekend reversal. Low priors;
+      several cannot reach 200 OOS trades. Register before running; keep spaces tiny.
 - [ ] R6.4 H-007 confirmation: needs the USER (holdout unlock or paper trading). Do not re-test on development data.
 - [ ] R6.3 Next idea: needs either cached data ($0: 238 RTH trade days 2024-11..2025-09, 15 y of hourly
       bars) or the user's OK for more spend ($1.08 left under the cap). Candidates must have a stated

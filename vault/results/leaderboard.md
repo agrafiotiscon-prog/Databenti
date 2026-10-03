@@ -5,7 +5,7 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **148** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **154** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 | Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
@@ -15,6 +15,7 @@ passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 | ~~2~~ | [H-009](h009-report.md) overnight drift | 15 y hourly | 5/11 | 2,552 | +$68,478 | 1.05 | **placebo: overnight earns exactly its time share of the drift (p = 0.51)** - not promising: negative at 2 ticks/side, PBO 0.63; 9/13 years > 0, all variants > 0 |
 | 3 | [H-010](h010-report.md) daily reversal | 15 y hourly | 5/11 | 1,074 | +$82,956 | 1.38 | not promising: 2020 alone +$75k (concentrated), 6/13 years |
 | 3b | [H-014](h014-report.md) time-series momentum (long/short) | 15 y hourly | 4/12 | 361 | +$47,697 | 0.51 | not promising: 5/13 years, unstable lookback choice |
+| 4b | [H-015](h015-report.md) macro-announcement days (jobs, CPI) | 15 y hourly | 0/12 | 165 | −$6,057 | −0.28 | not promising; placebo p = 0.53 (no premium vs random days) |
 | 4 | [H-011](h011-report.md) VWAP-deviation fade | 1 y trades | 3/11 | 256 | +$4,070 | 0.68 | not promising (0/4 variants > 0 full period) |
 | 5 | [H-003](h003-report.md) last-hour momentum | 15 y hourly | 2/11 | 2,095 | +$7,177 | 0.21 | not promising |
 | 6 | [H-004](h004-report.md) follow sweeps | 1 y trades | 2/11 | 202 | −$6,124 | −5.47 | not promising (reliably negative) |

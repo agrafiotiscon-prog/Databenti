@@ -26,3 +26,4 @@
 - 2026-10-03 (routine 12:15) Placebo tests: H-007 real FOMC days $324/trade vs $50 random (p 0.063); H-012 not exceptional vs shifted calendars (22/30 as good, p 0.74) -> demoted. New gate G12 (D-032).
 - 2026-10-03 G12 placebo: H-005 p 0.84, H-009 p 0.51 (drift); H-014 TSMOM registered.
 - 2026-10-03 H-014 TSMOM evaluated once: not promising (t 0.51, 5/13 years). 148 trials.
+- 2026-10-03 H-015 macro-announcement days: 0/12 gates, t -0.28, placebo p 0.53; closed. 154 trials.

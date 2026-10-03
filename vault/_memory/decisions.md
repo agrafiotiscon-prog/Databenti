@@ -220,3 +220,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Register H-015 (6 variants, D-023 protocol). The bars runner now computes G12 when a strategy module provides placebo(); H-015's placebo draws random non-event, non-FOMC days with the same window. Release dates: config/macro_dates.csv from bls.gov. Global trials after it: 154.
 - **Why:** Savor & Wilson 2013 / Ai & Bansal 2018 give a published mechanism with ~24 events per year (G1 reachable over 13 OOS years). Long-only, so the placebo is mandatory (lesson of D-032). Note: one fetch to bls.gov carried the user's email in its User-Agent by mistake; not repeated.
 - **Status:** active.
+
+## D-037 — H-015 closed (no announcement premium) (2026-10-03)
+- **Decision:** Close H-015.
+- **Why:** Single evaluation: 165 OOS trades, -$6.1k, t = -0.28, 0/12 gates; G12 placebo p = 0.53 (jobs/CPI days not better than random days). Trials: 154.
+- **Status:** active.

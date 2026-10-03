@@ -20,4 +20,4 @@ space:
   window: [c2c, post_release]   # c2c: 15:00 CT day before -> 15:00 CT; post_release: 08:00 -> 15:00 CT on the day
 trial_budget: 6
 registered: 2026-10-03
-status: open
+status: closed
