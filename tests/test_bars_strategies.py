@@ -278,3 +278,30 @@ def test_vol_regime_is_causal_and_flat_in_high_vol(monkeypatch):
     rows2 = rows[:50] + [(d, {"p0900": 1.0 * 9e3, "p1500": 9e3}) for d, _ in rows[50:]]
     s2 = H20.regime({"ES.c.0": table(rows2), "ES.c.1": table([])}, days, 5)
     assert s2[:50] == s[:50]
+
+
+def test_selloff_signal_is_causal_and_positions_do_not_overlap(monkeypatch):
+    import strategies.bars_common as B
+    import strategies.h020 as H20
+    import strategies.h021 as H21
+    for m in (B, H20, H21):
+        monkeypatch.setattr(m, "sym_of", lambda d: "ES.c.0")
+    same = lambda P, ref, d, col: B.px(P, "ES.c.0", d, col)          # noqa: E731
+    monkeypatch.setattr(H20, "same_contract_px", same)
+    monkeypatch.setattr(H21, "same_contract_px", same)
+    days = [d.date() for d in pd.bdate_range("2025-01-02", periods=120)]
+    rng = __import__("numpy").random.default_rng(1)
+    lvl, rows = 6000.0, []
+    for i, d in enumerate(days):
+        lvl *= 1 + (-0.03 if i in (80, 81, 82) else rng.normal(0, 0.004))   # crash days 80-82
+        rows.append((d, {"p0900": lvl + (20 if 83 <= i <= 90 else 0), "p1500": lvl}))
+    P = {"ES.c.0": table(rows), "ES.c.1": table([])}
+    ds = H21.closes(P, days)
+    z = H21.zscores(P, ds)
+    assert z[82] < -5 and __import__("numpy").isnan(z[:66]).all()
+    t = H21.trades(P, days, {"z_min": 2.0, "hold": 3}, 0.0, 0.0, 50.0)
+    assert t.iloc[0]["trading_date"] == days[84]                    # first crash day 80 signals -> enter 81 09:00 -> exit 84 09:00
+    assert (t["trading_date"].diff().dropna().apply(lambda x: x.days) >= 3).all()
+    rows2 = rows[:83] + [(d, {"p0900": 1.0, "p1500": 1.0}) for d, _ in rows[83:]]
+    z2 = H21.zscores({"ES.c.0": table(rows2), "ES.c.1": table([])}, ds)
+    assert (z2[:83][~__import__("numpy").isnan(z2[:83])] == z[:83][~__import__("numpy").isnan(z[:83])]).all()
