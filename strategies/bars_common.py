@@ -35,3 +35,11 @@ def trade(exit_date, side: int, entry: float, exit_: float, adverse_ticks: float
 
 def sym_of(d) -> str:
     return continuous_symbol(d)
+
+
+def next_date(P: dict, sym: str, d, max_gap_days: int = 5):
+    idx = P[sym].index
+    i = idx.searchsorted(d, side="right")
+    if i >= len(idx) or (idx[i] - d).days > max_gap_days:
+        return None
+    return idx[i]

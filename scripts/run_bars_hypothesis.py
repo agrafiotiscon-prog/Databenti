@@ -39,7 +39,7 @@ def hourly_table(bars: pd.DataFrame) -> pd.DataFrame:
     b = bars.copy()
     start_ct = pd.DatetimeIndex(b.index).tz_convert(CT)
     b["d"], b["h"] = start_ct.date, start_ct.hour
-    b = b[b["h"].between(8, 14)]
+    b = b[b["h"].between(7, 14)]                 # p0800 .. p1500
     t = b.pivot_table(index="d", columns="h", values="close", aggfunc="last")
     t.columns = [f"p{h + 1:02d}00" for h in t.columns]
     return t
