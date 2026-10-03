@@ -40,7 +40,8 @@ tags: [memory, state]
   ≤ $3/day, ≤ $25 total; keeps a strategy only if it passes G1–G11.
 
 ## Next step
-- The routine continues with `research/QUEUE.md`: Phase 3 (engine R3.1–R3.2 + metrics R3.3 done → R3.4 hftbacktest MBO adapter), Phase 4 (framework), Phase 5 (H-001).
+- The routine continues with `research/QUEUE.md`: Phase 3 done (engine, metrics, hftbacktest adapter; tier-B calibration run R3.5 deferred to
+  Phase 5), then **Phase 4** (framework: R4.1 holdout lock + walk-forward), Phase 5 (H-001).
 - **Needs the user:** a data budget for real backtests. One year of ES trades ≈ $140 on
   pay-as-you-go (more than the ~$115 left); Standard plan $199/mo includes 1 year of L1.
 

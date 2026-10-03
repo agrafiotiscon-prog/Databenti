@@ -32,3 +32,13 @@ first. Its docs note that CME implied orders are absent from MBO.
    features), and it is cross-checked against hftbacktest's book on the same data.
 3. **NautilusTrader**: deferred to the (out-of-scope) live phase. It is the natural route to
    paper or live trading with Databento plus a broker, and it reuses the same data.
+
+## hftbacktest integration (session 6, routine R3.4)
+- `backtest/hft_adapter.py` converts Databento MBO to hftbacktest events (vectorised; drops `N`
+  records, which hftbacktest's own converter rejects; snapshot timestamps handled like theirs;
+  their `correct_local_timestamp` / `correct_event_order` / `validate_event_order` applied).
+- **Cross-check on real data:** 2024-03-05, 4.0M events replayed from the 00:00 UTC snapshot;
+  hftbacktest's best bid/ask equals our `features.book` replay on **3,600 of 3,600** one-second
+  samples in the first RTH hour. Conversion 7.7 s, replay 2.7 s.
+- The tier-B calibration run (same strategy under `trade_through`, `queue_l1`, `l3_fifo`) needs a
+  limit-order strategy: queue item R3.5.

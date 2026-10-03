@@ -23,7 +23,11 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] R3.2 (s6: limit/stop/cancel, trade_through + queue_l1; fill-mode check in trials.jsonl) Limit and stop orders with `trade_through` (pessimistic) and `queue_l1` fill modes.
 - [x] R3.3 (s6: backtest/metrics.py; DSR/PBO/MC/stress belong to Phase 4) Metrics from `vault/04-backtesting/metrics.md` (per-trade, daily PnL, markouts,
       concentration) + per-year/month tables.
-- [ ] R3.4 hftbacktest adapter for tier-B `l3_fifo` calibration (MBO; only on cached days).
+- [x] R3.4 (s6: backtest/hft_adapter.py; book = ours on 3,600/3,600 samples) hftbacktest adapter for tier-B `l3_fifo` calibration (MBO; only on cached days).
+
+- [ ] R3.5 Tier-B calibration run: same strategy under trade_through / queue_l1 / hftbacktest l3_fifo
+      on the cached MBO day; report fill-rate and PnL differences (needs a limit-order strategy;
+      do it with H-001 in Phase 5 if nothing earlier fits).
 
 ## Phase 4: research framework (vault/05-anti-overfitting/)
 - [ ] R4.1 Holdout lock in the loader (`config/splits.toml`), walk-forward splitter with embargo.

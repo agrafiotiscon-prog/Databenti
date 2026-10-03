@@ -6,3 +6,4 @@ polars>=0.20
 plotly>=5.18
 python-dotenv>=1.0
 pytest>=8.0
+hftbacktest>=2.4
