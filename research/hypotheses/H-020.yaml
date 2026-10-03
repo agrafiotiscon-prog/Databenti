@@ -1,0 +1,26 @@
+id: H-020
+title: Volatility-managed exposure - long ES only while trailing realised volatility is below its 1-year median
+mechanism: >
+  Moreira & Muir (2017, JF "Volatility-managed portfolios"): changes in volatility are not matched
+  by proportional changes in expected returns, so equity exposure taken in calm periods earns a
+  higher return per unit of risk than exposure in turbulent periods. Who pays: investors who keep
+  exposure (or are forced to de-risk late) in high-volatility regimes, and the volatility risk
+  premium they pay for staying long through them. Out-of-sample doubts: Cederburg, O'Doherty, Wang
+  & Yan (2020, JFE) find weak real-time gains. Prior: low-moderate. Long only -> G12 placebo
+  (random timing with the same long share) is decisive; plain equity drift must not pass.
+direction: follow
+horizon: "days to months (held while the regime lasts)"
+features: [daily_closes]
+fixed:
+  vol: annualised standard deviation of the last vol_lookback same-contract 15:00-to-15:00 CT daily returns, known at day i's 15:00 close
+  regime: long if vol < median of the previous 252 days' vol values (strictly before day i), else flat
+  execution: like H-014 - trade at day i+1's 09:00 CT price; rolls on the roll rule's switch day at 09:00 (extra round trip); 1 tick adverse per side + fees
+  accounting: a trade = one contract-segment of a position, PnL booked on its exit day
+  data: ES ohlcv-1h both ranks 2010-06..2025-09; D-023 protocol
+  g12: circular shifts of the regime series (keeps long share and spell lengths), 500 random shifts of >= 21 days, OOS net vs shifted OOS net
+  coverage: expect a regime value on >= 95% of days after the first 252 + vol_lookback days (D-042)
+space:
+  vol_lookback: [21, 63]
+trial_budget: 2
+registered: 2026-10-03
+status: open

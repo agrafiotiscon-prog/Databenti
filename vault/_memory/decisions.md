@@ -251,3 +251,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-019 as not promising; add an event-coverage check to the routine's checklist.
 - **Why:** Bug-fixed re-run (D-041) on all 183 month-ends: 1/12 gates, OOS 86 trades, -$10.3k, t -0.34, 6/13 years, placebo p 0.41; full-period variant min_abs_bp0 +6.6 ticks/trade before selection, but selection picked 200 bp every fold and lost. Run 1's 7/12 and p 0.029 came from a sample that systematically dropped holiday and expiry months. 164 hypothesis trials. The ES-only proxy (no bond leg) remains a limitation; a proper equity-minus-bond test would need ZN/ZB data (budget: user).
 - **Status:** active.
+
+## D-043 — H-020 volatility-managed exposure registered before any result (2026-10-03)
+- **Decision:** Register H-020 (long ES only when trailing realised vol < its 1-year median; 2 variants; G12 via circular shifts).
+- **Why:** R6.3: published, different mechanism from the closed calendar family (risk timing, not dates); testable on cached hourly bars at $0. Long-only so G12 decides whether it beats plain drift; low-moderate prior given Cederburg et al. (2020).
+- **Status:** active.
