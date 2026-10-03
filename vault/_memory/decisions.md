@@ -271,3 +271,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-021 as not promising.
 - **Why:** One evaluation, coverage 3,750/3,750 z-scores (D-042): 3/12 gates, OOS 94 trades +$14k, t 0.25, MC P(loss) 0.22, PBO 0.31, placebo p 0.987 (random OOS entry days with the same hold earn more). Selloffs in 2018, 2020, 2022, 2025 continued; the 2021 gain (+$42k) carries the total. 170 hypothesis trials.
 - **Status:** active.
+
+## D-047 — R3.5 fill calibration: keep trade_through default (2026-10-03)
+- **Decision:** Keep trade_through as the engine's default limit-fill model; queue_l1 only as a sensitivity check; G8 unchanged.
+- **Why:** 77 passive probes on 2024-03-05: maker fills trade_through 49 vs L3 FIFO (hftbacktest, full MBO) 52 vs queue_l1 55; trade_through has the most adverse 60 s markout (median -1.5 ticks) - conservative, close in count to the reference. queue_l1 is mildly optimistic. One day only.
+- **Status:** active.

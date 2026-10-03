@@ -59,7 +59,8 @@ tags: [memory, state]
   rebalancing: run 1 buggy (dropped 2/3 of months, looked good), fixed re-run 1/12 → closed (D-041/42).
   Lesson: check event coverage first. H-020 vol-managed long: 8/12 gates (most) but placebo p 0.118,
   79 trades → not promoted (D-044). H-021 buy-the-selloff 3/12, placebo p 0.99 (D-046).
-  Total hypothesis trials: 170.
+  Total hypothesis trials: 170. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
+  fills), conservative; queue_l1 mildly optimistic.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
   paper trading); coverage audit done (H-007 sample complete, 122/122); next R6.3 more ideas.

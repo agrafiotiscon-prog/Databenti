@@ -25,7 +25,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
       concentration) + per-year/month tables.
 - [x] R3.4 (s6: backtest/hft_adapter.py; book = ours on 3,600/3,600 samples) hftbacktest adapter for tier-B `l3_fifo` calibration (MBO; only on cached days).
 
-- [ ] R3.5 Tier-B calibration run: same strategy under trade_through / queue_l1 / hftbacktest l3_fifo
+- [x] R3.5 (s6 routine 16:15, D-047: maker fills TT 49 / L3 52 / queue_l1 55; keep trade_through; vault/results/fill-calibration-2024-03-05.md) Tier-B calibration run: same strategy under trade_through / queue_l1 / hftbacktest l3_fifo
       on the cached MBO day; report fill-rate and PnL differences (needs a limit-order strategy;
       do it with H-001 in Phase 5 if nothing earlier fits).
 

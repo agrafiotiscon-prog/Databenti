@@ -32,3 +32,4 @@
 - 2026-10-03 R6.7 coverage audit: H-007 122/122 FOMC days; other modules 85-100% for known, non-directional reasons; nothing changes.
 - 2026-10-03 (routine 13:16) H-020 volatility-managed long: 8/12 gates, OOS 79 trades +$182k, fails G12 (p 0.118), G1, G3; closed (D-044). 166 trials.
 - 2026-10-03 (routine, after usage reset) H-021 buy after sharp 3-day decline: 3/12, t 0.25, placebo p 0.99; closed (D-046). 170 trials.
+- 2026-10-03 (routine 16:15) R3.5 fill calibration on 2024-03-05: maker fills trade_through 49 / L3 FIFO 52 / queue_l1 55; keep trade_through (D-047).
