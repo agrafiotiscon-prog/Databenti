@@ -31,18 +31,39 @@ def main(argv=None) -> int:
     from data.download import Downloader
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--workers", type=int, default=8)
     a = ap.parse_args(argv)
     dl = Downloader()
     todo = [(request(dl, f"{s.root}.v.{k}"), path_for(dl, f"{s.root}.v.{k}")) for s in UNIVERSE for k in (0, 1)]
     todo = [(r, p) for r, p in todo if not p.exists()]
-    cost = sum(dl.guard.estimate(r) for r, _ in todo)
-    print(f"{len(todo)} files to fetch, estimated ${cost:.2f}; spent so far ${dl.spent_total():.2f}")
+    import socket
+    socket.setdefaulttimeout(300)               # a metadata call once hung forever without a timeout
+    cost = sum(dl.guard.check([r]) for r, _ in todo)   # priced and logged once per file
+    print(f"{len(todo)} files to fetch, estimated ${cost:.2f}; spent so far ${dl.spent_total():.2f}", flush=True)
     if a.dry or not todo:
         return 0
     dl.check_total_cap(cost)
-    for r, p in todo:
-        dl.guard.check([r])
-        dl._download([(r, p)])
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    from data import cache
+
+    def fetch(r, path):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        part = cache.part_path(path)
+        part.unlink(missing_ok=True)
+        try:
+            dl.client.timeseries.get_range(dataset=r.dataset, schema=r.schema, symbols=r.symbols,
+                                           stype_in=r.stype_in, start=r.start, end=r.end, path=part)
+        except BaseException:
+            part.unlink(missing_ok=True)
+            raise
+        return r, path
+
+    with ThreadPoolExecutor(a.workers) as ex:                    # Databento resolves continuous symbols slowly
+        for fut in as_completed([ex.submit(fetch, r, path) for r, path in todo]):
+            r, path = fut.result()
+            cache.finalize(path)                                 # finalize + log in the main thread
+            dl._log_download(r, path)
+            print(f"  [download] {path.relative_to(dl.cache_dir)}", flush=True)
     print(f"done; spent now ${dl.spent_total():.2f}")
     return 0
 
