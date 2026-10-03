@@ -287,3 +287,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-022 as not promising; do not select trend252 after the fact; report the user's target as unmet by the classic recipe.
 - **Why:** One evaluation, coverage checked (D-042), carry signs verified: walk-forward OOS -4.3%/yr at 15.3% vol (Sharpe -0.28), 4/13 years > 0, placebo p 0.96, stress -$847k on $1M. Full-period trend252 Sharpe 0.41 matches public trend indices after 2010, but choosing it now would be hindsight. 174 hypothesis trials. Spend ~$121.2 of the $125 credit.
 - **Status:** active.
+
+## D-050 — User chose option 1 (continue): pre-register combined book H-023 for a single holdout / paper confirmation (2026-10-03)
+- **Decision:** Register H-023 = H-022 trend252 portfolio + H-007 lm24h ES sleeve, no parameters, with pass/fail criteria fixed before any holdout data is read. Development-period numbers for the book are descriptive only. The holdout is read only after the user's explicit go (unlock file).
+- **Why:** User: 'Continue' after being told option 1 is the default. Both components were selected after seeing results, so only untouched data can test them. Holdout data for 2025-10..2026-10 (26 markets daily + ES hourly) costs < $0.5, inside the remaining ~$3.7.
+- **Status:** active.

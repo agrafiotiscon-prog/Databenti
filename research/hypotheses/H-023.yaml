@@ -1,0 +1,25 @@
+id: H-023
+title: Combined book for confirmation - 26-market 12-month trend (H-022 trend252) plus pre-FOMC ES drift (H-007 lm24h)
+mechanism: >
+  Two premia with different payers and near-zero overlap in time: time-series trend across 26 futures
+  markets (slow-moving hedgers and investors; Moskowitz, Ooi & Pedersen 2012) and the pre-FOMC
+  announcement drift in equities (Lucca & Moench 2015; risk premium for holding through the event).
+  Both components were CHOSEN AFTER SEEING development results (H-022 trend252 = best variant in
+  hindsight; H-007 = best single-market candidate), so any development-period number for this book is
+  descriptive only and NOT evidence. The only valid test is the untouched holdout (2025-10-03 on) or
+  forward paper trading (user option 1, session 6, D-050). Prior: weak-moderate.
+direction: both
+horizon: "trend: weeks-months; FOMC sleeve: 24 h, 8 times a year"
+features: [daily_closes_v0_v1, hourly_closes_es, fomc_calendar]
+fixed:
+  capital: "$1,000,000 primary; $100,000 integer-contract run reported (not a criterion)"
+  sleeve_trend: "portfolio/engine.simulate variant trend252, exactly as in H-022 (15% vol target, next-day close execution, 1 tick + fees, rolls both legs)"
+  sleeve_fomc: "long ES 13:00 CT the trading day before each scheduled FOMC statement (config/fomc_dates.csv), exit 13:00 CT on statement day, contracts = round(capital / (ES price x 50)), 1 tick adverse per side + fees"
+  book: "daily P&L = trend sleeve + FOMC sleeve; no other weighting, no parameters"
+  holdout_test: "ONE evaluation on 2025-10-03 .. last available date, only after research/HOLDOUT_UNLOCK exists; trend signals may use pre-holdout history as warm-up, P&L counted only on holdout dates"
+  criteria: "CONFIRM (go to paper trading, still not live) if holdout net > 0 AND annualised Sharpe >= 0.4 AND trend sleeve net > 0; REJECT if holdout net <= 0; otherwise INCONCLUSIVE. One year has low power - a pass is not proof"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-03
+status: open
