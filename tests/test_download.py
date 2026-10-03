@@ -125,3 +125,17 @@ def test_retry_after_interrupted_download(tmp_path, fake_client):
     fake_client.timeseries.get_range = strict
     paths = dl.fetch_days("trades", [date(2024, 3, 5)])
     assert paths[0].read_bytes() == b"fake-dbn"
+
+
+def test_fetch_rth_requests_only_the_rth_window_and_respects_total_cap(tmp_path, fake_client, monkeypatch):
+    dl = make(tmp_path, fake_client)
+    paths = dl.fetch_rth("trades", [date(2024, 3, 5)])
+    call = fake_client.download_calls[0]
+    assert call["start"].startswith("2024-03-05T14:30") and call["end"].startswith("2024-03-05T21:00")
+    assert "trades-rth" in str(paths[0])
+    assert dl.fetch_rth("trades", [date(2024, 3, 5)], dry_run=True) == 0.0        # cached
+    monkeypatch.setenv("DATABENTO_TOTAL_CAP_USD", "10.10")                       # legacy 10.02 + 0.10 > cap
+    from data.cost_guard import CostLimitExceeded
+    with pytest.raises(CostLimitExceeded):
+        dl.fetch_rth("trades", [date(2024, 3, 6)])
+    assert len(fake_client.download_calls) == 1

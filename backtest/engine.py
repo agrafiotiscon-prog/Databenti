@@ -44,6 +44,27 @@ def l1_from_tbbo(tbbo: pd.DataFrame) -> pd.DataFrame:
     return out[keep]
 
 
+def l1_from_trades(trades: pd.DataFrame, tick: float = 0.25) -> pd.DataFrame:
+    """Trades-only input (D-019): rebuild the pre-trade bid/ask from aggressor prints.
+
+    side 'B' = buyer-initiated (prints at the ask 99.4% of the time on 2024-03-05), 'A' = seller.
+    ask = last buy-print price, bid = last sell-print price, both from trades BEFORE this one;
+    a crossed or locked estimate is fixed one tick away from the most recent print. On 2024-03-05
+    RTH this equals TBBO's pre-trade quote 81% of the time, otherwise +-1 tick (mean +0.017 ticks).
+    Sizes are unknown (set to 0) - queue_l1 needs real quotes, so use trade_through with this input.
+    """
+    px = trades["price"].to_numpy(float)
+    sd = trades["side"].astype(str).to_numpy()
+    ask = pd.Series(np.where(sd == "B", px, np.nan)).ffill().shift(1).to_numpy()
+    bid = pd.Series(np.where(sd == "A", px, np.nan)).ffill().shift(1).to_numpy()
+    last_side = pd.Series(sd).shift(1).to_numpy()
+    bad = ~(ask > bid)
+    ask = np.where(bad & (last_side == "A"), bid + tick, ask)
+    bid = np.where(bad & (last_side == "B"), ask - tick, bid)
+    return pd.DataFrame({"bid_px": bid, "ask_px": ask, "bid_sz": 0.0, "ask_sz": 0.0,
+                         "price": px, "size": trades["size"].to_numpy(float), "side": sd}, index=trades.index)
+
+
 @dataclass
 class Order:
     side: int                 # +1 buy, -1 sell

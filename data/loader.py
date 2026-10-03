@@ -85,6 +85,12 @@ def load_session(downloader, schema: str, trading_date: date, rth_only: bool = F
     return slice_session(df, trading_date, rth_only)
 
 
+def load_rth_session(downloader, schema: str, trading_date: date, **kw) -> pd.DataFrame:
+    """One RTH session from RTH-window chunks (Downloader.fetch_rth); refuses holdout dates."""
+    paths = downloader.fetch_rth(schema, [trading_date], **kw)
+    return slice_session(load_chunks(paths), trading_date, rth_only=True)
+
+
 def with_book_warmup(mbo: pd.DataFrame, trading_date: date, rth_only: bool = False) -> pd.DataFrame:
     """One MBO session plus everything before it back to the opening snapshot.
 

@@ -25,7 +25,10 @@ from .config import (DATASET, DEFAULT_ROOT, DEFAULT_STYPE_IN, DEFAULT_SYMBOL, SU
                      get_client, load_settings)
 from .contracts import DEFAULT_ROLL_DAYS_BEFORE_EXPIRY, continuous_symbol
 from .cost_guard import CostGuard, Request
-from .sessions import utc_days_for_session
+from .sessions import session_bounds, utc_days_for_session
+
+LEGACY_SPEND_USD = 10.02          # downloaded before download_log.csv existed (session 5)
+DEFAULT_TOTAL_CAP_USD = 120.0     # D-019: the $125 credit minus a $5 margin
 
 
 def _day_bounds(day: date) -> tuple[str, str]:
@@ -147,6 +150,52 @@ class Downloader:
             print(f"  [cache] {schema}: all {len(all_paths)} chunk(s) cached")
             return all_paths
         self.guard.check([r for r, _ in missing], allow_over_limit=allow_over_limit)
+        frozen = holdout.maybe_freeze(schema, trading_days, self.splits_path)
+        if frozen:
+            print(f"  [holdout] first multi-month {schema} pull: holdout_start frozen at {frozen}")
+        self._download(missing)
+        return all_paths
+
+    # ------------------------------------------------------------------ cumulative budget (D-019)
+    def spent_total(self) -> float:
+        log = self.cache_dir / "download_log.csv"
+        logged = 0.0
+        if log.exists():
+            rows = csv.DictReader(log.open())
+            logged = sum(float(r["estimated_cost_usd"] or 0) for r in rows)
+        return LEGACY_SPEND_USD + logged
+
+    def check_total_cap(self, new_cost: float) -> None:
+        import os
+        cap = float(os.getenv("DATABENTO_TOTAL_CAP_USD", DEFAULT_TOTAL_CAP_USD))
+        spent = self.spent_total()
+        if spent + new_cost > cap:
+            from .cost_guard import CostLimitExceeded
+            raise CostLimitExceeded(f"total spend would be ${spent + new_cost:,.2f} > cap ${cap:,.2f} "
+                                    f"(already ${spent:,.2f}). Nothing was downloaded.")
+
+    def fetch_rth(self, schema: str, trading_days: Iterable[date], symbol: str | None = None,
+                  root: str = DEFAULT_ROOT, roll_days_before: int = DEFAULT_ROLL_DAYS_BEFORE_EXPIRY,
+                  dry_run: bool = False) -> list[Path] | float:
+        """Fetch ONLY the RTH window (08:30-15:00 CT) of each trading date: ~19% cheaper than full UTC
+        days for trades/tbbo. Cached under `<schema>-rth/`. Priced as one batch; the per-request $ limit is
+        replaced by the cumulative cap (check_total_cap). With dry_run=True returns the cost of what is missing."""
+        trading_days = sorted(set(trading_days))
+        holdout.check(trading_days, self.splits_path)
+        all_paths, missing = [], []
+        for td in trading_days:
+            sym = symbol or continuous_symbol(td, root, roll_days_before)
+            p = cache.chunk_path(self.cache_dir, self.dataset, f"{schema}-rth", sym, td)
+            all_paths.append(p)
+            if not cache.is_cached(p):
+                s, e = session_bounds(td, rth_only=True)
+                missing.append((Request(self.dataset, schema, sym, DEFAULT_STYPE_IN, s.isoformat(), e.isoformat()), p))
+        if not missing:
+            return 0.0 if dry_run else all_paths
+        total = self.guard.check([r for r, _ in missing], allow_over_limit=True)
+        if dry_run:
+            return total
+        self.check_total_cap(total)
         frozen = holdout.maybe_freeze(schema, trading_days, self.splits_path)
         if frozen:
             print(f"  [holdout] first multi-month {schema} pull: holdout_start frozen at {frozen}")

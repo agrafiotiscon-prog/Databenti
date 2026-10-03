@@ -40,9 +40,10 @@ is [research-loop](../vault/05-anti-overfitting/research-loop.md); the gates are
 - Never read or evaluate the holdout (`config/splits.toml`; only `research/HOLDOUT_UNLOCK`,
   created by the user, opens it).
 - Never make the cost model, fill model or gate thresholds more optimistic.
-- **Data budget:** dry run (`metadata.get_cost`) before every download; at most **$1 per
-  firing, $3 per UTC day, $25 in total for the routine** (sum of `cache/download_log.csv` rows
-  with `downloaded_at_utc` ≥ 2026-10-02T23:15Z, when the routine started). No MBO without the user's OK. If an item needs more,
+- **Data budget (D-019, user, session 6):** everything within the $125 credit; **hard cumulative
+  cap $120** enforced by `Downloader` (download_log + $10.02 legacy). Dry run before every
+  download. Planned: RTH trades 2024-11-01..2025-09-30 + ~8 TBBO calibration days. No MBO without
+  the user's OK. If an item needs more,
   write the exact request and price into `QUEUE.md` under "Needs the user", notify once, and move
   to the next item.
 - Never print or commit the API key.

@@ -191,3 +191,18 @@ def test_bracket_orders_fit_the_position_limit():
             assert ctx.market(1) is None                  # would make the worst case 2 long
         st["n"] += 1
     run(l1t(BOOK), strat, costs(latency_ms=100))
+
+
+def test_l1_from_trades_rebuilds_quotes_from_aggressor_prints():
+    from backtest.engine import l1_from_trades
+    idx = pd.DatetimeIndex([T0 + pd.Timedelta(milliseconds=k) for k in range(5)])
+    tr = pd.DataFrame({"price": [5000.25, 5000.00, 5000.25, 5000.50, 5000.25],
+                       "side": ["B", "A", "B", "B", "A"], "size": [1] * 5}, index=idx)
+    q = l1_from_trades(tr)
+    # quote at each trade uses only EARLIER prints (no lookahead)
+    assert np.isnan(q.ask_px.iloc[0]) and np.isnan(q.bid_px.iloc[0])
+    assert (q.bid_px.iloc[2], q.ask_px.iloc[2]) == (5000.00, 5000.25)
+    assert (q.bid_px.iloc[4], q.ask_px.iloc[4]) == (5000.00, 5000.50)
+    tr2 = tr.copy(); tr2.loc[idx[3], "price"] = 5000.00            # lift at 5000.00 after a sell at 5000.00
+    q2 = l1_from_trades(tr2)
+    assert q2.ask_px.iloc[4] > q2.bid_px.iloc[4]                     # never crossed/locked
