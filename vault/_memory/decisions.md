@@ -205,3 +205,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Add G12 to research/gates.py: a candidate must beat a placebo or random-timing benchmark at one-sided p <= 0.05 (missing = FAIL). H-012 is demoted (placebo p ~ 0.74). H-007 stays the best candidate with placebo p = 0.063 (not significant at 5%).
 - **Why:** scripts/placebo_fed.py: H-012's even-week rule with the FOMC calendar shifted 1-30 trading days earns as much in 22/30 cases (median $117k vs $75k real) -> its profit is equity drift. G1-G11 had no benchmark check, so long-only rules in a rising market could look good. Adding a gate only makes promotion harder (never more optimistic).
 - **Status:** active.
+
+## D-034 — G12 placebo for H-005/H-009 (both drift); H-014 time-series momentum registered (2026-10-03)
+- **Decision:** H-005 and H-009 fail the placebo (p 0.84 and 0.51): their totals are equity drift. Register H-014 time-series momentum (long/short, 4 variants, D-023 protocol + G12 random-sign-timing placebo) before any result. Global trials after it: 148.
+- **Why:** scripts/placebo_bars.py results; H-014 chosen because it is long/short (immune to pure drift) with a strong published literature and enough round trips over 13 OOS years.
+- **Status:** active.

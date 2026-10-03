@@ -1,0 +1,24 @@
+id: H-014
+title: Time-series momentum on ES (long/short on the sign of the past N-day return)
+mechanism: >
+  Time-series momentum: an asset's own past 1-12 month return predicts its next-period return
+  across futures markets (Moskowitz, Ooi & Pedersen 2012 JFE; Hurst, Ooi & Pedersen 2017 "A
+  century of evidence on trend-following"). Mechanisms: initial under-reaction and delayed
+  over-reaction of investors, and hedging/rebalancing flows that extend trends. Who pays:
+  slow-moving investors and hedgers trading against the trend. Long AND short, so equity drift
+  alone cannot make it look good (G12 placebo still applies). Prior: moderate for diversified
+  portfolios, weaker for a single equity index.
+direction: follow
+horizon: "days to months (position held while the signal keeps its sign)"
+features: [daily_closes]
+fixed:
+  signal: sign of the return from the 15:00 CT close lookback trading days ago to today's 15:00 CT close (same contract series)
+  execution: trade at the next trading day's 09:00 CT price (no trading at the signal close); 1 tick adverse per side + fees per contract traded
+  rolls: a held position is rolled on the roll rule's switch day at that day's 09:00 price (one extra round trip)
+  accounting: daily PnL from 09:00 to 09:00 on the same contract; a 'trade' for statistics = one contract-segment of a position
+  data: ES ohlcv-1h both ranks 2010-06..2025-09 (D-023 protocol); G12 placebo = random sign timing with the same long share
+space:
+  lookback: [20, 60, 120, 250]
+trial_budget: 4
+registered: 2026-10-03
+status: open
