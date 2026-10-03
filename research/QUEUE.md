@@ -43,7 +43,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
       (stage 1 Jul-Sep 2025 started s6) + ~8 TBBO calibration days; cumulative cap $120.
       Old text: Price the L1 data it needs (trades/tbbo, RTH). Within the routine budget, use what is
       affordable; a meaningful test needs years (see "Needs the user").
-- [ ] R5.3 Run, gate, verdict (promising / not promising / insufficient data).
+- [ ] R5.3 (runner ready: scripts/run_h001.py per D-020; run ONCE when stage downloads finish) Run, gate, verdict (promising / not promising / insufficient data).
 
 ## Later: new hypotheses (one at a time, mechanism first; see vault/03-order-flow/evidence-review.md)
 
