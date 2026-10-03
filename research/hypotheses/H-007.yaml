@@ -1,0 +1,21 @@
+id: H-007
+title: Pre-FOMC announcement drift (long into scheduled FOMC statements)
+mechanism: >
+  Lucca & Moench (2015, JF 70) document large average excess returns on US equities in the 24
+  hours before scheduled FOMC announcements, accounting for a large share of the equity premium;
+  proposed explanations include resolution of uncertainty and dealer risk-taking ahead of the
+  news. Who pays: investors who hedge or de-risk ahead of the event and sell the premium.
+  Prior: moderate, with reported weakening after publication (sample here is 2010-2025).
+direction: follow
+horizon: "about 24 h (or the morning) before the 13:00 CT statement; exit at 13:00 CT"
+features: [fomc_calendar, hourly_closes]
+fixed:
+  dates: config/fomc_dates.csv (scheduled statements from federalreserve.gov, 2010-2026)
+  data: ES ohlcv-1h both ranks; exit = close of the 12:00-13:00 CT bar on the announcement day
+  contract: the entry day's contract for both prices
+  execution: 1 tick adverse per side + fees (stress 2 ticks + fees x1.5); long only
+space:
+  window: [lm24h, morning]     # lm24h: 13:00 CT day before -> 13:00 CT; morning: 09:00 -> 13:00 CT same day
+trial_budget: 2
+registered: 2026-10-03
+status: open

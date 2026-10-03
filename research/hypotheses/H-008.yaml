@@ -1,0 +1,23 @@
+id: H-008
+title: Fade extreme 5-minute order-flow imbalance (price-pressure reversal)
+mechanism: >
+  When aggressive order flow is extremely one-sided over a short window, intermediaries absorb
+  the imbalance into inventory and are compensated by a temporary price concession that later
+  reverts (Grossman & Miller 1988; Hendershott & Menkveld 2014 JFE "Price pressures"). Fading the
+  extreme earns part of that reversal. Who pays: impatient traders demanding immediacy.
+  Prior: low-moderate (H-004 found post-sweep reversion at seconds scale, gross ~0.7 tick - a
+  different, shorter horizon; this is decided on 5-minute buckets and held 15-30 min).
+direction: fade
+horizon: "15-30 min (bracket, time stop, flat by 14:55 CT)"
+features: [bar_delta]
+fixed:
+  buckets: 5-minute RTH bars; z = (bucket delta - mean) / std over the previous 20 buckets of the same day
+  entry: "market order opposite to the imbalance at the bucket's known_at (+100 ms), one position at a time, no entries after 14:25 CT"
+  data: 238 cached RTH trade days (quotes rebuilt from trades)
+space:
+  z: [2.0, 3.0]
+  hold_min: [15, 30]
+  stop_ticks: [8, 16]
+trial_budget: 8
+registered: 2026-10-03
+status: open

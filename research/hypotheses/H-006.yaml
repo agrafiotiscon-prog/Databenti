@@ -1,0 +1,22 @@
+id: H-006
+title: Fade the overnight gap after the RTH open
+mechanism: >
+  The move from the previous cash close to 09:00 CT includes overnight news plus the opening
+  imbalance of traders who demand immediacy at the open (market-on-open flows, stop runs). The
+  liquidity-demand part is temporary: liquidity providers absorb it and are paid as price partly
+  reverts in the first trading hours (inventory/price-pressure reversal, Hendershott & Menkveld
+  2014 JFE; Grossman & Miller 1988 JF). Who pays: impatient opening traders. Prior: low-moderate
+  (overnight news is not temporary, which dilutes the effect).
+direction: fade
+horizon: "1-2 hours: enter 09:00 CT, exit 10:00 or 11:00 CT"
+features: [hourly_returns]
+fixed:
+  data: ES ohlcv-1h both ranks 2010-06..2025-09; same-contract previous close as in H-003
+  entry: price at 09:00 CT (close of the 08:00-09:00 bar), direction opposite to the gap
+  execution: 1 tick adverse per side + fees (stress 2 ticks + fees x1.5)
+space:
+  min_gap_bp: [10, 25]
+  exit_at: ["10:00", "11:00"]
+trial_budget: 4
+registered: 2026-10-03
+status: open

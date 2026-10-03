@@ -170,3 +170,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-004. Do not test fade-the-sweep variants on the 2024-11..2025-09 trade data (idea derived from this result).
 - **Why:** Single evaluation (D-020 protocol): OOS 202 trades, -$6,124, -2.06 ticks/trade, t = -5.5; 0/16 variants positive; gross edge about -0.7 ticks (post-sweep reversion at 100 ms latency). Hypothesis trials now 108.
 - **Status:** active.
+
+## D-027 — Batch registration H-005..H-008 and their protocols (before any result) (2026-10-03)
+- **Decision:** Bars hypotheses H-005 (turn of month), H-006 (gap fade), H-007 (pre-FOMC drift) use the D-023 protocol (15 y hourly bars, walk-forward 3 y / 1 y, selection on bootstrap 5th pct at 1.5x fees, 1 tick adverse per side + fees, stress 2 ticks + fees x1.5, G8 substitute = sign survives +1 tick per side). H-008 (5-min order-flow imbalance fade) uses the D-020 protocol on the 238 cached RTH days. Each is evaluated once; DSR uses the global hypothesis trial count (126 after this batch). 'Best' = the hypothesis passing the most gates on OOS data; if none passes all, none qualifies. FOMC dates: config/fomc_dates.csv from federalreserve.gov (non-meeting statements, notation votes, conference calls, unscheduled meetings removed; 2025-09-17 restored by hand).
+- **Why:** User asked to continue through all hypotheses to find the best (session 6). Registering the whole batch first fixes the family before any of its results are seen; small spaces keep deflation honest.
+- **Status:** active.
