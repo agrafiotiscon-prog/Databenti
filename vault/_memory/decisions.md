@@ -266,3 +266,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Register H-021 (long ES at next 09:00 after a 3-day decline of z <= -1.5/-2.0 sigmas; hold 3/5 days; 4 variants; G12 random entry days).
 - **Why:** R6.3: a liquidity-provision mechanism with a named payer (mechanical de-risking flows), different from the closed calendar family and from H-010 (1-day, every day). Testable at $0 on cached hourly bars; ~20-40 signals/yr gives a chance at G1.
 - **Status:** active.
+
+## D-046 — H-021 closed (buying sharp selloffs is worse than random days) (2026-10-03)
+- **Decision:** Close H-021 as not promising.
+- **Why:** One evaluation, coverage 3,750/3,750 z-scores (D-042): 3/12 gates, OOS 94 trades +$14k, t 0.25, MC P(loss) 0.22, PBO 0.31, placebo p 0.987 (random OOS entry days with the same hold earn more). Selloffs in 2018, 2020, 2022, 2025 continued; the 2021 gain (+$42k) carries the total. 170 hypothesis trials.
+- **Status:** active.

@@ -5,7 +5,7 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **166** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **170** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 | Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
@@ -19,6 +19,7 @@ passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 | 3c | [H-018](h018-report.md) Monday reversal (fade Friday's RTH move) | 15 y hourly | 5/12 | 329 | +$36,866 | 1.64 | not promising: **placebo p = 0.24 - fading on Tue-Fri does as well, so Monday is not special** (it is a subset of H-010); 2022 + 2025 = +$37k, 7/13 years |
 | 3d | [H-017](h017-report.md) option-expiration week (Fri -> Thu, long) | 15 y hourly | 5/12 | 86 | +$26,312 | 0.83 | not promising: placebo p = 0.43 vs random non-OPEX 4-day holds (equity drift); PBO 0.88 |
 | 4d | [H-019](h019-report.md) month-end rebalancing fade (ES-only proxy) | 15 y hourly | 1/12 | 86 | −$10,300 | −0.34 | not promising; placebo p = 0.41. Run 1 ([buggy](h019-report-run1-buggy.md), 63/183 months) showed 7/12 and p = 0.029 - an artefact of the data bug (D-041) |
+| 4e | [H-021](h021-report.md) buy after a sharp 3-day decline (z <= -1.5/-2) | 15 y hourly | 3/12 | 94 | +$14,176 | 0.25 | not promising: **placebo p = 0.99 - random entry days do better**; 2018/2020/2022/2025 selloffs kept falling |
 | 4c | [H-016](h016-report.md) pre-holiday (long) | 15 y hourly | 0/12 | 31 | −$2,365 | −0.45 | not promising; ~2-3 events/yr, placebo p = 0.54 |
 | 4b | [H-015](h015-report.md) macro-announcement days (jobs, CPI) | 15 y hourly | 0/12 | 165 | −$6,057 | −0.28 | not promising; placebo p = 0.53 (no premium vs random days) |
 | 4 | [H-011](h011-report.md) VWAP-deviation fade | 1 y trades | 3/11 | 256 | +$4,070 | 0.68 | not promising (0/4 variants > 0 full period) |
