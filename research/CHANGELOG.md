@@ -34,3 +34,4 @@
 - 2026-10-03 (routine, after usage reset) H-021 buy after sharp 3-day decline: 3/12, t 0.25, placebo p 0.99; closed (D-046). 170 trials.
 - 2026-10-03 (routine 16:15) R3.5 fill calibration on 2024-03-05: maker fills trade_through 49 / L3 FIFO 52 / queue_l1 55; keep trade_through (D-047).
 - 2026-10-03 R7.1: 26-market daily bars ($2.26) + portfolio engine; H-022 trend/carry portfolio OOS -4.3%/yr, Sharpe -0.28, placebo p 0.96; closed (D-049). 174 trials.
+- 2026-10-03 (routine 17:15) Paused new hypotheses pending the user's choice of direction after H-022 (QUEUE 'Needs the user').

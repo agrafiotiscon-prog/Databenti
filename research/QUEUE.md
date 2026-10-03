@@ -82,6 +82,11 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 ## Later: new hypotheses (one at a time, mechanism first; see vault/03-order-flow/evidence-review.md)
 
 ## Needs the user
+- **(session 6, after H-022) Direction for the 15%/yr goal (D-048/D-049) - waiting for the user:**
+  (1) accept Sharpe ~0.4-0.5 and confirm a pre-registered combination (trend252 + H-007) on the holdout
+  or by paper trading; (2) buy multi-year ES tick data (~$140/yr PAYG or a subscription) for order-flow
+  research; (3) leverage (not recommended: ~-60% drawdowns). Until the user answers, the routine does not
+  start new hypotheses on the 26-market data (would add trials while the direction is open).
 - (resolved by D-019: credit spent on 1 year of RTH trades; $117.15 of $120 cap used)
 - **Old: Data budget for real backtests.** ES trades cost about $0.55 per full UTC day (tbbo ≈ $0.92):
   one year of trades ≈ $140, more than the remaining pay-as-you-go credit (~$112 after
