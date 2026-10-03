@@ -128,7 +128,7 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
     Added columns:
       event_id      increments after every F_LAST record
       kind          snapshot | clear | add | cancel | fill_removal | partial_fill_cancel |
-                    modify_price | modify_price_fill | modify_up | modify_down | modify_down_fill | refill |
+                    modify_price | modify_price_fill | aggressor_removal | modify_up | modify_down | modify_down_fill | refill |
                     trade | fill | none | unknown_order
       prev_size / new_size   the order's size before / after the record
       orig_size     size the order had when added (for removal rows; the clip size)
@@ -137,9 +137,10 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
       fill_hidden      on the record that takes an order out of the book: fills on it that no
                        size reduction explained = quantity executed beyond the displayed size
                        (native iceberg reserve)
-      fill_aggressor   on a modify_price_fill record: fills that preceded the order being
-                       re-priced to the fill price in the same event (an order modified into
-                       the market, i.e. aggressor fills, not resting fills)
+      fill_aggressor   fills of an order modified into the market (aggressor volume, not resting
+                       fills): on the F row when it fills away from its resting price (then its
+                       old entry is removed as `aggressor_removal` or moved as
+                       `modify_price_fill`), else on the modify_price_fill row
       Real data (2024-03-05, vault/results/mbo-fill-reconciliation-2024-03-05.md):
       explained + hidden + aggressor == resting fill volume.
       best_bid / best_ask    touch as of the last COMPLETED event before this record
@@ -163,6 +164,7 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
     hidden = np.zeros(n, np.int64)
     aggressor = np.zeros(n, np.int64)
     fill_rows: dict[int, list[int]] = {}    # oid -> F rows of the current event (for exceeds_display)
+    aggr_event: dict[int, int] = {}         # oid -> event in which it took liquidity as aggressor
     bb = np.full(n, np.nan)
     ba = np.full(n, np.nan)
     event = np.zeros(n, np.int64)
@@ -182,7 +184,12 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
             kind[i] = "trade"
         elif a == "F":
             kind[i] = "fill"
-            if o in book.orders:
+            if o in book.orders and book.orders[o][1] != p:
+                # filled at a price other than where it rests: the order was modified into the
+                # market and took liquidity (its M or C follows in this event). Aggressor volume.
+                aggressor[i] = q
+                aggr_event[o] = ev
+            elif o in book.orders:
                 unexplained[o] = unexplained.get(o, 0) + q
                 exceeds[i] = unexplained[o] > book.orders[o][2]
                 fill_rows.setdefault(o, []).append(i)
@@ -204,7 +211,9 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
                 orig[i] = orig_size.get(o, 0)
                 prev[i], new[i] = book.apply(a, s, p, q, o)
                 bal = unexplained.get(o, 0)
-                if bal >= q > 0:
+                if aggr_event.get(o) == ev and bal == 0:
+                    kind[i] = "aggressor_removal"       # old resting entry of a filled aggressor
+                elif bal >= q > 0:
                     kind[i] = "fill_removal"
                     unexplained[o] = bal - q
                     explained[i] = q
@@ -224,7 +233,9 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
                 kind[i] = "add"
                 orig_size[o] = q
             elif old_price != p:
-                if bal > 0:                          # re-priced into the market: aggressor fills
+                if aggr_event.get(o) == ev and bal == 0:
+                    kind[i] = "modify_price_fill"        # aggressor volume already on its F rows
+                elif bal > 0:                          # re-priced into the market: aggressor fills
                     kind[i] = "modify_price_fill"
                     aggressor[i] = bal
                     for j in fill_rows.get(o, ()):
@@ -251,6 +262,7 @@ def annotate_mbo(mbo: pd.DataFrame) -> pd.DataFrame:
             cur_bb, cur_ba = book.best_bid(), book.best_ask()
             ev += 1
             fill_rows.clear()
+            aggr_event.clear()
 
     out = mbo.copy()
     out["event_id"], out["kind"], out["prev_size"], out["new_size"] = event, kind, prev, new

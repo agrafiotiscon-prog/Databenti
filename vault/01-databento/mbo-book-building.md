@@ -96,3 +96,6 @@ In their ES example `k ≈ -0.8 … -0.95` tracked the true MBO queue much bette
   [mbo-fill-reconciliation-2024-03-05](../results/mbo-fill-reconciliation-2024-03-05.md).
 - Native iceberg refill = `F` then a same-price `M` on the **same order id in the same event**
   (100% of 3,018 refills; mostly 1-lot clips) → [mbo-iceberg-refills-2024-03-05](../results/mbo-iceberg-refills-2024-03-05.md).
+- An `F` at a price other than the order's resting price = the order was **modified into the market**
+  (aggressor volume). If it fills completely, CME deletes the old entry (`C`) instead of moving it
+  (5,211 orders on 2024-03-05 RTH) → [day check](../results/day-check-2024-03-05-rth.md).

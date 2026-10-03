@@ -22,7 +22,8 @@ tags: [memory, state]
   → IBKR fees as the default profile (`config/costs.toml`).
 
 ## Current state (2026-10-02, session 5)
-- Phases 0–1 done. **Phase 2 features: validated on the first real day** (2024-03-05, ES).
+- Phases 0–2 done. **Phase 2 features validated on the first real day** (2024-03-05, ES), incl.
+  a visual check ([day-check](../results/day-check-2024-03-05-rth.md)).
 - **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **$10.06** so
   far ($10.02 before `cache/download_log.csv` existed + $0.04 logged there; `spend_log.csv`
   also logs dry runs, so never sum it). Cached
@@ -31,7 +32,7 @@ tags: [memory, state]
 - Findings → [results](../results/README.md): roll crossover = **Monday of expiry week**
   (D-016, rule changed 8 → 4 days); MBO needed a **book warm-up** from the 00:00 UTC snapshot
   (fixed); MBO fill accounting is **exact** (1.0) once hidden iceberg reserve and
-  modify-into-market aggressor fills are recorded; side-N share ≈ 0.002% (negligible); native
+  modify-into-market aggressor fills (any F away from the resting price, 1.27%) are recorded; side-N share ≈ 0.002% (negligible); native
   iceberg refill = same-order `M` in the fill's event (mostly 1-lot clips).
   Calibration (D-018): synthetic icebergs ≈ chance → experimental; spoof label is descriptive only.
 - **Hourly research routine** active (D-017, `trig_01SxDd7cr6pA7egPMDYvJNAH`, :15 UTC): it
@@ -39,7 +40,7 @@ tags: [memory, state]
   ≤ $3/day, ≤ $25 total; keeps a strategy only if it passes G1–G11.
 
 ## Next step
-- The routine continues with `research/QUEUE.md`: R2.4 (visual check), then Phase 3 (L1 backtester), Phase 4 (framework), Phase 5 (H-001).
+- The routine continues with `research/QUEUE.md`: Phase 3 (L1 backtester, R3.1 first), Phase 4 (framework), Phase 5 (H-001).
 - **Needs the user:** a data budget for real backtests. One year of ES trades ≈ $140 on
   pay-as-you-go (more than the ~$115 left); Standard plan $199/mo includes 1 year of L1.
 

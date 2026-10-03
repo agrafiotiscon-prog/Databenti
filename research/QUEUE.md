@@ -12,7 +12,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] R2.3 (s6, D-018: synthetic dt=1ms + clips>=2, experimental; spoof descriptive) Calibrate on the real distribution: spoof `min_size` (default 50) and synthetic-iceberg
       `dt` (5 ms; 44,893 synthetic icebergs in one RTH looks far too many). Record the choice and
       the evidence; parameters are fixed BEFORE any strategy uses them.
-- [ ] R2.4 `scripts/plot_day.py --date 2024-03-05 --mbo` visual sanity check; save a screenshot
+- [x] R2.4 (s6: found fully-filled modify-into-market pattern; see day-check-2024-03-05-rth) `scripts/plot_day.py --date 2024-03-05 --mbo` visual sanity check; save a screenshot
       or summary to `vault/results/`.
 
 ## Phase 3: backtester (vault/04-backtesting/)

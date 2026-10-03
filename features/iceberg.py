@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 
 _TRACKED = {"add", "fill", "modify_up", "refill", "cancel", "fill_removal", "partial_fill_cancel",
-            "modify_down_fill", "modify_price", "modify_price_fill", "modify_down", "clear"}
+            "modify_down_fill", "modify_price", "modify_price_fill", "modify_down", "aggressor_removal", "clear"}
 
 
 def native_icebergs(ann: pd.DataFrame) -> pd.DataFrame:
@@ -33,6 +33,7 @@ def native_icebergs(ann: pd.DataFrame) -> pd.DataFrame:
     side, price = ann["side"].astype(str).to_numpy(), ann["price"].to_numpy(float)
     size, new = ann["size"].to_numpy(np.int64), ann["new_size"].to_numpy(np.int64)
     exceeds = ann["exceeds_display"].to_numpy(bool)
+    event = ann["event_id"].to_numpy(np.int64) if "event_id" in ann.columns else np.arange(len(ann))
     state: dict[int, dict] = {}
     out = []
     for i in pos:
@@ -49,9 +50,13 @@ def native_icebergs(ann: pd.DataFrame) -> pd.DataFrame:
         evidence = None
         if k == "fill":
             st["filled"] += int(size[i])
+            st["fill_event"] = int(event[i])
             if exceeds[i]:
                 evidence = "fill_exceeds_display"
-        elif k == "refill" or (k == "modify_up" and st["filled"] > 0 and price[i] == st["price"]):
+        # real refills happen in the fill's own event (vault/results/mbo-iceberg-refills-2024-03-05.md);
+        # a size increase hours after a partial fill is a manual change, not a refill
+        elif k == "refill" or (k == "modify_up" and st.get("fill_event") == int(event[i])
+                               and price[i] == st["price"]):
             st["peak"] = max(st["peak"], int(new[i]))
             evidence = "refill_after_fill"
         elif k in ("modify_price", "modify_price_fill"):
@@ -59,7 +64,8 @@ def native_icebergs(ann: pd.DataFrame) -> pd.DataFrame:
         if evidence and not st["detected"]:
             st["detected"] = True
             out.append((ts[i], o, side[i], float(st["price"]), evidence, st["peak"]))
-        if k in ("cancel", "fill_removal", "partial_fill_cancel", "modify_down_fill") and new[i] == 0:
+        if k in ("cancel", "fill_removal", "partial_fill_cancel", "modify_down_fill",
+                 "aggressor_removal") and new[i] == 0:
             state.pop(o, None)
     return pd.DataFrame(out, columns=cols)
 

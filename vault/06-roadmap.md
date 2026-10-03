@@ -39,7 +39,7 @@ updated: 2026-10-02
    - native-iceberg sightings
    - `F_MAYBE_BAD_BOOK` occurrences
 
-**Phase 2: features** (✅ code complete on synthetic data, session 4; awaiting real-data validation) exactly as in [feature definitions](03-order-flow/feature-definitions.md),
+**Phase 2: features** (✅ code complete session 4; ✅ validated on real data sessions 5–6) exactly as in [feature definitions](03-order-flow/feature-definitions.md),
 plus `features/book.py` (MBO book) and the Plotly day viewer. Each feature gets hand-made unit
 tests, truncation tests and perturbation tests.
 

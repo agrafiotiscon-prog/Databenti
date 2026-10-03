@@ -1,6 +1,6 @@
 ---
 type: result
-date: 2026-10-02
+date: 2026-10-03
 tags: [verification, phase-1b]
 ---
 # Data verification 2024-03-05 (RTH only)
@@ -28,18 +28,18 @@ hour_ct
 - **snapshot_records**: 0
 - **snapshot_times**: []
 - **maybe_bad_book_records**: 0
-- **kinds**: {'add': 3299780, 'cancel': 2445855, 'fill': 982791, 'fill_removal': 851920, 'modify_price': 599089, 'trade': 358336, 'modify_down_fill': 122203, 'modify_down': 19175, 'refill': 3018, 'none': 1232, 'modify_up': 722, 'modify_price_fill': 109, 'partial_fill_cancel': 56}
+- **kinds**: {'add': 3299780, 'cancel': 2445855, 'fill': 982791, 'fill_removal': 846765, 'modify_price': 599089, 'trade': 358336, 'modify_down_fill': 122203, 'modify_down': 19175, 'aggressor_removal': 5211, 'refill': 3018, 'none': 1232, 'modify_up': 722, 'modify_price_fill': 109}
 - **fill_volume**: 1499172
-- **fill_explained**: 1490095
+- **fill_explained**: 1473591
 - **fill_unexplained_open**: 0
-- **fill_reconciliation_ratio**: 0.9939453244857828
-- **fill_hidden (iceberg reserve)**: 7226
-- **fill_aggressor (modified into market)**: 1851
+- **fill_reconciliation_ratio**: 0.982936580992708
+- **fill_hidden (iceberg reserve)**: 6536
+- **fill_aggressor (modified into market)**: 19045
 - **fill_accounted_ratio**: 1.0
 - **book_anomalies**: 0
 - **unknown_order_records**: 0
-- **native_icebergs**: 1540
-- **synthetic_icebergs**: 44893
+- **native_icebergs**: 1432
+- **synthetic_icebergs**: 3388
 - **spoof_like**: 32
 
 ## status

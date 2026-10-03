@@ -33,3 +33,9 @@ Answer: **the fill/cancel split is exact on real data** (ratio 1.0 with the two 
 components). Full session (17:00 CT → 16:00 CT, [verify-2024-03-05](verify-2024-03-05.md)):
 1,793,572 F lots = 1,783,088 explained + 7,853 hidden + 2,630 aggressor + **1 lot** unaccounted
 (ratio 0.9999994; probably a balance wiped by the 00:00 UTC snapshot's `R` clear).
+
+## Update (session 6, routine R2.4)
+The visual check found a third pattern: orders **modified into the market and fully filled** (the old
+entry is then deleted, not moved). Any `F` at a price other than the order's resting price is now
+aggressor volume. Revised RTH split: explained 1,473,591 (98.29%), **aggressor 19,045 (1.27%)**,
+hidden reserve 6,536 (0.44%), unaccounted 0. See [day check](day-check-2024-03-05-rth.md).

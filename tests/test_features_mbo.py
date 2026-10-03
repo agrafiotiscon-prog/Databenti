@@ -323,13 +323,16 @@ def test_order_modified_into_market_is_aggressor_not_iceberg():
         (10, "F", "B", 5000.25, 10, 2, 0),     # fill reported on order 2 before its book update
         (10, "M", "B", 5000.25, 3, 2, L)]      # ...which moves it to the fill price with 3 left
     ann = annotate_mbo(mbo_df(rows))
-    assert ann["kind"].iloc[-1] == "modify_price_fill" and ann["fill_aggressor"].iloc[-1] == 10
+    assert ann["kind"].iloc[-1] == "modify_price_fill"
+    assert ann["fill_aggressor"].iloc[-2] == 10 and ann["fill_aggressor"].sum() == 10   # on the F row
     assert not ann["exceeds_display"].iloc[-2]                    # not hidden size
     assert native_icebergs(ann).empty
-    # negative control: same fill followed by a same-price removal IS iceberg evidence
-    rows2 = rows[:-1] + [(10, "C", "B", 5000.00, 3, 2, L)]
-    assert ann.shape[0] == annotate_mbo(mbo_df(rows2)).shape[0]
-    assert annotate_mbo(mbo_df(rows2))["exceeds_display"].iloc[-2]
+    # negative control: a fill AT the order's resting price larger than its display, then its
+    # removal, IS iceberg evidence
+    rows2 = base_book() + [(10, "T", "A", 5000.00, 10, 98, 0), (10, "F", "B", 5000.00, 10, 2, 0),
+                           (10, "C", "B", 5000.00, 3, 2, L)]
+    ann2 = annotate_mbo(mbo_df(rows2))
+    assert ann2["exceeds_display"].iloc[-2] and ann2["fill_hidden"].iloc[-1] == 7
 
 
 def test_synthetic_iceberg_ignores_one_lot_clips_by_default():
@@ -337,3 +340,33 @@ def test_synthetic_iceberg_ignores_one_lot_clips_by_default():
     ann = annotate_mbo(mbo_df(synthetic_chain(sizes=(1, 1, 1))))
     assert synthetic_icebergs(ann, dt="5ms", min_clips=3).empty
     assert len(synthetic_icebergs(ann, dt="5ms", min_clips=3, min_clip_size=1)) == 1
+
+
+def test_late_size_increase_is_not_an_iceberg_refill():
+    # order 1 (bid 5 @ 5000.00) partially filled, then 2 s later its owner raises it to 9
+    fill = [(10, "T", "A", 5000.00, 2, 99, 0), (10, "F", "B", 5000.00, 2, 1, 0),
+            (10, "C", "B", 5000.00, 2, 1, L)]
+    late = base_book() + fill + [(2_000, "M", "B", 5000.00, 9, 1, L)]
+    ann = annotate_mbo(mbo_df(late))
+    assert ann["kind"].iloc[-1] == "modify_up"
+    assert native_icebergs(ann).empty
+    # negative control: the same increase inside the fill's event IS a refill
+    same = base_book() + fill[:2] + [(10, "C", "B", 5000.00, 2, 1, 0), (10, "M", "B", 5000.00, 9, 1, L)]
+    ice = native_icebergs(annotate_mbo(mbo_df(same)))
+    assert ice["evidence"].tolist() == ["refill_after_fill"]
+
+
+def test_order_modified_into_market_and_fully_filled_is_removed_not_cancelled():
+    # ask 4 @ 5002.00 (far from the 5000.25 offer) is modified to sell 5 at market, fills fully,
+    # and CME deletes the old entry instead of moving it (real pattern, 2024-03-05)
+    rows = base_book() + [(5, "A", "A", 5002.00, 4, 7, L),
+        (10, "T", "A", 5000.00, 5, 97, 0),
+        (10, "F", "A", 5000.00, 5, 7, 0),      # F at 5000.00, but order 7 rests at 5002.00
+        (10, "F", "B", 5000.00, 5, 1, 0),      # the resting bid it hit
+        (10, "C", "B", 5000.00, 5, 1, 0),
+        (10, "C", "A", 5002.00, 4, 7, L)]      # old entry removed
+    ann = annotate_mbo(mbo_df(rows))
+    assert ann["kind"].iloc[-1] == "aggressor_removal"
+    assert ann["fill_aggressor"].iloc[-4] == 5 and not ann["exceeds_display"].iloc[-4]
+    assert native_icebergs(ann).empty and spoof_like_events(ann, min_size=1).empty
+    assert (ann["fill_explained"] + ann["fill_hidden"] + ann["fill_aggressor"]).sum() == 10
