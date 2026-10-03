@@ -57,6 +57,8 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
       6/13 years positive); closed. Do not test volatility-conditioned variants on 2010-2025 (snooped).
 - [x] H-004 (s6): follow multi-level sweeps: NOT PROMISING, t = -5.5, 0/16 variants > 0; closed (D-025).
       Fade-sweep variants are contaminated on this data.
+- [x] H-005..H-008 (s6, D-026/D-027): see vault/results/leaderboard.md. Best: H-007 pre-FOMC (6/11 gates, not promoted).
+- [ ] R6.4 H-007 confirmation: needs the USER (holdout unlock or paper trading). Do not re-test on development data.
 - [ ] R6.3 Next idea: needs either cached data ($0: 238 RTH trade days 2024-11..2025-09, 15 y of hourly
       bars) or the user's OK for more spend ($1.08 left under the cap). Candidates must have a stated
       payer and a horizon of minutes+; write registry + protocol first.

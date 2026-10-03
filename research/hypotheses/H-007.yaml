@@ -18,4 +18,4 @@ space:
   window: [lm24h, morning]     # lm24h: 13:00 CT day before -> 13:00 CT; morning: 09:00 -> 13:00 CT same day
 trial_budget: 2
 registered: 2026-10-03
-status: open
+status: closed

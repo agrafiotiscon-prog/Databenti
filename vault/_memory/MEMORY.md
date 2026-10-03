@@ -46,9 +46,12 @@ tags: [memory, state]
 - **H-002** (intraday momentum + delta filter, 1 year): inconclusive, t = 0.08. **H-003** (same
   signal, 15 y of hourly bars): **not promising**, 2,095 OOS trades, t = 0.21, 6/13 years > 0
   (D-024). **H-004** (follow multi-level sweeps): **not promising**, OOS t = −5.5, 0/16 > 0 (D-025).
-  Total hypothesis trials: 108. Reports: `vault/results/h00{1,2,3,4}-report.md`.
+  **H-005..H-008** evaluated; **leaderboard: [leaderboard](../results/leaderboard.md)** — best is
+  **H-007 pre-FOMC drift** (6/11 gates, OOS 98 trades, t = 1.95), not promoted (D-027).
+  Total hypothesis trials: 126.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
-  Holdout frozen at 2025-10-03. Next: R6.3 (needs cached data or the user's OK to spend).
+  Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
+  paper trading); otherwise R6.3 more hypotheses on cached data.
 - **Budget (D-019):** whole $125 credit approved; hard cap $120 in code; **spent $118.92** →
   only $1.08 left. No more data purchases without the user. One year cannot pass G7.
 

@@ -1,0 +1,36 @@
+---
+type: result
+date: 2026-10-03
+tags: [phase-5, leaderboard, gates]
+---
+# Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
+
+Total hypothesis trials logged: **126** (every DSR uses this global count). "Best" = most gates
+passed out of sample; **no hypothesis passes all 11, so none is promoted.**
+
+| Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
+|---|---|---|---|---|---|---|---|
+| 1 | [H-007](h007-report.md) pre-FOMC drift (24 h window) | 15 y hourly | **6/11** | 98 | +$21,296 | **1.95** | best candidate; fails G1 (8 events/yr), G3, G5, G6, G10 |
+| 2 | [H-003](h003-report.md) last-hour momentum | 15 y hourly | 2/11 | 2,095 | +$7,177 | 0.21 | not promising |
+| 3 | [H-004](h004-report.md) follow sweeps | 1 y trades | 2/11 | 202 | −$6,124 | −5.47 | not promising (reliably negative) |
+| 4 | [H-006](h006-report.md) gap fade | 15 y hourly | 1/11 | 2,043 | +$20,761 | 0.59 | not promising (0/4 variants > 0 full period) |
+| 5 | [H-005](h005-report.md) turn of month | 15 y hourly | 1/11 | 124 | +$3,141 | 0.12 | no evidence |
+| 6 | [H-008](h008-report.md) 5-min imbalance fade | 1 y trades | 1/11 | 124 | +$653 | 0.18 | not promising (0/8 variants > 0) |
+| 7 | [H-002](h002-report.md) momentum + delta filter | 1 y trades | 1/11 | 53 | +$348 | 0.08 | inconclusive |
+| 8 | [H-001](h001-report.md) absorption + divergence | 1 y trades | 0/11 | 14 | −$113 | −0.37 | not promising (70/72 variants lose) |
+
+## H-007: why it is the best candidate and why it is still not promoted
+- Out of sample 2013-06..2025-09 (13 annual folds): +17.7 ticks/trade after pessimistic costs
+  (≈ 2.36 ticks per round trip), positive in 8/13 years, stress (2 ticks/side, fees ×1.5)
+  +$18.6k, MC 5th percentile +$11.8k, PBO 0.002, cluster-K DSR 0.98, survives +1 tick per side.
+- It is a **pre-registered test of a published effect** (Lucca & Moench 2015) with a stated
+  direction, not a mined pattern; only the original 24 h window works (the morning-only variant
+  loses, −1.2 ticks/trade) and selection chose it in 10/13 folds.
+- No announcement leakage out of sample: since 2013 statements are released at 14:00 ET =
+  13:00 CT, exactly our exit; the 2011–2012 12:30 ET releases fall only in early training windows.
+- Against it: only 98 trades (t = 1.95), gains concentrated in big-Fed years (2018, 2020,
+  2022–2024; 2021 −$4.9k), raw-N DSR ≈ 0. After 126 trials this is **weak evidence**.
+- **What would confirm or kill it** (needs the user): (1) one evaluation on the frozen holdout
+  (from 2025-10-03, ~8 meetings; low power, but untouched); (2) forward paper trading of the
+  fixed rule (enter at 13:00 CT the day before a scheduled statement, exit 12:59 CT on the day).
+  No re-tuning on the development data.
