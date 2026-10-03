@@ -235,3 +235,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-016 (pre-holiday), H-017 (OPEX week) and H-018 (Monday reversal) as not promising; R6.6 done.
 - **Why:** Each run once: H-016 0/12 gates (31 OOS trades, t -0.45, placebo p 0.54); H-017 5/12 (86 trades, t 0.83, placebo p 0.43 vs random non-OPEX 4-day holds); H-018 5/12 (329 trades, t 1.64, placebo p 0.24 vs the same fade on Tue-Fri; gains concentrated in 2022/2025). H-018's G12 placebo was written into the module before any result (stricter only). Global hypothesis trials 160. H-007 remains the best candidate, not promoted.
 - **Status:** active.
+
+## D-040 — H-019 month-end rebalancing registered before any result (2026-10-03)
+- **Decision:** Register H-019 (fade the month-to-date ES move over the last 4 trading days; 2 variants; G12 placebo vs the same fade at non-month-end times).
+- **Why:** R6.3: strongest remaining idea with a stated payer (calendar-driven pension/balanced-fund rebalancing, Harvey, Mazzoleni & Melone 2025) testable on cached hourly bars at $0. ES-only proxy (no bond data) is a known weakness; ~12 events/yr means G1 (>= 200 OOS trades) is unlikely - recorded in advance.
+- **Status:** active.

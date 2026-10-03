@@ -1,0 +1,25 @@
+id: H-019
+title: Month-end rebalancing - fade the month-to-date ES move over the last 4 trading days of the month
+mechanism: >
+  Balanced funds and pensions rebalance back to fixed equity/bond weights near month-end: after
+  equities outperform they sell equities, after they underperform they buy. Harvey, Mazzoleni &
+  Melone (2025, NBER w33554 "The Unintended Consequences of Rebalancing") report that this
+  predictable flow moves equity futures against the month's move in the final days of the month
+  and is front-run by informed traders. Who pays: the rebalancing funds (price-insensitive,
+  calendar-driven). Proxy limitation: we only have ES (no bond data cached and no budget), so the
+  signal is the ES month-to-date return, not equity-minus-bond; this weakens the test. Prior:
+  moderate (recent paper, clear payer), but the ES-only proxy and ~12 events/yr limit power.
+direction: fade
+horizon: "4 trading days (close of T-4 -> close of the month's last trading day T)"
+features: [daily_closes, calendar]
+fixed:
+  signal: ES month-to-date return from the previous month's last 15:00 CT close to the 15:00 CT close of T-4, chained from same-contract daily returns
+  trade: side = -sign(signal) if |signal| >= min_abs_bp; enter 15:00 CT close of T-4, exit 15:00 CT close of T, entry day's contract for both prices
+  data: ES ohlcv-1h both ranks 2010-06..2025-09; D-023 protocol (36/12/12 folds)
+  execution: 1 tick adverse per side + fees
+  g12: is month-end special? same fade rule (trailing 17-trading-day return, 4-day hold) on random windows that do not overlap the last 6 or first 2 trading days of any month; same threshold and count; 10,000 draws; OOS dates
+space:
+  min_abs_bp: [0, 200]
+trial_budget: 2
+registered: 2026-10-03
+status: open
