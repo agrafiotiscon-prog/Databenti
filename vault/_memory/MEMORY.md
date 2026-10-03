@@ -25,7 +25,7 @@ tags: [memory, state]
 ## Current state (2026-10-03, session 6)
 - Phases 0–2 done. **Phase 2 features validated on the first real day** (2024-03-05, ES), incl.
   a visual check ([day-check](../results/day-check-2024-03-05-rth.md)).
-- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **$117.15**
+- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **$118.92**
   in total; earlier ($10.02 before `cache/download_log.csv` existed + $0.04 logged there; `spend_log.csv`
   also logs dry runs, so never sum it). Cached
   locally (not in git): 2024-03-05 trades/tbbo/mbo/status, trades for the 2024-03 roll window
@@ -43,10 +43,13 @@ tags: [memory, state]
 ## Next step
 - Phases 3–5 done. **H-001 evaluated once (D-020) → NOT PROMISING, closed (D-021)**: 70/72
   variants lose after costs, median −1.25 ticks/trade → [h001-report](../results/h001-report.md).
-- Data cached: **238 RTH trade days 2024-11-01..2025-09-30** (holdout frozen at 2025-10-03).
-  Next: R6.1 next hypothesis (best-evidenced, mechanism first) on the cached data at $0.
-- **Budget (D-019):** whole $125 credit approved; hard cap $120 in code; **spent $117.15** →
-  only $2.85 left. No more data purchases without the user. One year cannot pass G7.
+- **H-002** (intraday momentum + delta filter, 1 year): inconclusive, t = 0.08. **H-003** (same
+  signal, 15 y of hourly bars): **not promising**, 2,095 OOS trades, t = 0.21, 6/13 years > 0
+  (D-024). Total hypothesis trials: 92. Reports: `vault/results/h00{1,2,3}-report.md`.
+- Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
+  Holdout frozen at 2025-10-03. Next: R6.3 (needs cached data or the user's OK to spend).
+- **Budget (D-019):** whole $125 credit approved; hard cap $120 in code; **spent $118.92** →
+  only $1.08 left. No more data purchases without the user. One year cannot pass G7.
 
 ## Open questions
 - Recheck detector calibration (D-018) on more MBO days (needs the user's OK for MBO)

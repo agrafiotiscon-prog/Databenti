@@ -155,3 +155,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-003 (research/hypotheses/H-003.yaml, 4 variants). Walk-forward on calendar years: train 3 years, test 1 year, step 1 year, 1-trading-day embargo (folds from research.walkforward with train_months=36, test_months=12, step_months=12). Selection in each train window: highest block-bootstrap 5th-pct net PnL with fees x1.5 (mean block 7 days, 500 sims). Base cost: 1 tick adverse per side + fees; stress: 2 ticks adverse per side + fees x1.5. G8 substitute for bar data (no tier-B fills possible): OOS net PnL keeps its sign with +1 extra tick per side. G2 uses the stress scenario. DSR with N = all hypothesis trials so far (92). PBO via CSCV with S = 16 (15 years). Evaluated once; download ohlcv-1h ES.c.0 + ES.c.1 2010-06..2025-09 (priced $1.77, cap $120 respected).
 - **Why:** H-002 showed a once-a-day strategy needs ~15 years for power; hourly bars give that for $1.77. Costs are deliberately pessimistic because bars carry no quotes. The G8 substitute and every threshold are fixed now, before any data exists locally.
 - **Status:** active.
+
+## D-024 — H-002 inconclusive and H-003 not promising: intraday momentum into the close has no reliable edge in ES (2026-10-03)
+- **Decision:** Close H-002 (inconclusive, underpowered) and H-003 (not promising). Do not re-test conditional variants (e.g. high-volatility only) on 2010-2025 data: the idea came from seeing H-003's yearly results.
+- **Why:** H-002: 1 year of trades, OOS 53 trades, t = 0.08. H-003: 15 years of hourly bars, 2,095 OOS trades over 13 years, t = 0.21, positive in 6/13 years, PBO 0.03, DSR 0.002 (N=92), stress -$49.9k. Total data spend $118.92 of the $120 cap.
+- **Status:** active.

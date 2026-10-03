@@ -25,4 +25,4 @@ space:
   min_abs_bp: [0, 25]         # trade only if |signal return| >= this
 trial_budget: 4
 registered: 2026-10-03
-status: open
+status: closed

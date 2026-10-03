@@ -18,3 +18,4 @@
 - 2026-10-03 R6.1: H-002 registered (intraday momentum into the close, Gao et al. 2018 / Baltussen et al. 2021; optional cum-delta filter; 16 variants); protocol D-022 fixed before any result.
 - 2026-10-03 R6.2: generic runner scripts/run_hypothesis.py (strategy module interface, state across days, global-N DSR); strategies/h002.py + causality tests; dry run OK (no PnL viewed).
 - 2026-10-03 H-002 single evaluation: inconclusive (OOS 53 trades, t=0.08; 5/16 variants >0; underpowered: ~15 years needed); closed. H-003 (last-hour momentum on 15 years of hourly bars, 4 variants) + protocol D-023 registered before download.
+- 2026-10-03 H-003 single evaluation: NOT PROMISING (2,095 OOS trades over 13 y, t=0.21, 6/13 years positive, stress -$49.9k); closed (D-024). Hourly bars cost $1.77; total spend $118.92.
