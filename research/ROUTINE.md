@@ -23,6 +23,10 @@ is [research-loop](../vault/05-anti-overfitting/research-loop.md); the gates are
    something is broken that blocks all progress (user, session 6: "only confirm if you are
    sure"). No confirmation requests otherwise; keep working through the queue.
 
+## Before reading any result (D-042)
+- Check **event coverage**: events/trades found vs. expected (e.g. 183 month-ends in 2010-09..2025-09).
+  A shortfall is a data bug until proven otherwise (H-019 run 1 silently dropped 2/3 of its months).
+
 ## What "keep it if it is more profitable" means
 - A strategy variant is **kept** (written to `research/CHAMPION.md`) only if it passes **every
   gate G1–G11** on walk-forward out-of-sample data, after realistic costs: `config/costs.toml`

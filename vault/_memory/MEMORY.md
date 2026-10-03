@@ -55,10 +55,12 @@ tags: [memory, state]
   D-032). H-013 intraday periodicity negative (D-031). G12 placebo: H-005, H-009 are drift. H-014 TSMOM
   not promising (t 0.51). **Only H-007 shows timing beyond drift (p 0.063).** H-015 macro days: 0/12, placebo p 0.53.
   H-016 pre-holiday 0/12; H-017 OPEX week 5/12 (placebo p 0.43); H-018 Monday reversal 5/12
-  (placebo p 0.24 vs Tue-Fri) - all closed (D-039). Total hypothesis trials: 160.
+  (placebo p 0.24 vs Tue-Fri) - all closed (D-039). H-019 month-end
+  rebalancing: run 1 buggy (dropped 2/3 of months, looked good), fixed re-run 1/12 → closed (D-041/42).
+  Lesson: check event coverage first. Total hypothesis trials: 164.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
-  paper trading); otherwise R6.3 more hypotheses on cached data.
+  paper trading); next queue item R6.7 coverage audit of H-005..H-018, then R6.3 more ideas.
 - **Budget (D-019):** whole $125 credit approved; hard cap $120 in code; **spent $118.92** →
   only $1.08 left. No more data purchases without the user. One year cannot pass G7.
 

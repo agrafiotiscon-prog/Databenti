@@ -246,3 +246,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Why:** Run 1 used only 63 of 183 month-ends: (a) holiday sessions halted before 15:00 CT were treated as trading days, so any month containing one had no signal; (b) the chained daily returns broke at Databento's post-expiry rank shift (c.0 has no 15:00 close on expiry Friday). The loss was systematic (most quarterly-expiry months and holiday months dropped), not random. The fix only restores the registered definition (same contract's 15:00 closes; trading days = days with a 15:00 close) - no parameter or rule change. Run 1 looked good (7/12 gates, placebo p 0.029, 30 OOS trades), so the re-run is NOT motivated by a bad result; both results are reported. Same issue can drop a few trades per year in earlier bar modules that use prev_date across expiry weekends or holidays (no directional bias expected; noted in QUEUE as a check).
 - **Alternatives:** Report run 1 as is (rejected: it tested a different, data-filtered sample)
 - **Status:** active.
+
+## D-042 — H-019 closed (no month-end rebalancing effect in ES alone) (2026-10-03)
+- **Decision:** Close H-019 as not promising; add an event-coverage check to the routine's checklist.
+- **Why:** Bug-fixed re-run (D-041) on all 183 month-ends: 1/12 gates, OOS 86 trades, -$10.3k, t -0.34, 6/13 years, placebo p 0.41; full-period variant min_abs_bp0 +6.6 ticks/trade before selection, but selection picked 200 bp every fold and lost. Run 1's 7/12 and p 0.029 came from a sample that systematically dropped holiday and expiry months. 164 hypothesis trials. The ES-only proxy (no bond leg) remains a limitation; a proper equity-minus-bond test would need ZN/ZB data (budget: user).
+- **Status:** active.

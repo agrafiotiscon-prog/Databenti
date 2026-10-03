@@ -67,6 +67,10 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] R6.6 (s6, D-039: H-016 0/12, H-017 5/12 p 0.43, H-018 5/12 p 0.24 - all closed) Remaining weaker calendar ideas (each long-only -> G12 placebo built in): pre-holiday
       (Ariel 1990), option-expiration week (Stivers & Sun 2013), Monday/weekend reversal. Low priors;
       several cannot reach 200 OOS trades. Register before running; keep spaces tiny.
+- [x] H-019 (s6, D-040..D-042): month-end rebalancing fade: run 1 buggy (63/183 months), fixed re-run 1/12, p 0.41; closed.
+- [ ] R6.7 Coverage audit of earlier bar modules (H-005..H-018): count events found vs expected; holiday
+      sessions halted before 15:00 CT and Databento's post-expiry rank shift can drop trades via prev_date/px.
+      Report only (closed hypotheses are not re-run unless a drop is systematic AND large; then decide + log).
 - [ ] R6.4 H-007 confirmation: needs the USER (holdout unlock or paper trading). Do not re-test on development data.
 - [ ] R6.3 Next idea: needs either cached data ($0: 238 RTH trade days 2024-11..2025-09, 15 y of hourly
       bars) or the user's OK for more spend ($1.08 left under the cap). Candidates must have a stated
