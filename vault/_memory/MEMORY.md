@@ -18,7 +18,8 @@ tags: [memory, state]
 
 ## Decisions made by the user (session 4) → [decisions](decisions.md) D-012..D-015
 - Instrument **ES**. Billing **pay-as-you-go** ($125 credit, $5 guard). Holdout = **last 12
-  months** (frozen at the first multi-month pull, `config/splits.toml`). Broker **not chosen**
+  months** (frozen at the first multi-month tier-A pull, `config/splits.toml`; until then a
+  provisional lock from today − 12 months is enforced by `data/holdout.py`). Broker **not chosen**
   → IBKR fees as the default profile (`config/costs.toml`).
 
 ## Current state (2026-10-02, session 5)
@@ -41,7 +42,7 @@ tags: [memory, state]
 
 ## Next step
 - The routine continues with `research/QUEUE.md`: Phase 3 done (engine, metrics, hftbacktest adapter; tier-B calibration run R3.5 deferred to
-  Phase 5), then **Phase 4** (framework: R4.1 holdout lock + walk-forward), Phase 5 (H-001).
+  Phase 5), then **Phase 4** (R4.1 holdout lock + walk-forward done → R4.2 trial log + hypothesis registry), Phase 5 (H-001).
 - **Needs the user:** a data budget for real backtests. One year of ES trades ≈ $140 on
   pay-as-you-go (more than the ~$115 left); Standard plan $199/mo includes 1 year of L1.
 

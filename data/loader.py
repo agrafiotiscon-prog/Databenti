@@ -23,7 +23,7 @@ from typing import Iterable
 
 import pandas as pd
 
-from . import cache
+from . import cache, holdout
 from .flags import F_SNAPSHOT
 from .rolls import contract_segments
 from .sessions import session_bounds, tag_sessions
@@ -76,7 +76,8 @@ def slice_session(df: pd.DataFrame, trading_date: date, rth_only: bool = False) 
 
 def load_session(downloader, schema: str, trading_date: date, rth_only: bool = False,
                  **fetch_kwargs) -> pd.DataFrame:
-    """Fetch (cost-checked, cached) and load one trading session."""
+    """Fetch (cost-checked, cached) and load one trading session (refuses holdout dates)."""
+    holdout.check([trading_date], getattr(downloader, "splits_path", holdout.SPLITS_TOML))
     paths = downloader.fetch_sessions(schema, [trading_date], rth_only=rth_only, **fetch_kwargs)
     df = load_chunks(paths)
     if schema == "mbo":

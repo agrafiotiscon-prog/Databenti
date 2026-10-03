@@ -140,3 +140,12 @@ covered by sections 1–5 and the [pitfalls checklist](../01-databento/pitfalls.
   learning methods*, Quantitative Finance 19(9). Uses clustering to estimate the effective number
   of trials.
 - A user-supplied video checklist (summary in [inbox](../inbox/2026-10-02-video-four-robustness-steps.md)).
+
+## Implementation (session 6, routine R4.1)
+- `data/holdout.py`: `check()` is called by `Downloader.fetch_sessions/fetch_days` (before
+  anything is priced) and by `load_session`; it raises `HoldoutLocked` for dates in the holdout
+  unless `research/HOLDOUT_UNLOCK` exists. Until `holdout_start` is frozen, a **provisional**
+  holdout from today − 12 months applies. `maybe_freeze()` writes `holdout_start` at the first
+  tier-A request spanning ≥ 60 days; it never moves afterwards.
+- `research/walkforward.py`: rolling folds from `[walk_forward]` in `config/splits.toml`
+  (12 m train → 3 m test, step 3 m, 1 trading-day embargo), development dates only.

@@ -30,7 +30,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
       do it with H-001 in Phase 5 if nothing earlier fits).
 
 ## Phase 4: research framework (vault/05-anti-overfitting/)
-- [ ] R4.1 Holdout lock in the loader (`config/splits.toml`), walk-forward splitter with embargo.
+- [x] R4.1 (s6: data/holdout.py provisional+frozen lock in downloads/loads; research/walkforward.py) Holdout lock in the loader (`config/splits.toml`), walk-forward splitter with embargo.
 - [ ] R4.2 Append-only trial log `research/trials.jsonl` + hypothesis registry
       `research/hypotheses/*.yaml` (mechanism, space, budget written first).
 - [ ] R4.3 DSR, PBO (CSCV), plateau test, Monte Carlo (block bootstrap + execution MC).

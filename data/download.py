@@ -20,7 +20,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterable
 
-from . import cache
+from . import cache, holdout
 from .config import (DATASET, DEFAULT_ROOT, DEFAULT_STYPE_IN, DEFAULT_SYMBOL, SUPPORTED_SCHEMAS,
                      get_client, load_settings)
 from .contracts import DEFAULT_ROLL_DAYS_BEFORE_EXPIRY, continuous_symbol
@@ -42,6 +42,7 @@ class Downloader:
         self.cache_dir = Path(cache_dir) if cache_dir else settings.cache_dir
         self.max_cost_usd = settings.max_cost_usd if max_cost_usd is None else max_cost_usd
         self.dataset = dataset
+        self.splits_path = holdout.SPLITS_TOML
         self.guard = CostGuard(self.client, self.max_cost_usd, self.cache_dir / "spend_log.csv")
 
     # ------------------------------------------------------------------ planning
@@ -71,6 +72,8 @@ class Downloader:
     # ------------------------------------------------------------------ fetching
     def fetch_days(self, schema: str, days: Iterable[date], symbol: str = DEFAULT_SYMBOL,
                    stype_in: str = DEFAULT_STYPE_IN, allow_over_limit: bool = False) -> list[Path]:
+        days = sorted(set(days))
+        holdout.check(days, self.splits_path)
         all_paths, missing = self.plan(schema, days, symbol, stype_in)
         if not missing:
             print(f"  [cache] {schema} {symbol}: all {len(all_paths)} chunk(s) cached")
@@ -132,6 +135,8 @@ class Downloader:
         All missing chunks (across symbols) are priced together before anything
         is downloaded, so the $ limit applies to the whole request.
         """
+        trading_days = sorted(set(trading_days))
+        holdout.check(trading_days, self.splits_path)          # raises unless the user unlocked it
         all_paths: list[Path] = []
         missing: list[tuple[Request, Path]] = []
         for sym, days in self.session_plan(trading_days, symbol, root, rth_only, roll_days_before).items():
@@ -142,6 +147,9 @@ class Downloader:
             print(f"  [cache] {schema}: all {len(all_paths)} chunk(s) cached")
             return all_paths
         self.guard.check([r for r, _ in missing], allow_over_limit=allow_over_limit)
+        frozen = holdout.maybe_freeze(schema, trading_days, self.splits_path)
+        if frozen:
+            print(f"  [holdout] first multi-month {schema} pull: holdout_start frozen at {frozen}")
         self._download(missing)
         return all_paths
 
