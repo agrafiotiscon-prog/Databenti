@@ -185,3 +185,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Per the user (session 6: 'only confirm if you are sure ... continue'): no confirmation requests; notify only when a candidate passes ALL gates G1-G11 (ROUTINE.md step 7 updated). H-007 holdout/paper steps stay parked until something is certain. Registered before any result: H-009 overnight drift (4), H-010 daily reversal (4) on 15 y hourly bars (D-023 protocol), H-011 VWAP-deviation fade (4) on the cached trades (D-020 protocol). Global hypothesis trials after this batch: 138.
 - **Why:** User instruction; batch registration fixes the family before results.
 - **Status:** active.
+
+## D-030 — H-009..H-011 closed; leaderboard updated (H-007 still best, nothing promoted) (2026-10-03)
+- **Decision:** Close H-009 (overnight drift, 5/11), H-010 (daily reversal, 5/11), H-011 (VWAP fade, 3/11).
+- **Why:** Single evaluations. H-009: 2,552 OOS trades, +$68.5k, t = 1.05, 9/13 years, negative at 2 ticks/side, PBO 0.63. H-010: 1,074 trades, +$83.0k, t = 1.38, 2020 alone +$75k, 6/13 years. H-011: 256 trades, t = 0.68, 0/4 variants positive. Hypothesis trials: 138.
+- **Status:** active.
