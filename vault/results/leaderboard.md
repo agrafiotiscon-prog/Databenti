@@ -5,11 +5,12 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **164** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **166** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 | Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
 |---|---|---|---|---|---|---|---|
+| 1b | [H-020](h020-report.md) volatility-managed long (63-day vol < 1-y median) | 15 y hourly | **8/12** (most) | 79 | +$182,206 | 3.89* | not promoted: **fails G12 (p = 0.118: regime series shifted in time with the same 57% long share earn nearly as much - mostly equity drift)**, G1 (79 multi-week holds), G3 (raw-N DSR 0.56). *per-trade t is inflated by month-long holds |
 | **1** | [H-007](h007-report.md) pre-FOMC drift (24 h window) | 15 y hourly | **6/11** | 98 | +$21,296 | **1.95** | best candidate; placebo vs random days p = 0.063 (borderline); fails G1 (8 events/yr), G3, G5, G6, G10 |
 | ~~1=~~ | [H-012](h012-report.md) FOMC-cycle even weeks | 15 y hourly | 6/11 | 226 | +$82,006 | 1.23 | **DEMOTED by placebo: 22/30 shifted calendars do as well (p ≈ 0.74) - the profit is equity drift, not a Fed effect**; passes G1 (226 trades); fails G3 (t < 2, DSR), G4/G10 (2-variant space), G6 (2023-24 = +$61k), G11 |
 | ~~2~~ | [H-009](h009-report.md) overnight drift | 15 y hourly | 5/11 | 2,552 | +$68,478 | 1.05 | **placebo: overnight earns exactly its time share of the drift (p = 0.51)** - not promising: negative at 2 ticks/side, PBO 0.63; 9/13 years > 0, all variants > 0 |
@@ -81,3 +82,10 @@ of 183 month-ends: months containing an early-halted holiday session or a quarte
 silently dropped. With the bug fixed (same contract's 15:00 closes; trading days = days with a
 15:00 close) all 183 months trade and the effect is gone (t = −0.34, 6/13 years). Lesson: **check
 event coverage (events found vs. events expected) before reading any result.**
+
+## H-020 volatility-managed exposure (session 6 routine 13:16, D-044)
+Passes 8/12 gates - more than any other hypothesis - but not the ones that separate an edge from
+drift: random-timing placebo p = 0.118 (beats 88% of circular shifts of its own regime series, so a
+weak volatility-timing signal may exist, as Moreira & Muir claim, but it is not significant), only
+79 OOS trades, raw-N DSR 0.56. It is a long-only exposure rule, not a trading edge after drift.
+Not promoted. **H-007 remains the strongest timing evidence (p = 0.063); neither passes G12.**

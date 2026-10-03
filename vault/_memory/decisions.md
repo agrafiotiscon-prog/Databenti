@@ -256,3 +256,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Register H-020 (long ES only when trailing realised vol < its 1-year median; 2 variants; G12 via circular shifts).
 - **Why:** R6.3: published, different mechanism from the closed calendar family (risk timing, not dates); testable on cached hourly bars at $0. Long-only so G12 decides whether it beats plain drift; low-moderate prior given Cederburg et al. (2020).
 - **Status:** active.
+
+## D-044 — H-020 closed (vol-managed long: 8/12 gates but fails G12) (2026-10-03)
+- **Decision:** Close H-020; not promoted.
+- **Why:** One evaluation: OOS 79 trades, +$182k, stress +$180k, PBO 0.001, 9/13 years > 0, cluster-K DSR 1.0, but G12 placebo p 0.118 (circular shifts of the regime with the same long share earn nearly as much), G1 79 < 200, G3 raw-N DSR 0.56 (per-trade t 3.89 is inflated by month-long holds). Coverage 3,815/3,815 daily returns (D-042 check). 166 hypothesis trials.
+- **Status:** active.
