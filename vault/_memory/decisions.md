@@ -144,3 +144,9 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-001 (status: closed). Its 72 logged trials remain in research/trials.jsonl and count in future DSR deflation.
 - **Why:** Single evaluation per D-020 on 238 RTH days (2024-11-01..2025-09-30): all gates fail; 70 of 72 variants lose after costs (median -1.25 ticks/trade); the 2 positive variants are low-trade noise; PBO 0.16, DSR 0.001 (N=72) / 0.01 (K=18). Gate code reports 'insufficient data' (OOS trades 14 < 200) but the family-wide loss makes the substantive verdict 'not promising'. Report: vault/results/h001-report.md.
 - **Status:** active.
+
+## D-022 — H-002 registered and its evaluation protocol fixed (before any result) (2026-10-03)
+- **Decision:** H-002 intraday momentum (research/hypotheses/H-002.yaml, 16 variants). Protocol identical to D-020: same 238 cached RTH days, walk-forward 6/1/1 with 1-day embargo, selection on block-bootstrap 5th-pct net at 1.5x fees, DSR with N = this family (16) AND with the global count including H-001 (88), PBO via CSCV S=8, stress 1.5x/2x fees and 250/500 ms. Evaluated once via scripts/run_hypothesis.py.
+- **Why:** Chosen from vault/03-order-flow/evidence-review.md section 7: minutes-scale horizon, once-a-day event, peer-reviewed evidence (Gao et al. 2018; Baltussen et al. 2021) with a stated payer (end-of-day hedging flows); order flow enters only as a confirmation filter. Small space (16) keeps deflation mild. Known limits: ~200-240 trades over the year at most, so G1 (>= 200 OOS) and G7 (multi-year) cannot pass - the best possible verdict this round is 'insufficient data'; a clear negative is still informative.
+- **Alternatives:** OFI at seconds horizons (best evidence but killed by 100 ms latency); iceberg/spoof features (no MBO budget, noisy labels).
+- **Status:** active.

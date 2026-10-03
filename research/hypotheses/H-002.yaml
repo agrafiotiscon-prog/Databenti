@@ -1,0 +1,30 @@
+id: H-002
+title: Intraday momentum into the cash close, with an optional order-flow confirmation filter
+mechanism: >
+  Gao, Han, Li & Zhou (2018, JFE 129) find that the S&P 500's first half-hour return (from the
+  previous close) predicts the last half-hour return; Baltussen, Da, Lammers & Martens (2021,
+  JFE 142) confirm it in 60+ futures markets and attribute it to end-of-day hedging flows: options
+  dealers short gamma and leveraged ETFs must trade in the direction of the day's move near the
+  close. Who pays: hedgers who must rebalance into the close regardless of price. The optional
+  filter asks the aggressive order flow (cumulative delta over the signal window) to agree with
+  the return sign, i.e. the move was driven by aggressors, not drift. Prior: moderate (peer
+  reviewed, but published anomalies often decay after publication; 2024-25 is post-publication).
+direction: follow
+horizon: "30 min: enter at 14:30 CT, exit just before the 15:00 CT cash close"
+features: [rth_returns, cum_delta]
+fixed:
+  session: ES RTH, 1 contract, one trade per day at most
+  entry: market order at the first trade at/after 14:30:00 CT (+100 ms latency), worse-of-book fill
+  exit: market order at 14:59:30 CT (time exit), or the protective stop if set
+  previous_close: last RTH trade of the previous trading date in the data, SAME contract only;
+    days whose contract differs from the previous day's (roll Monday) or without a previous day
+    are skipped
+  data: RTH trades (quotes rebuilt from trades, D-019)
+space:
+  signal: [open30, day]       # open30: prev close -> 09:00 CT;  day: prev close -> 14:30 CT
+  min_abs_bp: [0, 10]         # trade only if |signal return| >= this many basis points
+  stop_ticks: [0, 12]         # 0 = no protective stop
+  delta_filter: [false, true] # require cum delta over the signal window to agree in sign
+trial_budget: 16
+registered: 2026-10-03
+status: open

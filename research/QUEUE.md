@@ -46,7 +46,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] R5.3 (s6: NOT PROMISING - 70/72 variants lose, median -1.25 ticks/trade; H-001 closed, D-021) (runner ready: scripts/run_h001.py per D-020; run ONCE when stage downloads finish) Run, gate, verdict (promising / not promising / insufficient data).
 
 ## Next hypotheses ($0: reuse the 238 cached RTH days; one at a time, mechanism first)
-- [ ] R6.1 Pick the next hypothesis from vault/03-order-flow/evidence-review.md with the strongest
+- [x] R6.1 (s6: H-002 intraday momentum + order-flow filter, 16 variants, D-022) Pick the next hypothesis from vault/03-order-flow/evidence-review.md with the strongest
       published support (not footprint folklore); write its registry entry and protocol BEFORE
       running anything. Count H-001's 72 trials in the family/global trial tally.
 - [ ] R6.2 Generic runner: refactor scripts/run_h001.py into scripts/run_hypothesis.py so new
