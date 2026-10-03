@@ -26,7 +26,7 @@ tags: [memory, state]
 ## Current state (2026-10-03, session 6)
 - Phases 0–2 done. **Phase 2 features validated on the first real day** (2024-03-05, ES), incl.
   a visual check ([day-check](../results/day-check-2024-03-05-rth.md)).
-- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **$118.92**
+- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **≈ $121.2** (see Budget below)
   in total; earlier ($10.02 before `cache/download_log.csv` existed + $0.04 logged there; `spend_log.csv`
   also logs dry runs, so never sum it). Cached
   locally (not in git): 2024-03-05 trades/tbbo/mbo/status, trades for the 2024-03 roll window
@@ -59,13 +59,16 @@ tags: [memory, state]
   rebalancing: run 1 buggy (dropped 2/3 of months, looked good), fixed re-run 1/12 → closed (D-041/42).
   Lesson: check event coverage first. H-020 vol-managed long: 8/12 gates (most) but placebo p 0.118,
   79 trades → not promoted (D-044). H-021 buy-the-selloff 3/12, placebo p 0.99 (D-046).
-  Total hypothesis trials: 170. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
+  Total hypothesis trials: 174. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
   fills), conservative; queue_l1 mildly optimistic.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
   paper trading); coverage audit done (H-007 sample complete, 122/122); next R6.3 more ideas.
-- **Budget (D-019):** whole $125 credit approved; hard cap $120 in code; **spent $118.92** →
-  only $1.08 left. No more data purchases without the user. One year cannot pass G7.
+- **User target (D-048): ~15%/yr = Sharpe ≥ 1 at 15% vol** → [return-targets](../04-backtesting/return-targets.md).
+  R7: 26 CME futures daily bars 2010-2025 cached (`data/universe.py`, `portfolio/`). H-022 trend+carry
+  portfolio OOS −4.3%/yr (Sharpe −0.28); trend252 in hindsight 0.41 (D-049).
+- **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.2** (+ ≤ $0.15 possible
+  partial charges from 3 interrupted streams) → ≈ $3.7 of credit left. No more data purchases without the user. One year cannot pass G7.
 
 ## Open questions
 - Recheck detector calibration (D-018) on more MBO days (needs the user's OK for MBO)

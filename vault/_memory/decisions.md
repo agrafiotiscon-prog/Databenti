@@ -282,3 +282,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Why:** User (session 6): '11% over 12 years is really bad, it should be like 15% annually; do robust research and engineering'. Return scales with leverage, so the honest target is risk-adjusted: 15%/yr at 15% vol = Sharpe 1.0 net - top-decile for systematic funds (SG Trend index 2010-2024 roughly Sharpe 0.3-0.5). Single-market ES calendar effects are idle ~97% of the time and cannot reach it without dangerous leverage. The best-documented route to Sharpe ~0.7-1 is diversification across many markets and independent signals (time-series momentum, carry; Moskowitz-Ooi-Pedersen 2012, Koijen et al. 2018, Hurst-Ooi-Pedersen 2017). Daily bars for 26 markets cost ~$2.45 (< $5 guard; total stays < $125 the user approved).
 - **Alternatives:** Lever H-007 up (rejected: 8 trades/yr, tail risk, not confirmed); keep mining ES on the same data (rejected: 170 trials already, DSR penalty grows)
 - **Status:** active.
+
+## D-049 — H-022 closed (diversified trend/carry portfolio fails out of sample) (2026-10-03)
+- **Decision:** Close H-022 as not promising; do not select trend252 after the fact; report the user's target as unmet by the classic recipe.
+- **Why:** One evaluation, coverage checked (D-042), carry signs verified: walk-forward OOS -4.3%/yr at 15.3% vol (Sharpe -0.28), 4/13 years > 0, placebo p 0.96, stress -$847k on $1M. Full-period trend252 Sharpe 0.41 matches public trend indices after 2010, but choosing it now would be hindsight. 174 hypothesis trials. Spend ~$121.2 of the $125 credit.
+- **Status:** active.
