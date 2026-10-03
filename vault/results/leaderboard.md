@@ -10,8 +10,8 @@ passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 | Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
 |---|---|---|---|---|---|---|---|
-| 1= | [H-007](h007-report.md) pre-FOMC drift (24 h window) | 15 y hourly | **6/11** | 98 | +$21,296 | **1.95** | best candidate; fails G1 (8 events/yr), G3, G5, G6, G10 |
-| 1= | [H-012](h012-report.md) FOMC-cycle even weeks | 15 y hourly | **6/11** | 226 | +$82,006 | 1.23 | co-leader; passes G1 (226 trades); fails G3 (t < 2, DSR), G4/G10 (2-variant space), G6 (2023-24 = +$61k), G11 |
+| **1** | [H-007](h007-report.md) pre-FOMC drift (24 h window) | 15 y hourly | **6/11** | 98 | +$21,296 | **1.95** | best candidate; placebo vs random days p = 0.063 (borderline); fails G1 (8 events/yr), G3, G5, G6, G10 |
+| ~~1=~~ | [H-012](h012-report.md) FOMC-cycle even weeks | 15 y hourly | 6/11 | 226 | +$82,006 | 1.23 | **DEMOTED by placebo: 22/30 shifted calendars do as well (p ≈ 0.74) - the profit is equity drift, not a Fed effect**; passes G1 (226 trades); fails G3 (t < 2, DSR), G4/G10 (2-variant space), G6 (2023-24 = +$61k), G11 |
 | 2 | [H-009](h009-report.md) overnight drift | 15 y hourly | 5/11 | 2,552 | +$68,478 | 1.05 | not promising: negative at 2 ticks/side, PBO 0.63; 9/13 years > 0, all variants > 0 |
 | 3 | [H-010](h010-report.md) daily reversal | 15 y hourly | 5/11 | 1,074 | +$82,956 | 1.38 | not promising: 2020 alone +$75k (concentrated), 6/13 years |
 | 4 | [H-011](h011-report.md) VWAP-deviation fade | 1 y trades | 3/11 | 256 | +$4,070 | 0.68 | not promising (0/4 variants > 0 full period) |
@@ -47,3 +47,13 @@ Cieslak, Morse & Vissing-Jorgensen 2019), and both are positive in 8–9 of 13 O
 overlap (H-007's entry day is in H-012's week 0). **A combined rule must NOT be built from this
 observation on 2010–2025 data** (it was formed after seeing both results); the clean tests are the
 frozen holdout and forward paper trading, which the user decides on. Neither is promoted.
+
+## Placebo tests (session 6, routine 12:15) → [placebo-fed](placebo-fed.md)
+- **H-007:** $324/trade on real FOMC days vs $50 on random non-FOMC days; one-sided p = 0.063.
+  Still the best candidate, but borderline.
+- **H-012:** with the FOMC calendar shifted by 1–30 trading days, 22 of 30 shifted calendars earn
+  as much or more (median $117k vs $75k real). Its profit is long exposure in a rising market, not
+  a Fed-cycle effect → demoted.
+- Lesson → new gate **G12** (D-032, stricter only): long-only/calendar rules must beat a placebo or
+  random-timing benchmark at p ≤ 0.05. Not yet measured for H-005, H-009 (also long-only) - their
+  totals likely contain the same equity drift.

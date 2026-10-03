@@ -1,4 +1,4 @@
-"""Promotion gates G1-G11 (vault/05-anti-overfitting/methodology.md section 8; Phase 4, R4.4).
+"""Promotion gates G1-G12 (vault/05-anti-overfitting/methodology.md section 8; Phase 4, R4.4).
 
 `evaluate(evidence)` returns one row per gate. Missing evidence is a FAIL, never a pass:
 a candidate is promoted only when every gate was measured and passed.
@@ -24,6 +24,9 @@ GATES = [
      lambda e: bool(e["is_medoid"]) and e["cluster_share_profitable"] >= 0.70 and not e["island"],
      ["is_medoid", "cluster_share_profitable", "island"]),
     ("G11", "DSR >= 0.95 with cluster-based effective K", lambda e: e["dsr_k"] >= 0.95, ["dsr_k"]),
+    # added session 6 (D-032, stricter only): long-only or calendar rules must beat random timing
+    ("G12", "beats a placebo / random-timing benchmark (one-sided p <= 0.05)", lambda e: e["placebo_p"] <= 0.05,
+     ["placebo_p"]),
 ]
 
 

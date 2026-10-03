@@ -200,3 +200,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-012 (6/11 gates, co-leader) and H-013 (reliably negative). No combined Fed-calendar rule on 2010-2025 (post-hoc).
 - **Why:** H-012: 226 OOS trades, +$82.0k, t = 1.23, 9/13 years, positive under stress. H-013: 637 trades, -$36.4k, t = -2.14, 0/4 variants. Hypothesis trials: 144.
 - **Status:** active.
+
+## D-033 — New gate G12 (placebo / random-timing benchmark); H-012 demoted (2026-10-03)
+- **Decision:** Add G12 to research/gates.py: a candidate must beat a placebo or random-timing benchmark at one-sided p <= 0.05 (missing = FAIL). H-012 is demoted (placebo p ~ 0.74). H-007 stays the best candidate with placebo p = 0.063 (not significant at 5%).
+- **Why:** scripts/placebo_fed.py: H-012's even-week rule with the FOMC calendar shifted 1-30 trading days earns as much in 22/30 cases (median $117k vs $75k real) -> its profit is equity drift. G1-G11 had no benchmark check, so long-only rules in a rising market could look good. Adding a gate only makes promotion harder (never more optimistic).
+- **Status:** active.

@@ -23,3 +23,4 @@
 - 2026-10-03 H-005 (t 0.12), H-006 (t 0.59), H-007 (t 1.95, 6/11 gates), H-008 (t 0.18) evaluated once; leaderboard written; best = H-007 pre-FOMC drift, not promoted (D-027). 126 hypothesis trials.
 - 2026-10-03 H-009 (overnight, 5/11, t 1.05), H-010 (daily reversal, 5/11, t 1.38, 2020-driven), H-011 (VWAP fade, 3/11, t 0.68) evaluated once; none promoted; leaderboard updated. 138 trials.
 - 2026-10-03 H-012 (FOMC cycle even weeks: 226 OOS trades, +$82k, t 1.23, 6/11 - co-leader) and H-013 (intraday periodicity: t -2.14, 0/4) evaluated once. 144 trials.
+- 2026-10-03 (routine 12:15) Placebo tests: H-007 real FOMC days $324/trade vs $50 random (p 0.063); H-012 not exceptional vs shifted calendars (22/30 as good, p 0.74) -> demoted. New gate G12 (D-032).

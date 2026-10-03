@@ -60,6 +60,8 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] H-005..H-008 (s6, D-026/D-027): see vault/results/leaderboard.md. Best: H-007 pre-FOMC (6/11 gates, not promoted).
 - [x] H-009..H-011 (s6, D-029): overnight 5/11, daily reversal 5/11, VWAP fade 3/11 - none promoted.
 - [x] H-012..H-013 (s6, D-031): FOMC cycle 6/11 (co-leader with H-007), intraday periodicity negative.
+- [x] Placebo tests (s6 routine 12:15, D-032): H-012 demoted (p 0.74, equity drift); H-007 p = 0.063; new gate G12.
+- [ ] R6.5 Placebo (G12) for the remaining long-only rules H-005, H-009 (diagnostic, no new trials).
 - [ ] R6.4 H-007 confirmation: needs the USER (holdout unlock or paper trading). Do not re-test on development data.
 - [ ] R6.3 Next idea: needs either cached data ($0: 238 RTH trade days 2024-11..2025-09, 15 y of hourly
       bars) or the user's OK for more spend ($1.08 left under the cap). Candidates must have a stated

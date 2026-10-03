@@ -33,7 +33,8 @@ def test_cluster_quality_flags_islands():
 GOOD = {"oos_trades": 350, "oos_net_stress": 1200.0, "dsr_raw": 0.97, "oos_t": 3.1, "pbo": 0.05,
         "plateau_pass": True, "concentrated": False, "years_positive_share": 0.75, "n_years": 4,
         "tier_b_same_sign": True, "mc_net_p5": 300.0, "mc_p_loss": 0.04, "is_medoid": True,
-        "cluster_share_profitable": 0.8, "island": False, "dsr_k": 0.96}
+        "cluster_share_profitable": 0.8, "island": False, "dsr_k": 0.96,
+        "placebo_p": 0.01}
 
 
 def test_all_gates_pass_only_with_complete_evidence():
@@ -50,3 +51,9 @@ def test_one_year_of_data_is_insufficient_not_promising():
     assert t.loc["G7", "result"] == "FAIL" and G.verdict(t, e) == "insufficient data"
     bad = {**GOOD, "pbo": 0.4}
     assert G.verdict(G.evaluate(bad), bad) == "not promising"
+
+
+def test_g12_placebo_gate_fails_when_missing_or_not_significant():
+    t = G.evaluate({k: v for k, v in GOOD.items() if k != "placebo_p"})
+    assert t.loc["G12", "result"] == "FAIL" and not G.promoted(t)
+    assert G.evaluate({**GOOD, "placebo_p": 0.2}).loc["G12", "result"] == "FAIL"

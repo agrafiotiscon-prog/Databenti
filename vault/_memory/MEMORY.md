@@ -50,8 +50,9 @@ tags: [memory, state]
   **H-005..H-008** evaluated; **leaderboard: [leaderboard](../results/leaderboard.md)** — best is
   **H-007 pre-FOMC drift** (6/11 gates, OOS 98 trades, t = 1.95), not promoted (D-027).
   **H-009..H-011**: overnight drift 5/11, daily reversal 5/11, VWAP fade 3/11 (D-029).
-  **H-012** FOMC-cycle even weeks: **6/11, co-leader with H-007** (both Fed-calendar effects);
-  H-013 intraday periodicity negative (D-031). Total hypothesis trials: 144.
+  H-012 FOMC-cycle even weeks scored 6/11 but was **demoted by a placebo test** (shifted calendars do
+  as well → equity drift); H-007 placebo p = 0.063. **New gate G12** (placebo/random timing,
+  D-032). H-013 intraday periodicity negative (D-031). Total hypothesis trials: 144.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
   paper trading); otherwise R6.3 more hypotheses on cached data.
@@ -67,7 +68,7 @@ tags: [memory, state]
 - ES: tick 0.25 = $12.50. Fees about $2.26/side, $4.51 per round turn. Market-in/market-out ≈
   **1.36 ticks ≈ $17** before slippage.
 - Latency 100 ms (stress 250/500). Fees ×1.5 and ×2 stress. Gates G1–G11 (≥ 200 trades,
-  DSR ≥ 0.95, PBO ≤ 0.10, plateau, MC 5th percentile > 0, cluster medoid).
+  DSR ≥ 0.95, PBO ≤ 0.10, plateau, MC 5th percentile > 0, cluster medoid) + G12 placebo p ≤ 0.05.
 
 ## Where things are
 - [decisions](decisions.md) · [journal/](../journal/) · [inbox/](../inbox/) · [results/](../results/README.md) · [roadmap](../06-roadmap.md)
