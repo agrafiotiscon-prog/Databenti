@@ -33,18 +33,18 @@ tags: [memory, state]
   (fixed); MBO fill accounting is **exact** (1.0) once hidden iceberg reserve and
   modify-into-market aggressor fills are recorded; side-N share ≈ 0.002% (negligible); native
   iceberg refill = same-order `M` in the fill's event (mostly 1-lot clips).
+  Calibration (D-018): synthetic icebergs ≈ chance → experimental; spoof label is descriptive only.
 - **Hourly research routine** active (D-017, `trig_01SxDd7cr6pA7egPMDYvJNAH`, :15 UTC): it
   follows `research/ROUTINE.md` and works through `research/QUEUE.md`. Budget ≤ $1/firing,
   ≤ $3/day, ≤ $25 total; keeps a strategy only if it passes G1–G11.
 
 ## Next step
-- The routine continues with `research/QUEUE.md`: R2.3–R2.4 (spoof/iceberg calibration, visual
-  check), then Phase 3 (L1 backtester), Phase 4 (framework), Phase 5 (H-001).
+- The routine continues with `research/QUEUE.md`: R2.4 (visual check), then Phase 3 (L1 backtester), Phase 4 (framework), Phase 5 (H-001).
 - **Needs the user:** a data budget for real backtests. One year of ES trades ≈ $140 on
   pay-as-you-go (more than the ~$115 left); Standard plan $199/mo includes 1 year of L1.
 
 ## Open questions
-- Spoof `min_size` (50) and synthetic-iceberg `dt` (5 ms → 44,893/day looks far too many)
+- Recheck detector calibration (D-018) on more MBO days (needs the user's OK for MBO)
 - CME fees after 2026-10-01 (SER #9799) → [costs](../02-market-structure/costs-fees-slippage.md)
 - Roll rule for NQ/MES/MNQ not measured (ES only)
 

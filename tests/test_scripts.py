@@ -62,3 +62,25 @@ def test_roll_history_folds_weekend_bars_into_monday():
     idx = pd.DatetimeIndex(["2024-03-08", "2024-03-10", "2024-03-11"], tz="UTC")   # Fri, Sun, Mon
     out = to_trading_dates(pd.Series([5, 1, 7], index=idx))
     assert out.to_dict() == {date(2024, 3, 8): 5, date(2024, 3, 11): 8}
+
+
+def test_readd_precision_separates_reposts_from_chance():
+    from scripts.calibrate_mbo import readd_precision
+    t0 = pd.Timestamp("2024-03-05 14:30", tz="UTC")
+    rows = []   # (offset, kind, side, price, new_size, orig_size)
+    for k in range(20):
+        base = k * 10.0
+        rows += [(base, "fill_removal", "B", 5000.0, 0, 5),
+                 (base + 0.0005, "add", "B", 5000.0, 5, 5),     # same size right away (re-post)
+                 (base + 1.0005, "add", "B", 5000.0, 3, 3)]     # other size one second later
+    idx = pd.DatetimeIndex([t0 + pd.Timedelta(seconds=r[0]) for r in rows])
+    ann = pd.DataFrame({"kind": [r[1] for r in rows], "side": [r[2] for r in rows],
+                        "price": [r[3] for r in rows], "new_size": [r[4] for r in rows],
+                        "orig_size": [r[5] for r in rows]}, index=idx)
+    out = readd_precision(ann, dt_grid=("1ms",))
+    assert out.loc["1ms", "same_share_near"] == 1.0 and out.loc["1ms", "same_share_far"] == 0.0
+    assert out.loc["1ms", "precision_est"] == 1.0
+    # negative control: same-size adds equally likely near and far -> precision 0
+    ann2 = ann.copy()
+    ann2.loc[ann2["new_size"] == 3, "new_size"] = 5
+    assert readd_precision(ann2, dt_grid=("1ms",)).loc["1ms", "precision_est"] == 0.0

@@ -330,3 +330,10 @@ def test_order_modified_into_market_is_aggressor_not_iceberg():
     rows2 = rows[:-1] + [(10, "C", "B", 5000.00, 3, 2, L)]
     assert ann.shape[0] == annotate_mbo(mbo_df(rows2)).shape[0]
     assert annotate_mbo(mbo_df(rows2))["exceeds_display"].iloc[-2]
+
+
+def test_synthetic_iceberg_ignores_one_lot_clips_by_default():
+    # calibration (D-018): 1-lot re-adds are indistinguishable from chance
+    ann = annotate_mbo(mbo_df(synthetic_chain(sizes=(1, 1, 1))))
+    assert synthetic_icebergs(ann, dt="5ms", min_clips=3).empty
+    assert len(synthetic_icebergs(ann, dt="5ms", min_clips=3, min_clip_size=1)) == 1

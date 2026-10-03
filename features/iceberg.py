@@ -64,8 +64,13 @@ def native_icebergs(ann: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(out, columns=cols)
 
 
-def synthetic_icebergs(ann: pd.DataFrame, dt: str = "5ms", min_clips: int = 3) -> pd.DataFrame:
+def synthetic_icebergs(ann: pd.DataFrame, dt: str = "1ms", min_clips: int = 3,
+                       min_clip_size: int = 2) -> pd.DataFrame:
     """Chains of same-size clips re-added within `dt` after the previous clip filled.
+
+    EXPERIMENTAL, not for strategy use: on real ES data (vault/results/mbo-calibration-2024-03-05-rth.md,
+    decision D-018) a same-size re-add is only ~27% above chance even at the best setting
+    (dt=1ms, clips >= 2 lots) and indistinguishable from chance for 1-lot clips or dt >= 5ms.
 
     Returns one row per chain reaching `min_clips`: known_at, side, price, clip_size, clips, order_ids.
     """
@@ -89,7 +94,7 @@ def synthetic_icebergs(ann: pd.DataFrame, dt: str = "5ms", min_clips: int = 3) -
     for e in ends:
         key = (side[e], price[e], int(orig[e]))
         cand = adds.get(key)
-        if not cand or orig[e] <= 0:
+        if not cand or orig[e] < max(min_clip_size, 1):
             continue
         j = bisect.bisect_right(cand, int(e))
         while j < len(cand) and cand[j] in used:

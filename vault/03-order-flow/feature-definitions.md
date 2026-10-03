@@ -138,3 +138,10 @@ carries an *unexplained fill* balance:
 times. Two deliberately leaky features (today's completed POC, and a centred moving average) are
 tests that **must fail** it, and they do. MBO causality tests assert that the fixture produces
 output, so the check can't pass vacuously.
+
+## Real-data calibration (session 6, D-018)
+- **Synthetic icebergs:** near chance on 2024-03-05 RTH (same-size re-add precision ≈ +2% for
+  all clips, +27% for clips ≥ 2 lots at dt = 1 ms). Defaults now `dt="1ms"`, `min_clip_size=2`;
+  **experimental, not for strategy use** → [calibration](../results/mbo-calibration-2024-03-05-rth.md).
+- **Spoof-like:** ~45% of all far adds are pulled untouched within 10 s, and large orders less
+  often; `min_size=50` kept, label is descriptive only.

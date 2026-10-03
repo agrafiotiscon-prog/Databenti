@@ -9,7 +9,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
       0.48% hidden iceberg reserve, 0.12% orders modified into the market).
 - [x] R2.2 (s6: same-order M in the fill's event; see mbo-iceberg-refills-2024-03-05) (removed: 1,544 → 1,540 RTH, 1,850 → 1,843 full) Describe
       how native refills really look in Databento MBO (answers an open question in MEMORY).
-- [ ] R2.3 Calibrate on the real distribution: spoof `min_size` (default 50) and synthetic-iceberg
+- [x] R2.3 (s6, D-018: synthetic dt=1ms + clips>=2, experimental; spoof descriptive) Calibrate on the real distribution: spoof `min_size` (default 50) and synthetic-iceberg
       `dt` (5 ms; 44,893 synthetic icebergs in one RTH looks far too many). Record the choice and
       the evidence; parameters are fixed BEFORE any strategy uses them.
 - [ ] R2.4 `scripts/plot_day.py --date 2024-03-05 --mbo` visual sanity check; save a screenshot

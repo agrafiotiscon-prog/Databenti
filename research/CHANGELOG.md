@@ -2,3 +2,4 @@
 
 - 2026-10-02 s5: routine set up (D-017). Queue seeded from the roadmap.
 - 2026-10-03 R2.2: native refill = same-order M in the fill's event (100%); synthetic re-posts can't be told apart from new orders (156k/day). Result note written. $0.
+- 2026-10-03 R2.3: calibrate_mbo.py; synthetic icebergs ≈ chance (experimental, dt=1ms, clips>=2), spoof label descriptive (45% base rate). D-018. $0.

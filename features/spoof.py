@@ -7,7 +7,9 @@ A spoof-like event is a LARGE resting order that
   * within `max_lifetime` of being added, never traded, and
   * price never came within `near_ticks` of it while it rested.
 It is known at the CANCEL time (using it at add time would be lookahead).
-This labels behaviour, not intent. Orders whose price is modified, that trade,
+This labels behaviour, not intent. Base rate (vault/results/mbo-calibration-2024-03-05-rth.md):
+~45% of ALL far adds (1-50 lots) are pulled untouched within 10 s, and >= 50-lot orders are
+pulled LESS often (17-27%), so the label is descriptive only (D-018). Orders whose price is modified, that trade,
 or that are wiped by a non-snapshot book clear are dropped from tracking.
 """
 from __future__ import annotations
