@@ -20,7 +20,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
       only data with `ts_recv + latency <= now`; market orders fill at the book seen at
       arrival (+ latency); fees from `config/costs.toml`. Tests: no-lookahead (negative
       control), fee arithmetic, one-contract position limits.
-- [ ] R3.2 Limit and stop orders with `trade_through` (pessimistic) and `queue_l1` fill modes.
+- [x] R3.2 (s6: limit/stop/cancel, trade_through + queue_l1; fill-mode check in trials.jsonl) Limit and stop orders with `trade_through` (pessimistic) and `queue_l1` fill modes.
 - [ ] R3.3 Metrics from `vault/04-backtesting/metrics.md` (per-trade, daily PnL, markouts,
       concentration) + per-year/month tables.
 - [ ] R3.4 hftbacktest adapter for tier-B `l3_fifo` calibration (MBO; only on cached days).

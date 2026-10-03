@@ -67,3 +67,9 @@ case must be simulated.
 - Null baseline on 2024-03-05 RTH (buy every 10 min, exit after 5 min): 39 trades, −2.95 ticks
   gross per trade (≈ −1.5 drift on a falling day, −1 spread, rest latency/conservatism), fees
   $4.51 per round trip exactly. Logged in `research/trials.jsonl` (family `engine-sanity`).
+- R3.2: limit (marketable → taker at the worse book within the limit; resting → `trade_through`
+  or `queue_l1`), stop (trade at/through → market at the worse of trigger and next book), cancel
+  (effective strictly after its arrival; a same-instant trade fills first). `optimistic` is
+  refused. Real-data check (join the bid every 10 min, 2024-03-05 RTH): fills 35/39
+  `trade_through`, 36/39 `queue_l1`; −2.3 ticks/trade gross vs −2.95 for market entries
+  (spread saved, adverse selection on a falling day).

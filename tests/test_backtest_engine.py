@@ -96,3 +96,98 @@ def test_l1_from_tbbo_renames_columns():
     tb = pd.DataFrame({"bid_px_00": [1.0], "ask_px_00": [1.25], "bid_sz_00": [3], "ask_sz_00": [4],
                        "price": [1.25], "size": [1], "side": ["A"], "other": [0]})
     assert list(l1_from_tbbo(tb).columns) == ["bid_px", "ask_px", "bid_sz", "ask_sz", "price", "size", "side"]
+
+
+# ----------------------------------------------------------------------- R3.2 limit / stop / cancel
+def l1t(rows):
+    """rows: (ms, bid, ask, bid_sz, ask_sz, trade_px, trade_sz)."""
+    idx = pd.DatetimeIndex([T0 + pd.Timedelta(milliseconds=r[0]) for r in rows], name="ts_recv")
+    return pd.DataFrame({"bid_px": [r[1] for r in rows], "ask_px": [r[2] for r in rows],
+                         "bid_sz": [r[3] for r in rows], "ask_sz": [r[4] for r in rows],
+                         "price": [r[5] for r in rows], "size": [r[6] for r in rows]}, index=idx)
+
+
+def once(action):
+    """Run `action(ctx)` on the first record only."""
+    done = {"x": False}
+
+    def strat(ts, rec, ctx):
+        if not done["x"]:
+            done["x"] = True
+            action(ctx)
+    return strat
+
+
+# buy limit at 5000.00 (the bid, 10 lots displayed)
+BOOK = [(0, 5000.00, 5000.25, 10, 10, 5000.25, 1),
+        (200, 5000.00, 5000.25, 10, 10, 5000.00, 4),     # 4 trade AT our price
+        (300, 5000.00, 5000.25, 6, 10, 5000.00, 7),      # 7 more at our price -> queue of 10 consumed
+        (400, 4999.75, 5000.00, 10, 3, 4999.75, 2),      # trade THROUGH our price
+        (500, 4999.75, 5000.00, 10, 3, 5000.00, 1)]
+
+
+def test_trade_through_needs_a_print_strictly_through_the_limit():
+    res = run(l1t(BOOK), once(lambda c: c.limit(1, 5000.00)), costs(), fill_mode="trade_through")
+    f = res.fills.iloc[0]
+    assert f.fill_ts == T0 + pd.Timedelta(milliseconds=400) and f.price == 5000.00 and f.liquidity == "maker"
+
+
+def test_queue_l1_fills_after_the_queue_ahead_trades():
+    res = run(l1t(BOOK), once(lambda c: c.limit(1, 5000.00)), costs(), fill_mode="queue_l1")
+    # queue ahead = 10 displayed at arrival; 4 + 7 = 11 traded at our price -> filled at 300 ms
+    assert res.fills.iloc[0].fill_ts == T0 + pd.Timedelta(milliseconds=300)
+    assert res.fills.iloc[0].price == 5000.00
+
+
+def test_marketable_limit_fills_as_taker_within_the_limit_only():
+    ok = run(l1t(BOOK), once(lambda c: c.limit(1, 5000.25)), costs())
+    assert ok.fills.iloc[0].liquidity == "taker" and ok.fills.iloc[0].price == 5000.25
+    # negative control: optimistic touch fills are not offered at all
+    with pytest.raises(ValueError):
+        run(l1t(BOOK), once(lambda c: c.limit(1, 5000.00)), costs(), fill_mode="optimistic")
+
+
+def test_stop_triggers_on_trade_and_fills_at_worse_book():
+    rows = [(0, 5000.00, 5000.25, 10, 10, 5000.25, 1),
+            (200, 5000.25, 5000.50, 10, 10, 5000.50, 1),   # trade at 5000.50 = buy stop price -> trigger
+            (210, 5000.50, 5000.75, 10, 10, 5000.75, 1),
+            (300, 5000.50, 5000.75, 10, 10, 5000.75, 1)]
+    res = run(l1t(rows), once(lambda c: c.stop(1, 5000.50)), costs())
+    f = res.fills.iloc[0]
+    assert f.kind == "stop" and f.price == 5000.75                  # worse of 5000.50 / 5000.75 ask
+    # a stop that is never touched does not fill
+    assert len(run(l1t(rows), once(lambda c: c.stop(1, 5001.00)), costs()).fills) == 0
+
+
+def test_order_can_fill_while_its_cancel_is_in_flight():
+    # cancel sent at 300 ms arrives at 400 ms, the instant of the through-trade: the fill wins
+    res = run(l1t(BOOK), _cancel_strat(), costs(latency_ms=100), fill_mode="trade_through")
+    assert len(res.fills) == 2 and res.fills.iloc[0].fill_ts == T0 + pd.Timedelta(milliseconds=400)
+    # negative control: with a 50 ms latency the cancel lands at 350 ms, before the through-trade
+    res2 = run(l1t(BOOK), _cancel_strat(), costs(latency_ms=50), fill_mode="trade_through")
+    assert len(res2.fills) == 0 and res2.cancelled == 1
+
+
+def _cancel_strat():
+    st = {"o": None, "n": 0}
+
+    def strat(ts, rec, ctx):
+        if st["n"] == 0:
+            st["o"] = ctx.limit(1, 5000.00)
+        elif st["n"] == 2:
+            ctx.cancel(st["o"])
+        st["n"] += 1
+    return strat
+
+
+def test_bracket_orders_fit_the_position_limit():
+    st = {"n": 0}
+
+    def strat(ts, rec, ctx):
+        if st["n"] == 0:
+            ctx.market(1)
+        elif st["n"] == 1 and ctx.position == 1:
+            assert ctx.stop(-1, 4999.00) is not None and ctx.limit(-1, 5001.00) is not None
+            assert ctx.market(1) is None                  # would make the worst case 2 long
+        st["n"] += 1
+    run(l1t(BOOK), strat, costs(latency_ms=100))
