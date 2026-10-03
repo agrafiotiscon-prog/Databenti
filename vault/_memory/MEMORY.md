@@ -45,7 +45,8 @@ tags: [memory, state]
   variants lose after costs, median −1.25 ticks/trade → [h001-report](../results/h001-report.md).
 - **H-002** (intraday momentum + delta filter, 1 year): inconclusive, t = 0.08. **H-003** (same
   signal, 15 y of hourly bars): **not promising**, 2,095 OOS trades, t = 0.21, 6/13 years > 0
-  (D-024). Total hypothesis trials: 92. Reports: `vault/results/h00{1,2,3}-report.md`.
+  (D-024). **H-004** (follow multi-level sweeps): **not promising**, OOS t = −5.5, 0/16 > 0 (D-025).
+  Total hypothesis trials: 108. Reports: `vault/results/h00{1,2,3,4}-report.md`.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: R6.3 (needs cached data or the user's OK to spend).
 - **Budget (D-019):** whole $125 credit approved; hard cap $120 in code; **spent $118.92** →

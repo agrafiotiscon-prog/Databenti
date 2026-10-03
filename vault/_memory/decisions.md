@@ -165,3 +165,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-004 sweep continuation (16 variants) is evaluated once with scripts/run_hypothesis.py on the 238 cached RTH days: walk-forward 6/1/1, 1-day embargo, selection on bootstrap 5th-pct net at 1.5x fees, DSR with N = all hypothesis trials (108 incl. this family), PBO S=8, stress 1.5x/2x fees and 250/500 ms.
 - **Why:** Uses cached data ($0, budget nearly spent); intraday event strategy with many trades, so one year has power. Prior is low (stated in the registry).
 - **Status:** active.
+
+## D-026 — H-004 closed: following sweeps loses (t = -5.5) (2026-10-03)
+- **Decision:** Close H-004. Do not test fade-the-sweep variants on the 2024-11..2025-09 trade data (idea derived from this result).
+- **Why:** Single evaluation (D-020 protocol): OOS 202 trades, -$6,124, -2.06 ticks/trade, t = -5.5; 0/16 variants positive; gross edge about -0.7 ticks (post-sweep reversion at 100 ms latency). Hypothesis trials now 108.
+- **Status:** active.

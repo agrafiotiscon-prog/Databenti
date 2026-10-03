@@ -19,3 +19,4 @@
 - 2026-10-03 R6.2: generic runner scripts/run_hypothesis.py (strategy module interface, state across days, global-N DSR); strategies/h002.py + causality tests; dry run OK (no PnL viewed).
 - 2026-10-03 H-002 single evaluation: inconclusive (OOS 53 trades, t=0.08; 5/16 variants >0; underpowered: ~15 years needed); closed. H-003 (last-hour momentum on 15 years of hourly bars, 4 variants) + protocol D-023 registered before download.
 - 2026-10-03 H-003 single evaluation: NOT PROMISING (2,095 OOS trades over 13 y, t=0.21, 6/13 years positive, stress -$49.9k); closed (D-024). Hourly bars cost $1.77; total spend $118.92.
+- 2026-10-03 H-004 single evaluation (routine firing 11:15): NOT PROMISING - OOS 202 trades, -$6,124, t=-5.5, 0/16 variants >0; closed (D-025). $0 spent.
