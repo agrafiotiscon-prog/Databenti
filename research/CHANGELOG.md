@@ -17,3 +17,4 @@
 - 2026-10-03 R5.3: H-001 single evaluation: all gates fail; 70/72 variants lose after costs (median -1.25 ticks/trade); NOT PROMISING; closed (D-021). Total data spend $117.15.
 - 2026-10-03 R6.1: H-002 registered (intraday momentum into the close, Gao et al. 2018 / Baltussen et al. 2021; optional cum-delta filter; 16 variants); protocol D-022 fixed before any result.
 - 2026-10-03 R6.2: generic runner scripts/run_hypothesis.py (strategy module interface, state across days, global-N DSR); strategies/h002.py + causality tests; dry run OK (no PnL viewed).
+- 2026-10-03 H-002 single evaluation: inconclusive (OOS 53 trades, t=0.08; 5/16 variants >0; underpowered: ~15 years needed); closed. H-003 (last-hour momentum on 15 years of hourly bars, 4 variants) + protocol D-023 registered before download.

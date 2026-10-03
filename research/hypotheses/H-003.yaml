@@ -1,0 +1,28 @@
+id: H-003
+title: Last-hour intraday momentum on 15 years of hourly bars
+mechanism: >
+  Same mechanism as H-002 (Gao, Han, Li & Zhou 2018 JFE; Baltussen, Da, Lammers & Martens 2021
+  JFE): end-of-day hedging flows (short-gamma options dealers, leveraged ETF rebalancing) trade in
+  the direction of the day's move into the cash close, so the morning / day return predicts the
+  final hour. Who pays: hedgers forced to rebalance into the close. Tested on hourly bars because
+  a once-a-day strategy needs many years for statistical power (H-002: one year gives t ~ 0.1);
+  the order-flow filter is not possible on bars. Prior: moderate, with post-publication decay risk.
+direction: follow
+horizon: "1 hour: enter at 14:00 CT, exit at the 15:00 CT cash close"
+features: [hourly_returns]
+fixed:
+  data: ES ohlcv-1h, ES.c.0 and ES.c.1, 2010-06-07..2025-09-30 (before the frozen holdout 2025-10-03)
+  contract: roll rule of data/contracts.py (ES.c.1 from the Monday of expiry week); returns always
+    from the SAME contract (previous close taken from that contract's own series)
+  prices: hourly bars aligned to CT hours; p0900 = close of the 08:00-09:00 CT bar, p1400 = close of
+    the 13:00-14:00 CT bar, p1500 = close of the 14:00-15:00 CT bar, prev_close = previous trading
+    date's p1500 of the same contract
+  execution: enter at p1400, exit at p1500, each side 1 tick ADVERSE (pays a full tick) plus fees from
+    config/costs.toml -> about 2.36 ticks per round trip (pessimistic vs ~1.36 real)
+  days: skipped if any needed bar is missing (holidays, early closes)
+space:
+  signal: [open30, day]       # open30: prev close -> 09:00 CT; day: prev close -> 14:00 CT
+  min_abs_bp: [0, 25]         # trade only if |signal return| >= this
+trial_budget: 4
+registered: 2026-10-03
+status: open

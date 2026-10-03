@@ -27,4 +27,4 @@ space:
   delta_filter: [false, true] # require cum delta over the signal window to agree in sign
 trial_budget: 16
 registered: 2026-10-03
-status: open
+status: closed
