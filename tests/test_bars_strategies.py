@@ -254,3 +254,27 @@ def test_same_contract_px_follows_the_contract_across_databento_rank_shift(monke
     assert B.same_contract_px(P, mar, feb, "p1500") == 6050.0        # June contract was rank 1 in Feb
     assert B.same_contract_px(P, feb, mar, "p1500") is None          # March contract has expired by then
     assert B.same_contract_px(P, mar, mar, "p1500") == 6100.0
+
+
+def test_vol_regime_is_causal_and_flat_in_high_vol(monkeypatch):
+    import strategies.bars_common as B
+    import strategies.h020 as H20
+    monkeypatch.setattr(H20, "MEDIAN_DAYS", 20)
+    monkeypatch.setattr(H20, "sym_of", lambda d: "ES.c.0")
+    monkeypatch.setattr(B, "sym_of", lambda d: "ES.c.0")
+    monkeypatch.setattr(B, "same_contract_px", lambda P, ref, d, col: B.px(P, "ES.c.0", d, col))
+    monkeypatch.setattr(H20, "same_contract_px", lambda P, ref, d, col: B.px(P, "ES.c.0", d, col))
+    days = [d.date() for d in pd.bdate_range("2025-01-02", periods=80)]
+    rng = __import__("numpy").random.default_rng(0)
+    lvl, rows = 6000.0, []
+    for i, d in enumerate(days):
+        lvl *= 1 + rng.normal(0, 0.03 if 40 <= i < 60 else 0.003)        # turbulent spell days 40-59
+        rows.append((d, {"p0900": lvl, "p1500": lvl}))
+    P = {"ES.c.0": table(rows), "ES.c.1": table([])}
+    s = H20.regime(P, days, 5)
+    assert all(x == 0 for x in s[:21])                     # warm-up: 5 returns + 16 past vol values (80% of 20)
+    assert sum(s[45:50]) == 0 and sum(s[66:80]) > 0          # flat early in turbulence (median still calm), long after
+    # causality: changing the future must not change today's regime
+    rows2 = rows[:50] + [(d, {"p0900": 1.0 * 9e3, "p1500": 9e3}) for d, _ in rows[50:]]
+    s2 = H20.regime({"ES.c.0": table(rows2), "ES.c.1": table([])}, days, 5)
+    assert s2[:50] == s[:50]
