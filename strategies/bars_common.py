@@ -43,3 +43,14 @@ def next_date(P: dict, sym: str, d, max_gap_days: int = 5):
     if i >= len(idx) or (idx[i] - d).days > max_gap_days:
         return None
     return idx[i]
+
+
+def placebo_p(real: list, pool: list, n_draws: int = 10000, seed: int = 5):
+    """One-sided p: share of random same-size draws (without replacement) from `pool` whose mean >= mean(real)."""
+    import numpy as np
+    pool = np.asarray(pool, float)
+    if not len(real) or len(pool) < len(real):
+        return None
+    rng = np.random.default_rng(seed)
+    draws = np.array([rng.choice(pool, size=len(real), replace=False).mean() for _ in range(n_draws)])
+    return float((draws >= np.mean(real)).mean())

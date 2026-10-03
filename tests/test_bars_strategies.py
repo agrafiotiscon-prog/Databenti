@@ -163,3 +163,60 @@ def test_macro_days_and_placebo(monkeypatch):
     t = H15.trades(P, days, {"events": "both", "window": "c2c"}, 0.0, 0.0, 50.0)
     assert len(t) == 3 and (t["gross_pnl"] == 500.0).all()
     assert H15.placebo(P, days, {"events": "both", "window": "c2c"}, 0.0, 0.0, 50.0, days, n_draws=500) == 0.0
+
+
+def test_pre_holiday_detection_and_placebo(monkeypatch):
+    import strategies.h016 as H16
+    monkeypatch.setattr(H16, "sym_of", lambda d: "ES.c.0")
+    allb = [d.date() for d in pd.bdate_range("2025-01-02", periods=60)]
+    hol = {allb[10], allb[30], allb[50]}                     # weekdays with no bars
+    days = [d for d in allb if d not in hol]
+    pre = {allb[9], allb[29], allb[49]}
+    rows, lvl = [], 6000.0
+    for d in days:
+        if d in pre:
+            rows.append((d, {"p0900": lvl, "p1500": lvl + 8}))
+            lvl += 8
+        else:
+            rows.append((d, {"p0900": lvl, "p1500": lvl}))
+    P = {"ES.c.0": table(rows), "ES.c.1": table([])}
+    assert H16.holidays(P) == hol and H16.pre_holidays(P, days) == pre
+    t = H16.trades(P, days, {"window": "rth"}, 0.0, 0.0, 50.0)
+    assert len(t) == 3 and (t["gross_pnl"] == 400.0).all() and (t["side"] == 1).all()
+    assert len(H16.trades(P, days, {"window": "c2c"}, 0.0, 0.0, 50.0)) == 3
+    assert H16.placebo(P, days, {"window": "rth"}, 0.0, 0.0, 50.0, days, n_draws=500) == 0.0
+
+
+def test_opex_week_windows_and_placebo(monkeypatch):
+    import strategies.h017 as H17
+    monkeypatch.setattr(H17, "sym_of", lambda d: "ES.c.0")
+    days = [d.date() for d in pd.bdate_range("2025-01-02", "2025-06-30")]
+    w = H17.windows(days, "all")
+    assert w[0] == (date(2025, 1, 10), date(2025, 1, 16))   # OPEX 2025-01-17
+    assert all(e.weekday() == 4 and x.weekday() == 3 and (x - e).days == 6 for e, x in w)
+    assert [e.month for e, _ in H17.windows(days, "quarterly")] == [3, 6]
+    # price rises only inside OPEX weeks -> every hold +X, placebo p ~ 0
+    inside = {d for e, x in w for d in days if e < d <= x}
+    lvl, rows = 6000.0, []
+    for d in days:
+        lvl += 5 if d in inside else 0
+        rows.append((d, {"p1500": lvl}))
+    P = {"ES.c.0": table(rows), "ES.c.1": table([])}
+    t = H17.trades(P, days, {"months": "all"}, 0.0, 0.0, 50.0)
+    assert len(t) == len(w) and (t["gross_pnl"] == 4 * 5 * 50).all()
+    assert H17.placebo(P, days, {"months": "all"}, 0.0, 0.0, 50.0, days, n_draws=500) == 0.0
+
+
+def test_monday_reversal_only_after_friday(monkeypatch):
+    import strategies.h018 as H18
+    monkeypatch.setattr(H18, "sym_of", lambda d: "ES.c.0")
+    fri, mon, tue = date(2025, 2, 7), date(2025, 2, 10), date(2025, 2, 11)
+    P = {"ES.c.0": table([(fri, {"p0900": 6000.0, "p1500": 6060.0}), (mon, {"p0900": 6050.0, "p1500": 6030.0}),
+                          (tue, {"p0900": 6030.0, "p1500": 6000.0})]), "ES.c.1": table([])}
+    t = H18.trades(P, [fri, mon, tue], {"min_abs_bp": 50}, 1.0, 4.51, 50.0)
+    assert len(t) == 1 and t.iloc[0]["trading_date"] == mon and t.iloc[0]["side"] == -1   # +100 bp Friday -> short
+    assert t.iloc[0]["gross_pnl"] == ((6050.0 - 0.25) - (6030.0 + 0.25)) * 50
+    assert H18.trades(P, [fri, mon, tue], {"min_abs_bp": 150}, 1.0, 4.51, 50.0).empty
+    gap = {"ES.c.0": table([(date(2025, 2, 6), {"p0900": 6000.0, "p1500": 6060.0}),
+                            (mon, {"p0900": 6050.0, "p1500": 6030.0})]), "ES.c.1": table([])}
+    assert H18.trades(gap, [date(2025, 2, 6), mon], {"min_abs_bp": 0}, 0.0, 0.0, 50.0).empty   # no Friday session
