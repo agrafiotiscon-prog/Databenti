@@ -53,7 +53,7 @@ tags: [memory, state]
   H-012 FOMC-cycle even weeks scored 6/11 but was **demoted by a placebo test** (shifted calendars do
   as well → equity drift); H-007 placebo p = 0.063. **New gate G12** (placebo/random timing,
   D-032). H-013 intraday periodicity negative (D-031). G12 placebo: H-005, H-009 are drift. H-014 TSMOM
-  not promising (t 0.51). **Only H-007 shows timing beyond drift (p 0.063).** Total hypothesis trials: 144.
+  not promising (t 0.51). **Only H-007 shows timing beyond drift (p 0.063).** Total hypothesis trials: 148.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
   paper trading); otherwise R6.3 more hypotheses on cached data.
