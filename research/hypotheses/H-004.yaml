@@ -1,0 +1,28 @@
+id: H-004
+title: Follow large multi-level aggressive sweeps (order-splitting continuation)
+mechanism: >
+  A single aggressive order that sweeps several price levels at once (many contracts printed at
+  one timestamp across >= min_levels prices) is likely one slice of a larger parent order:
+  institutions split orders (Lillo & Farmer 2004: long-memory order-flow sign; Bouchaud et al.:
+  part of large-order impact is permanent). The remaining slices keep pushing price in the same
+  direction for minutes, so following the sweep earns part of that continuation. Who pays:
+  passive liquidity providers and resting orders on the other side, adversely selected by the
+  informed parent order. Prior: LOW - order-flow predictability is largely priced in (the
+  "efficient market paradox"), and at 100 ms retail latency much of the immediate impact is gone.
+direction: follow
+horizon: "seconds to 15 min (bracket, 15 min time stop, flat by 14:55 CT)"
+features: [aggressor_events]
+fixed:
+  sweep: trades grouped by (ts_recv, aggressor side); size = summed contracts, levels = distinct prices
+  entry: market order in the sweep's direction at the next record (+100 ms latency), worse-of-book fill
+  exits: stop/target brackets in ticks from the fill; 15 min time stop; no entries after 14:40 CT;
+    flatten 14:55 CT; one position at a time
+  data: 238 cached RTH trade days 2024-11-01..2025-09-30 (quotes rebuilt from trades, D-019)
+space:
+  min_size: [100, 200]
+  min_levels: [2, 3]
+  stop_ticks: [6, 12]
+  target_ticks: [8, 16]
+trial_budget: 16
+registered: 2026-10-03
+status: open

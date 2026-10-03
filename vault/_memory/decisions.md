@@ -160,3 +160,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Close H-002 (inconclusive, underpowered) and H-003 (not promising). Do not re-test conditional variants (e.g. high-volatility only) on 2010-2025 data: the idea came from seeing H-003's yearly results.
 - **Why:** H-002: 1 year of trades, OOS 53 trades, t = 0.08. H-003: 15 years of hourly bars, 2,095 OOS trades over 13 years, t = 0.21, positive in 6/13 years, PBO 0.03, DSR 0.002 (N=92), stress -$49.9k. Total data spend $118.92 of the $120 cap.
 - **Status:** active.
+
+## D-025 — H-004 registered; protocol = D-020 (via scripts/run_hypothesis.py) (2026-10-03)
+- **Decision:** H-004 sweep continuation (16 variants) is evaluated once with scripts/run_hypothesis.py on the 238 cached RTH days: walk-forward 6/1/1, 1-day embargo, selection on bootstrap 5th-pct net at 1.5x fees, DSR with N = all hypothesis trials (108 incl. this family), PBO S=8, stress 1.5x/2x fees and 250/500 ms.
+- **Why:** Uses cached data ($0, budget nearly spent); intraday event strategy with many trades, so one year has power. Prior is low (stated in the registry).
+- **Status:** active.
