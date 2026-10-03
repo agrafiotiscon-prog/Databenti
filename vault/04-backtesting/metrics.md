@@ -24,3 +24,11 @@ Net PnL is always **after fees and modelled slippage**, in USD, for 1 contract u
 | Cost stress | All of the above at fees ×1, ×1.5, ×2 and latency 100/250/500 ms. |
 | Markouts | Mean mid-price move after our fills at +0.1/1/10/60/300 s. |
 | Slippage | Distribution of arrival-vs-signal touch differences. |
+
+## Implementation (session 6, routine R3.3)
+`backtest/metrics.py`: trade stats (flag < 200), daily PnL by CME trading date with zero days,
+Sharpe, Lo (2002) autocorrelation-adjusted Sharpe, PSR vs 0, max drawdown + duration,
+concentration flags, breakdowns (year, month, weekday, hour), markouts of our fills
+(mid at +h minus fill price, signed; NaN past the data, never 0), exposure; `report()` bundles
+them. Phase 4 adds DSR, PBO, Monte Carlo and the cost/latency stress grid (re-runs).
+Not yet: per-session (RTH/ETH) and volatility-tercile breakdowns, slippage distribution.
