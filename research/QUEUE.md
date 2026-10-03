@@ -74,7 +74,9 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] H-020 (s6 routine 13:16, D-043/D-044): volatility-managed long 8/12 gates, fails G12 (p 0.118), G1, G3; closed.
 - [x] H-021 (s6 routine, D-045/D-046): buy after 3-day selloff 3/12, placebo p 0.99; closed.
 - [x] R7.1 (s6, D-048/D-049): 26-market daily data ($2.26) + portfolio engine; H-022 trend/carry portfolio: OOS −4.3%/yr, Sharpe −0.28; closed.
-- [ ] R6.4 H-007 confirmation: needs the USER (holdout unlock or paper trading). Do not re-test on development data.
+- [x] R7.2 (s6, D-050): H-023 combined book registered (trend252 + pre-FOMC), scripts/run_h023.py; development numbers descriptive only: $1M 8.4%/yr Sharpe 0.53 (hindsight), $100k 2.3%/yr.
+- [ ] R7.3 H-023 single holdout evaluation: waiting for the user's explicit go (research/HOLDOUT_UNLOCK); data ~$0.27.
+- [ ] R6.4 H-007 confirmation (superseded by R7.3): needs the USER (holdout unlock or paper trading). Do not re-test on development data.
 - [ ] R6.3 Next idea: needs either cached data ($0: 238 RTH trade days 2024-11..2025-09, 15 y of hourly
       bars) or the user's OK for more spend ($1.08 left under the cap). Candidates must have a stated
       payer and a horizon of minutes+; write registry + protocol first.

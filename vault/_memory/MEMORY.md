@@ -67,6 +67,9 @@ tags: [memory, state]
 - **User target (D-048): ~15%/yr = Sharpe ≥ 1 at 15% vol** → [return-targets](../04-backtesting/return-targets.md).
   R7: 26 CME futures daily bars 2010-2025 cached (`data/universe.py`, `portfolio/`). H-022 trend+carry
   portfolio OOS −4.3%/yr (Sharpe −0.28); trend252 in hindsight 0.41 (D-049).
+  User chose option 1 → **H-023** combined book (trend252 + H-007) registered with holdout criteria (D-050);
+  hindsight-only: $1M 8.4%/yr Sharpe 0.53, $100k 2.3%/yr (integer contracts). **Next: holdout run needs the
+  user's go** (`research/HOLDOUT_UNLOCK`, data ≈ $0.27).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.2** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $3.7 of credit left. No more data purchases without the user. One year cannot pass G7.
 
