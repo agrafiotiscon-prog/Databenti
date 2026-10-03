@@ -54,7 +54,8 @@ tags: [memory, state]
   as well → equity drift); H-007 placebo p = 0.063. **New gate G12** (placebo/random timing,
   D-032). H-013 intraday periodicity negative (D-031). G12 placebo: H-005, H-009 are drift. H-014 TSMOM
   not promising (t 0.51). **Only H-007 shows timing beyond drift (p 0.063).** H-015 macro days: 0/12, placebo p 0.53.
-  Total hypothesis trials: 154.
+  H-016 pre-holiday 0/12; H-017 OPEX week 5/12 (placebo p 0.43); H-018 Monday reversal 5/12
+  (placebo p 0.24 vs Tue-Fri) - all closed (D-039). Total hypothesis trials: 160.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
   paper trading); otherwise R6.3 more hypotheses on cached data.

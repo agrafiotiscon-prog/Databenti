@@ -5,7 +5,7 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **154** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **160** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 | Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
@@ -15,6 +15,9 @@ passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 | ~~2~~ | [H-009](h009-report.md) overnight drift | 15 y hourly | 5/11 | 2,552 | +$68,478 | 1.05 | **placebo: overnight earns exactly its time share of the drift (p = 0.51)** - not promising: negative at 2 ticks/side, PBO 0.63; 9/13 years > 0, all variants > 0 |
 | 3 | [H-010](h010-report.md) daily reversal | 15 y hourly | 5/11 | 1,074 | +$82,956 | 1.38 | not promising: 2020 alone +$75k (concentrated), 6/13 years |
 | 3b | [H-014](h014-report.md) time-series momentum (long/short) | 15 y hourly | 4/12 | 361 | +$47,697 | 0.51 | not promising: 5/13 years, unstable lookback choice |
+| 3c | [H-018](h018-report.md) Monday reversal (fade Friday's RTH move) | 15 y hourly | 5/12 | 329 | +$36,866 | 1.64 | not promising: **placebo p = 0.24 - fading on Tue-Fri does as well, so Monday is not special** (it is a subset of H-010); 2022 + 2025 = +$37k, 7/13 years |
+| 3d | [H-017](h017-report.md) option-expiration week (Fri -> Thu, long) | 15 y hourly | 5/12 | 86 | +$26,312 | 0.83 | not promising: placebo p = 0.43 vs random non-OPEX 4-day holds (equity drift); PBO 0.88 |
+| 4c | [H-016](h016-report.md) pre-holiday (long) | 15 y hourly | 0/12 | 31 | −$2,365 | −0.45 | not promising; ~2-3 events/yr, placebo p = 0.54 |
 | 4b | [H-015](h015-report.md) macro-announcement days (jobs, CPI) | 15 y hourly | 0/12 | 165 | −$6,057 | −0.28 | not promising; placebo p = 0.53 (no premium vs random days) |
 | 4 | [H-011](h011-report.md) VWAP-deviation fade | 1 y trades | 3/11 | 256 | +$4,070 | 0.68 | not promising (0/4 variants > 0 full period) |
 | 5 | [H-003](h003-report.md) last-hour momentum | 15 y hourly | 2/11 | 2,095 | +$7,177 | 0.21 | not promising |
@@ -63,3 +66,10 @@ frozen holdout and forward paper trading, which the user decides on. Neither is 
   +$293 for random 4-day holds (p = 0.84); overnight returns equal their 17/24 time share of the
   close-to-close drift (p = 0.51). Both totals are equity drift. **Only H-007 shows a timing effect
   beyond drift (p = 0.063).**
+
+## Weaker calendar ideas H-016..H-018 (session 6, D-039)
+Pre-holiday (Ariel 1990), option-expiration week (Stivers & Sun 2013) and the Monday reversal were
+each run once with a G12 placebo. None beats its placebo: pre-holiday loses (31 trades), OPEX-week
+holds earn no more than random non-OPEX holds (p = 0.43), and the Monday fade is no better than the
+same fade on other weekdays (p = 0.24) - it is the H-010 daily reversal on a subset of days.
+**H-007 remains the only candidate with timing beyond drift (p = 0.063), and it is not promoted.**

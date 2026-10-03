@@ -17,4 +17,4 @@ space:
   window: [c2c, rth]     # c2c: 15:00 CT day before -> 15:00 CT; rth: 09:00 -> 15:00 CT on the day
 trial_budget: 2
 registered: 2026-10-03
-status: open
+status: closed

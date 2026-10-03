@@ -230,3 +230,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Weaker calendar ideas: H-016 pre-holiday (2), H-017 option-expiration week (2), H-018 Monday reversal (2); D-023 protocol, G12 placebo built in for the long-only H-016/H-017. Global trials after this batch: 160.
 - **Why:** User: continue testing. Remaining published calendar effects testable on cached data at $0; priors low and stated.
 - **Status:** active.
+
+## D-039 — H-016..H-018 closed (no calendar effect beyond drift) (2026-10-03)
+- **Decision:** Close H-016 (pre-holiday), H-017 (OPEX week) and H-018 (Monday reversal) as not promising; R6.6 done.
+- **Why:** Each run once: H-016 0/12 gates (31 OOS trades, t -0.45, placebo p 0.54); H-017 5/12 (86 trades, t 0.83, placebo p 0.43 vs random non-OPEX 4-day holds); H-018 5/12 (329 trades, t 1.64, placebo p 0.24 vs the same fade on Tue-Fri; gains concentrated in 2022/2025). H-018's G12 placebo was written into the module before any result (stricter only). Global hypothesis trials 160. H-007 remains the best candidate, not promoted.
+- **Status:** active.

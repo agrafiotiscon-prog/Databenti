@@ -27,3 +27,4 @@
 - 2026-10-03 G12 placebo: H-005 p 0.84, H-009 p 0.51 (drift); H-014 TSMOM registered.
 - 2026-10-03 H-014 TSMOM evaluated once: not promising (t 0.51, 5/13 years). 148 trials.
 - 2026-10-03 H-015 macro-announcement days: 0/12 gates, t -0.28, placebo p 0.53; closed. 154 trials.
+- 2026-10-03 R6.6 H-016 pre-holiday 0/12 (p 0.54), H-017 OPEX week 5/12 (t 0.83, p 0.43), H-018 Monday reversal 5/12 (t 1.64, p 0.24 vs Tue-Fri); all closed (D-039). 160 trials.

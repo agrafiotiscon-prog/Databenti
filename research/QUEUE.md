@@ -64,7 +64,7 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] R6.5 (s6): H-005 p 0.84, H-009 p 0.51 -> equity drift.
 - [x] H-014 (s6): time-series momentum: not promising (t 0.51, 5/13 years).
 - [x] H-015 (s6): macro-announcement days: 0/12 gates, placebo p 0.53; closed.
-- [ ] R6.6 Remaining weaker calendar ideas (each long-only -> G12 placebo built in): pre-holiday
+- [x] R6.6 (s6, D-039: H-016 0/12, H-017 5/12 p 0.43, H-018 5/12 p 0.24 - all closed) Remaining weaker calendar ideas (each long-only -> G12 placebo built in): pre-holiday
       (Ariel 1990), option-expiration week (Stivers & Sun 2013), Monday/weekend reversal. Low priors;
       several cannot reach 200 OOS trades. Register before running; keep spaces tiny.
 - [ ] R6.4 H-007 confirmation: needs the USER (holdout unlock or paper trading). Do not re-test on development data.
