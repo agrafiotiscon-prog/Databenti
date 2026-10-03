@@ -20,4 +20,4 @@ space:
   min_abs_bp: [0, 5]            # trade only if |mean hourly return| >= this
 trial_budget: 4
 registered: 2026-10-03
-status: open
+status: closed

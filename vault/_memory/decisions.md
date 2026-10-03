@@ -195,3 +195,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-012 FOMC-cycle even weeks (2 variants) and H-013 intraday periodicity (4 variants), both on 15 y hourly bars with the D-023 protocol. Global hypothesis trials after this batch: 144.
 - **Why:** Published mechanisms (Cieslak, Morse & Vissing-Jorgensen 2019; Heston, Korajczyk & Sadka 2010) with many trades -> statistical power on cached data at $0.
 - **Status:** active.
+
+## D-032 — H-012 co-leader with H-007 (Fed-calendar effects); H-013 negative; nothing promoted (2026-10-03)
+- **Decision:** Close H-012 (6/11 gates, co-leader) and H-013 (reliably negative). No combined Fed-calendar rule on 2010-2025 (post-hoc).
+- **Why:** H-012: 226 OOS trades, +$82.0k, t = 1.23, 9/13 years, positive under stress. H-013: 637 trades, -$36.4k, t = -2.14, 0/4 variants. Hypothesis trials: 144.
+- **Status:** active.

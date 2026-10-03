@@ -20,4 +20,4 @@ space:
   weeks: [even, w0_w2]          # even: 0,2,4,6 ; w0_w2: 0 and 2 only
 trial_budget: 2
 registered: 2026-10-03
-status: open
+status: closed

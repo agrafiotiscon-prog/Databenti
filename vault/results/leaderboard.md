@@ -5,12 +5,13 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **138** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **144** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 | Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
 |---|---|---|---|---|---|---|---|
-| 1 | [H-007](h007-report.md) pre-FOMC drift (24 h window) | 15 y hourly | **6/11** | 98 | +$21,296 | **1.95** | best candidate; fails G1 (8 events/yr), G3, G5, G6, G10 |
+| 1= | [H-007](h007-report.md) pre-FOMC drift (24 h window) | 15 y hourly | **6/11** | 98 | +$21,296 | **1.95** | best candidate; fails G1 (8 events/yr), G3, G5, G6, G10 |
+| 1= | [H-012](h012-report.md) FOMC-cycle even weeks | 15 y hourly | **6/11** | 226 | +$82,006 | 1.23 | co-leader; passes G1 (226 trades); fails G3 (t < 2, DSR), G4/G10 (2-variant space), G6 (2023-24 = +$61k), G11 |
 | 2 | [H-009](h009-report.md) overnight drift | 15 y hourly | 5/11 | 2,552 | +$68,478 | 1.05 | not promising: negative at 2 ticks/side, PBO 0.63; 9/13 years > 0, all variants > 0 |
 | 3 | [H-010](h010-report.md) daily reversal | 15 y hourly | 5/11 | 1,074 | +$82,956 | 1.38 | not promising: 2020 alone +$75k (concentrated), 6/13 years |
 | 4 | [H-011](h011-report.md) VWAP-deviation fade | 1 y trades | 3/11 | 256 | +$4,070 | 0.68 | not promising (0/4 variants > 0 full period) |
@@ -18,9 +19,10 @@ passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 | 6 | [H-004](h004-report.md) follow sweeps | 1 y trades | 2/11 | 202 | −$6,124 | −5.47 | not promising (reliably negative) |
 | 7 | [H-006](h006-report.md) gap fade | 15 y hourly | 1/11 | 2,043 | +$20,761 | 0.59 | not promising (0/4 variants > 0 full period) |
 | 8 | [H-005](h005-report.md) turn of month | 15 y hourly | 1/11 | 124 | +$3,141 | 0.12 | no evidence |
-| 9 | [H-008](h008-report.md) 5-min imbalance fade | 1 y trades | 1/11 | 124 | +$653 | 0.18 | not promising (0/8 variants > 0) |
-| 10 | [H-002](h002-report.md) momentum + delta filter | 1 y trades | 1/11 | 53 | +$348 | 0.08 | inconclusive |
-| 11 | [H-001](h001-report.md) absorption + divergence | 1 y trades | 0/11 | 14 | −$113 | −0.37 | not promising (70/72 variants lose) |
+| 9 | [H-013](h013-report.md) intraday periodicity | 15 y hourly | 1/11 | 637 | −$36,435 | −2.14 | not promising (reliably negative, 0/4 variants > 0) |
+| 10 | [H-008](h008-report.md) 5-min imbalance fade | 1 y trades | 1/11 | 124 | +$653 | 0.18 | not promising (0/8 variants > 0) |
+| 11 | [H-002](h002-report.md) momentum + delta filter | 1 y trades | 1/11 | 53 | +$348 | 0.08 | inconclusive |
+| 12 | [H-001](h001-report.md) absorption + divergence | 1 y trades | 0/11 | 14 | −$113 | −0.37 | not promising (70/72 variants lose) |
 
 ## H-007: why it is the best candidate and why it is still not promoted
 - Out of sample 2013-06..2025-09 (13 annual folds): +17.7 ticks/trade after pessimistic costs
@@ -37,3 +39,11 @@ passed out of sample; **no hypothesis passes all 11, so none is promoted.**
   (from 2025-10-03, ~8 meetings; low power, but untouched); (2) forward paper trading of the
   fixed rule (enter at 13:00 CT the day before a scheduled statement, exit 12:59 CT on the day).
   No re-tuning on the development data.
+
+## Co-leaders are both Fed-calendar effects (session 6, after H-012)
+H-007 (pre-FOMC 24 h drift) and H-012 (even weeks of the FOMC cycle) each pass 6/11 gates with
+pessimistic costs, both are pre-registered tests of published effects (Lucca & Moench 2015;
+Cieslak, Morse & Vissing-Jorgensen 2019), and both are positive in 8–9 of 13 OOS years. They
+overlap (H-007's entry day is in H-012's week 0). **A combined rule must NOT be built from this
+observation on 2010–2025 data** (it was formed after seeing both results); the clean tests are the
+frozen holdout and forward paper trading, which the user decides on. Neither is promoted.
