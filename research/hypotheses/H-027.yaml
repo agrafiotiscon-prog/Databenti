@@ -1,0 +1,26 @@
+id: H-027
+title: Pre-FOMC drift replication on NQ, RTY and YM daily bars (out-of-market check of H-007's mechanism)
+mechanism: >
+  Lucca & Moench (2015 JF): US equities earn a large excess return in the 24 hours before scheduled FOMC
+  announcements (risk premium for bearing announcement risk / resolution of uncertainty). H-007 found
+  it on ES hourly bars (t 1.95, placebo p 0.063) and the ES sleeve lost on the holdout (D-052). If the
+  mechanism is real it must also appear in the other US index futures. This is a REPLICATION with no
+  free parameters, not a tuned strategy; it can raise or lower the prior for H-007, nothing more.
+  Caveat: NQ/RTY/YM are highly correlated with ES, so this is a weak independence check (mostly a check
+  that H-007 was not an ES/hourly-data artefact).
+direction: long
+horizon: "one day, 8 times a year"
+features: [daily_closes_v0, fomc_calendar]
+fixed:
+  data: "ohlcv-1d v.0 2010-06-07..2025-09-30 (RTY from 2017-07-10, when CME relisted it); development only, holdout spent (D-052)"
+  window: "long from the UTC-day close before each scheduled FOMC statement day (config/fomc_dates.csv; ~00:00 UTC, i.e. evening ET) to the UTC-day close of the statement day; this covers ~18 h before and ~6 h after the 14:00 ET statement, so it includes the announcement reaction (Lucca-Moench find the post-announcement mean ~0)"
+  returns: "portfolio.data.chain_returns (same instrument t-1 -> t)"
+  sizing: "each market $333,333 notional with integer contracts (>= 1); pooled = sum over available markets"
+  costs: "1 tick + $2.26 per contract per side (stress: 2 ticks + fees x1.5)"
+  placebo: "G12-style: 2,000 draws of the same number of random non-FOMC trading days (same markets, same sizing); p = share of draws with pooled net >= actual"
+  criteria: "REPLICATES if pooled net mean per event > 0 AND per-event t >= 2 AND placebo p <= 0.05; otherwise DOES NOT REPLICATE. Per-market and by-year results are reported, not used to decide"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-04
+status: open
