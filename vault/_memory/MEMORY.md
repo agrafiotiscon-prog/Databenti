@@ -59,7 +59,7 @@ tags: [memory, state]
   rebalancing: run 1 buggy (dropped 2/3 of months, looked good), fixed re-run 1/12 → closed (D-041/42).
   Lesson: check event coverage first. H-020 vol-managed long: 8/12 gates (most) but placebo p 0.118,
   79 trades → not promoted (D-044). H-021 buy-the-selloff 3/12, placebo p 0.99 (D-046).
-  Total hypothesis trials: 198. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
+  Total hypothesis trials: 214. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
   fills), conservative; queue_l1 mildly optimistic.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
@@ -81,7 +81,11 @@ tags: [memory, state]
   not replicate (t 1.13, placebo p 0.17) → H-007 no longer a candidate (D-056). R8.6 done: `portfolio/combine.py` (causal inverse-vol/ERC
   sleeve weights + vol target). H-028 trade-flow imbalance (238 RTH days): 0/8 variants
   > 0, closed (D-057). R8.8 done → [next-ideas-r9](../04-backtesting/next-ideas-r9.md):
-  forced scheduled flows outside equities. Next: R9.1 G12 placebo in the tick runner, then H-029 index roll. Asked the user about forward paper tracking (R8.9, cents/day).
+  forced scheduled flows outside equities. R9 run in parallel (user asked for 3 at once):
+  H-029 GSCI roll 1/12 (D-059); **H-030 Treasury long into month-end 9/12 gates - strongest ever, not promoted**
+  (OOS t 2.2, all pre variants t~3, scales with duration, stable both halves, not a roll artefact; D-060) →
+  [h030-report](../results/h030-report.md); H-031 auction cycle 4/12 (D-061). Next: H-030 confirmation (UB/TN
+  replication ~$0.1 needs the user's OK; paper tracking), R9.1 tick-runner placebo. Asked the user about forward paper tracking (R8.9, cents/day).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.5** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $3.4 of credit left. No more data purchases without the user. One year cannot pass G7.
 

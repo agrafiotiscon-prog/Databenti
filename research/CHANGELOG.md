@@ -44,3 +44,4 @@
 - 2026-10-04 R8.6 engineering: portfolio/combine.py (inverse-vol + equal-risk-contribution weights from trailing P&L, causal, vol-targeted) + tests; no backtest run.
 - 2026-10-04 R8.7 H-028 trade-flow imbalance continuation: insufficient data; 0/8 variants net > 0; closed (D-057). run_hypothesis.py report name fixed (h028-report.md).
 - 2026-10-04 R8.8: next ideas written (vault/04-backtesting/next-ideas-r9.md); QUEUE R9.1-R9.5 (G12 in tick runner, H-029 index roll, H-030 Treasury month-end, H-031 auction cycle, paper-tracking skeleton).
+- 2026-10-04 R9 (3 in parallel, user request): H-029 GSCI roll 1/12 (D-059); H-030 Treasury month-end 9/12, strongest candidate, not promoted (D-060); H-031 auction cycle 4/12 (D-061). New: research/daily_eval.py, scripts/run_r9.py, config/treasury_auctions.csv, locked trials.append.

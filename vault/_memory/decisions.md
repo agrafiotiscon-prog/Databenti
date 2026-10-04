@@ -332,3 +332,18 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** After R8, new ideas prioritise mechanical, scheduled, price-insensitive flows in commodities and rates (index roll, Treasury month-end, auction cycle) over equity calendar effects, cross-sectional ranking on the thin universe, and new trend variants. Queue R9.1-R9.5; the tick runner gets a G12 placebo first.
 - **Why:** R8 evidence: cross-sectional ranks failed twice (D-054); equity calendar effects keep reducing to drift under G12; new trend variants would be snooped on data that selected trend252. Mechanical payers are the most robust class in the literature.
 - **Status:** active.
+
+## D-059 — H-029 GSCI roll front-running: not promising, closed (2026-10-04)
+- **Decision:** H-029 (4 variants): 1/12, OOS -0.7%/yr, all variants negative full-period; closed.
+- **Why:** Pre-registered protocol; consistent with the documented decay of roll price impact (Bessembinder et al. 2016).
+- **Status:** active.
+
+## D-060 — H-030 Treasury month-end: 9/12 gates, strongest candidate, not promoted; confirmation proposed (2026-10-04)
+- **Decision:** H-030 (8 variants): 9/12 gates (G3 DSR, G5 plateau, G11 fail), OOS +$173k t 2.2, stress +$130k, 10/13 OOS years positive; every pre-window variant positive (t ~3), every post-window variant negative; effect scales with duration, stable 2010-17 vs 2018-25, holds outside roll months. Not promoted (rules). Proposed confirmation: forward paper tracking and/or a pre-registered replication on UB and TN (not used so far), which needs the user's OK for ~$0.1 of data.
+- **Why:** Gates are fixed and are not redefined after seeing results (the plateau failure is structural to the declared space, and DSR penalises 214 trials). The robustness pattern is strong enough to justify an independent test rather than closing the idea.
+- **Status:** active.
+
+## D-061 — H-031 Treasury auction cycle: not promising, closed (2026-10-04)
+- **Decision:** H-031 (4 variants): 4/12, OOS +0.2%/yr t 0.5, negative at stress; placebo pass reflects bond drift; closed.
+- **Why:** Pre-registered protocol; the Lou-Yan-Zhang pattern is at most faint after 2010.
+- **Status:** active.

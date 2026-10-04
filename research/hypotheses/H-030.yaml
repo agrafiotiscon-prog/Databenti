@@ -24,4 +24,4 @@ space:
   markets: [long_end, all]
 trial_budget: 8
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: 9/12 gates (most ever), not promoted; confirmation candidate (D-060)

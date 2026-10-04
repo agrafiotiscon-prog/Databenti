@@ -24,4 +24,4 @@ space:
   exit_bd: [5, 9]
 trial_budget: 4
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: not promising, 1/12, OOS -0.7%/yr (D-059)

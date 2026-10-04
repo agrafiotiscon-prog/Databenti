@@ -104,18 +104,21 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
 
 ## R9: forced, scheduled flows outside equities (vault/04-backtesting/next-ideas-r9.md); $0 cached data
 - [ ] R9.1 Engineering E-1: random-timing placebo (G12) in scripts/run_hypothesis.py (tick runner), with tests.
-- [ ] R9.2 H-029 front-running the commodity index roll (GSCI 5th-9th business day; Mou 2011): near/far
+- [x] R9.2 (2026-10-04, D-059: 1/12, not promising) H-029 front-running the commodity index roll (GSCI 5th-9th business day; Mou 2011): near/far
       calendar spread via portfolio.signals.near_far_returns; coverage of roll months first; placebo.
-- [ ] R9.3 H-030 Treasury futures month-end (index duration extension / Etula et al. 2020): long ZN/ZB last
+- [x] R9.3 (2026-10-04, D-060: 9/12 gates, strongest candidate, not promoted) H-030 Treasury futures month-end (index duration extension / Etula et al. 2020): long ZN/ZB last
       k days; month-end coverage first (H-019 lesson); placebo vs random windows.
-- [ ] R9.4 H-031 Treasury auction cycle (Lou, Yan & Zhang 2013): needs the auction calendar from TreasuryDirect
+- [x] R9.4 (2026-10-04, D-061: 4/12, not promising; calendar in config/treasury_auctions.csv) H-031 Treasury auction cycle (Lou, Yan & Zhang 2013): needs the auction calendar from TreasuryDirect
       (no Databento cost); fetch into config/ if the network allows, else park under "Needs the user".
+- [ ] R9.6 H-030 confirmation: pre-register a replication on UB + TN daily bars (not used so far; ~$0.1, needs the user's OK)
+      with the exact H-030 rule fixed in advance (pre-window, k=3, long), and add H-030 to forward paper tracking (R8.9).
 - [ ] R9.5 Engineering E-2: forward paper-tracking skeleton for trend252, tested on cached data (running it
       forward waits for the user, R8.9).
 
 ## Later: new hypotheses (one at a time, mechanism first; see vault/03-order-flow/evidence-review.md)
 
 ## Needs the user
+- **(2026-10-04) H-030 confirmation (R9.6):** ~$0.1 of UB/TN daily bars for a pre-registered replication; and/or forward paper tracking. Asked in chat.
 - **(2026-10-04) Forward paper tracking of the confirmed trend252 book (R8.9):** a few cents/day of daily bars;
   ~$3.4 credit left. Asked in chat.
 - **(session 6, after H-022) Direction for the 15%/yr goal (D-048/D-049) - waiting for the user:**

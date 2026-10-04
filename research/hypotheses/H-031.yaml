@@ -20,4 +20,4 @@ space:
   k: [3, 5]
 trial_budget: 4
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: not promising, 4/12 (D-061)

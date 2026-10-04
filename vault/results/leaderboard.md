@@ -5,7 +5,7 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **198** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **214** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 **Holdout confirmation (D-052):** [H-023](h023-holdout.md) (trend252 portfolio + pre-FOMC sleeve, chosen in hindsight
@@ -15,6 +15,7 @@ and pre-registered in D-050) was run once on the 2025-10..2026-10 holdout: **CON
 
 | Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
 |---|---|---|---|---|---|---|---|
+| **1a** | [H-030](h030-report.md) **Treasury futures long into month-end** (last 3/5 days; ZN+ZB or all 4) | 15 y daily, ZT/ZF/ZN/ZB | **9/12** (most ever) | 472 | +$173,130 on $1M (+1.4%/yr at ~2% vol) | 2.21 (daily) | **strongest candidate, not promoted** (fails G3 DSR N=214, G5 plateau vs opposite-sign post variants, G11). All pre variants t~3, all post variants < 0; scales with duration (ZT 4 bp → ZB 27 bp); stable 2010-17 vs 2018-25; needs independent confirmation (D-060) |
 | 1b | [H-020](h020-report.md) volatility-managed long (63-day vol < 1-y median) | 15 y hourly | **8/12** (most) | 79 | +$182,206 | 3.89* | not promoted: **fails G12 (p = 0.118: regime series shifted in time with the same 57% long share earn nearly as much - mostly equity drift)**, G1 (79 multi-week holds), G3 (raw-N DSR 0.56). *per-trade t is inflated by month-long holds |
 | **1** | [H-007](h007-report.md) pre-FOMC drift (24 h window) | 15 y hourly | **6/11** | 98 | +$21,296 | **1.95** | best candidate; placebo vs random days p = 0.063 (borderline); fails G1 (8 events/yr), G3, G5, G6, G10 |
 | ~~1=~~ | [H-012](h012-report.md) FOMC-cycle even weeks | 15 y hourly | 6/11 | 226 | +$82,006 | 1.23 | **DEMOTED by placebo: 22/30 shifted calendars do as well (p ≈ 0.74) - the profit is equity drift, not a Fed effect**; passes G1 (226 trades); fails G3 (t < 2, DSR), G4/G10 (2-variant space), G6 (2023-24 = +$61k), G11 |
@@ -31,6 +32,8 @@ and pre-registered in D-050) was run once on the 2025-10..2026-10 holdout: **CON
 | 3e | [H-026](h026-report.md) **commodity basis-momentum** (front − second contract, 6/12 m; time-series + cross-sectional) | 15 y daily, 12 commodities | 4/12 | 6,425 contract trades | +3.1%/yr on $1M | 0.71 (daily) | not promising but best of R8: all 4 variants > 0, 8/13 years; placebo p 0.13, PBO 0.53; energy −$395k |
 | — | [H-027](h027-report.md) pre-FOMC drift **replication** on NQ/RTY/YM (daily, fixed) | 15 y daily | n/a (replication) | 122 events | +$143,874 | 1.13 | **does not replicate**: placebo p 0.17 vs random days; NQ t 1.83, YM 0.59, RTY 0.50 - lowers H-007's prior (D-056) |
 | 4i | [H-028](h028-report.md) follow 5/15-min aggressor **trade-flow imbalance** for 15/30 min (ES RTH ticks) | 1 y ticks (238 days) | 1/12 | 171 | +$2,566 | 0.65 | insufficient data, and **0/8 variants net > 0 full-period** - OOS gain is fold-selection luck |
+| 4j | [H-029](h029-report.md) front-run GSCI commodity index roll (near/far spread) | 15 y daily, 12 commodities | 1/12 | 1,123 | −$90,703 | −1.88 (daily) | not promising: all 4 variants < 0, 11/13 years < 0 (D-059) |
+| 3f | [H-031](h031-report.md) Treasury auction cycle (short pre / long post) | 15 y daily + 1,012 auctions | 4/12 | 807 | +$30,591 | 0.50 (daily) | not promising: negative at stress, PBO 0.69; placebo pass = bond drift (D-061) |
 | 4c | [H-016](h016-report.md) pre-holiday (long) | 15 y hourly | 0/12 | 31 | −$2,365 | −0.45 | not promising; ~2-3 events/yr, placebo p = 0.54 |
 | 4b | [H-015](h015-report.md) macro-announcement days (jobs, CPI) | 15 y hourly | 0/12 | 165 | −$6,057 | −0.28 | not promising; placebo p = 0.53 (no premium vs random days) |
 | 4 | [H-011](h011-report.md) VWAP-deviation fade | 1 y trades | 3/11 | 256 | +$4,070 | 0.68 | not promising (0/4 variants > 0 full period) |
