@@ -54,6 +54,7 @@ def main(argv=None) -> int:
     ap.add_argument("--dry", action="store_true", help="pipeline test: no trial logging, report to --out")
     ap.add_argument("--schema-dir", default="trades-rth")
     ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--placebo-draws", type=int, default=200, help="G12 random-timing draws (0 = skip)")
     a = ap.parse_args(argv)
     hyp = registry.load(a.hyp)
     mod = importlib.import_module("strategies." + a.hyp.lower().replace("-", ""))
@@ -136,6 +137,32 @@ def main(argv=None) -> int:
         mc = stats.execution_mc(oos_tr["base"]["net_pnl"].to_numpy(float), oos_tr["base"]["fees"].to_numpy(float),
                                 n_sims=1000)
         evidence["mc_net_p5"], evidence["mc_p_loss"] = mc["net_p5"], mc["p_loss"]
+    # G12: random-timing placebo on the OOS trades (research/placebo.py)
+    placebo_note = "G12 not measured (--placebo-draws 0)"
+    if a.placebo_draws and len(oos_tr["base"]):
+        from backtest.bracket import simulate as br_sim
+        from data.sessions import session_bounds
+        from research.placebo import random_timing_nets
+        path_of = dict(days)
+        base_costs = costs_map["base"]
+
+        def load_day(d):
+            return Day.from_l1(l1_from_trades(slice_session(load_chunks([path_of[d]]), d, rth_only=True)))
+
+        def bounds(d):
+            lo, hi = session_bounds(d, rth_only=True)
+            return pd.Timestamp(lo).value, pd.Timestamp(hi).value - 60_000_000_000      # leave 1 min for the exit
+
+        def sim_one(day, t, side, t_exit):
+            tr = br_sim(day, t, side, 100_000, 100_000, t_exit, base_costs)
+            return None if tr is None else tr["net_pnl"]
+
+        oos_days = sorted(set(oos_tr["base"]["trading_date"]))
+        sims = random_timing_nets(oos_tr["base"], oos_days, load_day, bounds, sim_one, a.placebo_draws)
+        real = float(oos_tr["base"]["net_pnl"].sum())
+        evidence["placebo_p"] = float((sims >= real).mean())
+        placebo_note = (f"G12 random timing ({a.placebo_draws} draws, same days/sides/holds): real OOS net {real:,.0f} "
+                        f"vs placebo median {np.median(sims):,.0f}; p = {evidence['placebo_p']:.3f}")
     table = gates.evaluate(evidence)
     verdict = gates.verdict(table, evidence)
 
@@ -164,7 +191,7 @@ def main(argv=None) -> int:
              f"DSR uses N = {max(len(variants), n_global)} (all hypothesis trials so far).", "",
              "## Gates", md(table), "", "## Out-of-sample (concatenated test months)",
              "```", json.dumps({k: (round(v, 4) if isinstance(v, float) else v) for k, v in ts_oos.items()}, indent=1), "```",
-             f"Net PnL by cost scenario: {stress}", "", "### Per month", md(months) if len(months) else "none", "",
+             f"Net PnL by cost scenario: {stress}", "", placebo_note, "", "### Per month", md(months) if len(months) else "none", "",
              "## Variant chosen per fold", md(pd.DataFrame(chosen), index=False) if chosen else "none", "",
              f"## Family: PBO = {pbo['pbo']}, clusters K = {cl['k']}, variants net > 0: "
              f"{int((full_net > 0).sum())}/{len(variants)}", "",
