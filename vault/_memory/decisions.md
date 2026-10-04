@@ -322,3 +322,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-027 (fixed, 1 trial): pooled +$144k over 122 FOMC days but t 1.13, placebo p 0.17 vs random days -> DOES NOT REPLICATE; closed. With the H-023 holdout FOMC sleeve loss (-$18k), H-007 is no longer treated as a candidate; the FOMC sleeve is dropped from future combined-book plans.
 - **Why:** Pre-registered criteria (t >= 2, placebo p <= 0.05) not met; the effect is indistinguishable from equity drift post-2010, consistent with the literature on the drift's decline.
 - **Status:** active.
+
+## D-057 — H-028 trade-flow imbalance continuation: closed, not worth more data (2026-10-04)
+- **Decision:** H-028 (8 variants, 238 RTH days): verdict insufficient data; 0/8 variants net positive full-period, OOS +$2.6k over 171 trades from fold-selection luck (t 0.65, PBO 0.34). Closed; do not buy more tick data for imbalance-continuation.
+- **Why:** The idea fails on its own full-sample economics, independent of the one-year G7 limit.
+- **Status:** active.

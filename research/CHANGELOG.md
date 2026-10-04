@@ -42,3 +42,4 @@
 - 2026-10-04 R8.4 H-026 commodity basis-momentum: 4/12, OOS +3.1%/yr, Sharpe 0.20, placebo p 0.13; not promoted (D-055).
 - 2026-10-04 R8.5 H-027 pre-FOMC replication NQ/RTY/YM: DOES NOT REPLICATE (t 1.13, placebo p 0.17); H-007 prior lowered (D-056).
 - 2026-10-04 R8.6 engineering: portfolio/combine.py (inverse-vol + equal-risk-contribution weights from trailing P&L, causal, vol-targeted) + tests; no backtest run.
+- 2026-10-04 R8.7 H-028 trade-flow imbalance continuation: insufficient data; 0/8 variants net > 0; closed (D-057). run_hypothesis.py report name fixed (h028-report.md).

@@ -25,4 +25,4 @@ space:
   hold: [15, 30]
 trial_budget: 8
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: insufficient data, 0/8 variants net > 0 (D-057)

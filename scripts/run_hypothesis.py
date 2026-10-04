@@ -57,7 +57,7 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     hyp = registry.load(a.hyp)
     mod = importlib.import_module("strategies." + a.hyp.lower().replace("-", ""))
-    out_path = a.out or ROOT / "vault" / "results" / f"{a.hyp.lower()}-report.md"
+    out_path = a.out or ROOT / "vault" / "results" / f"{a.hyp.lower().replace('-', '')}-report.md"
     if not a.dry:
         if hyp.status != "open":
             raise SystemExit(f"{a.hyp} is {hyp.status}")

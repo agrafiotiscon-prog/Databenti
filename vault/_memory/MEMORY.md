@@ -59,7 +59,7 @@ tags: [memory, state]
   rebalancing: run 1 buggy (dropped 2/3 of months, looked good), fixed re-run 1/12 → closed (D-041/42).
   Lesson: check event coverage first. H-020 vol-managed long: 8/12 gates (most) but placebo p 0.118,
   79 trades → not promoted (D-044). H-021 buy-the-selloff 3/12, placebo p 0.99 (D-046).
-  Total hypothesis trials: 190. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
+  Total hypothesis trials: 198. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
   fills), conservative; queue_l1 mildly optimistic.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
@@ -79,7 +79,8 @@ tags: [memory, state]
   momentum: not promising (1/12, −1.3%/yr, placebo p 0.40; D-054). H-026 basis-momentum: 4/12, +3.1%/yr,
   Sharpe 0.20, placebo p 0.13 (best of R8, not promoted; D-055). H-027 FOMC replication on NQ/RTY/YM: does
   not replicate (t 1.13, placebo p 0.17) → H-007 no longer a candidate (D-056). R8.6 done: `portfolio/combine.py` (causal inverse-vol/ERC
-  sleeve weights + vol target). Next: R8.7 order-flow imbalance on the 238 RTH days. Asked the user about forward paper tracking (R8.9, cents/day).
+  sleeve weights + vol target). H-028 trade-flow imbalance (238 RTH days): 0/8 variants
+  > 0, closed (D-057). Next: R8.8 write the next 3-5 literature ideas into QUEUE. Asked the user about forward paper tracking (R8.9, cents/day).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.5** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $3.4 of credit left. No more data purchases without the user. One year cannot pass G7.
 

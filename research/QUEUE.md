@@ -96,7 +96,7 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
       close t-1 -> close t on FOMC days): an out-of-market check of H-007's mechanism, not a new tuned strategy.
 - [x] R8.6 (2026-10-04: portfolio/combine.py inverse_vol + ERC, causal trailing weights, vol target; tests/test_combine.py; no result) Engineering: risk-parity sleeve combiner (inverse-vol / correlation-aware weights across passing or
       near-passing sleeves), tested on synthetic data; only combines sleeves registered BEFORE seeing the combo.
-- [ ] R8.7 Order-flow on the 238 RTH days: trade-imbalance (signed volume) predicting 5-30 min ES returns
+- [x] R8.7 (2026-10-04, D-057: H-028 insufficient data, 0/8 variants > 0; closed) Order-flow on the 238 RTH days: trade-imbalance (signed volume) predicting 5-30 min ES returns
       (Chordia & Subrahmanyam 2004 style); 1 year -> expect "insufficient data" on G7; report honestly.
 - [ ] R8.9 Forward paper-tracking of the trend252 book (daily signals + simulated fills logged, no broker):
       needs the user's OK for ongoing data cost (~$0.06/day for 26 daily bars x2) - listed under Needs the user.
