@@ -100,7 +100,18 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
       (Chordia & Subrahmanyam 2004 style); 1 year -> expect "insufficient data" on G7; report honestly.
 - [ ] R8.9 Forward paper-tracking of the trend252 book (daily signals + simulated fills logged, no broker):
       needs the user's OK for ongoing data cost (~$0.06/day for 26 daily bars x2) - listed under Needs the user.
-- [ ] R8.8 When R8.2-R8.7 are done: write the next 3-5 ideas from the literature into this queue (mechanism first).
+- [x] R8.8 (2026-10-04: vault/04-backtesting/next-ideas-r9.md) When R8.2-R8.7 are done: write the next 3-5 ideas from the literature into this queue (mechanism first).
+
+## R9: forced, scheduled flows outside equities (vault/04-backtesting/next-ideas-r9.md); $0 cached data
+- [ ] R9.1 Engineering E-1: random-timing placebo (G12) in scripts/run_hypothesis.py (tick runner), with tests.
+- [ ] R9.2 H-029 front-running the commodity index roll (GSCI 5th-9th business day; Mou 2011): near/far
+      calendar spread via portfolio.signals.near_far_returns; coverage of roll months first; placebo.
+- [ ] R9.3 H-030 Treasury futures month-end (index duration extension / Etula et al. 2020): long ZN/ZB last
+      k days; month-end coverage first (H-019 lesson); placebo vs random windows.
+- [ ] R9.4 H-031 Treasury auction cycle (Lou, Yan & Zhang 2013): needs the auction calendar from TreasuryDirect
+      (no Databento cost); fetch into config/ if the network allows, else park under "Needs the user".
+- [ ] R9.5 Engineering E-2: forward paper-tracking skeleton for trend252, tested on cached data (running it
+      forward waits for the user, R8.9).
 
 ## Later: new hypotheses (one at a time, mechanism first; see vault/03-order-flow/evidence-review.md)
 

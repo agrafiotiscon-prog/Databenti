@@ -54,6 +54,7 @@ Confidence tags used throughout:
 | 4 | [Fill and latency models](04-backtesting/fill-and-latency-models.md) | Market/limit fill rules, queue models, adverse selection |
 | 4 | [Engines compared](04-backtesting/engines-compared.md) | Own engine vs hftbacktest vs NautilusTrader |
 | 4 | [Metrics](04-backtesting/metrics.md) | How every number in a report is computed |
+| 4 | [Next ideas (R9)](04-backtesting/next-ideas-r9.md) | Mechanism-first idea list after R8: index roll, Treasury month-end, auction cycle |
 | 5 | [Anti-overfitting methodology](05-anti-overfitting/methodology.md) | Splits, walk-forward, CPCV, DSR, PBO, gates |
 | 5 | [Automated research loop design](05-anti-overfitting/research-loop.md) | The "constantly improving" routine and its guardrails |
 | 6 | [Roadmap, revised](06-roadmap.md) | Phases after research, and what changed |

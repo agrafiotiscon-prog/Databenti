@@ -80,7 +80,8 @@ tags: [memory, state]
   Sharpe 0.20, placebo p 0.13 (best of R8, not promoted; D-055). H-027 FOMC replication on NQ/RTY/YM: does
   not replicate (t 1.13, placebo p 0.17) → H-007 no longer a candidate (D-056). R8.6 done: `portfolio/combine.py` (causal inverse-vol/ERC
   sleeve weights + vol target). H-028 trade-flow imbalance (238 RTH days): 0/8 variants
-  > 0, closed (D-057). Next: R8.8 write the next 3-5 literature ideas into QUEUE. Asked the user about forward paper tracking (R8.9, cents/day).
+  > 0, closed (D-057). R8.8 done → [next-ideas-r9](../04-backtesting/next-ideas-r9.md):
+  forced scheduled flows outside equities. Next: R9.1 G12 placebo in the tick runner, then H-029 index roll. Asked the user about forward paper tracking (R8.9, cents/day).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.5** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $3.4 of credit left. No more data purchases without the user. One year cannot pass G7.
 

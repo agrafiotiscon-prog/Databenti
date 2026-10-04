@@ -327,3 +327,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-028 (8 variants, 238 RTH days): verdict insufficient data; 0/8 variants net positive full-period, OOS +$2.6k over 171 trades from fold-selection luck (t 0.65, PBO 0.34). Closed; do not buy more tick data for imbalance-continuation.
 - **Why:** The idea fails on its own full-sample economics, independent of the one-year G7 limit.
 - **Status:** active.
+
+## D-058 — R9 research direction: forced scheduled flows outside equities (2026-10-04)
+- **Decision:** After R8, new ideas prioritise mechanical, scheduled, price-insensitive flows in commodities and rates (index roll, Treasury month-end, auction cycle) over equity calendar effects, cross-sectional ranking on the thin universe, and new trend variants. Queue R9.1-R9.5; the tick runner gets a G12 placebo first.
+- **Why:** R8 evidence: cross-sectional ranks failed twice (D-054); equity calendar effects keep reducing to drift under G12; new trend variants would be snooped on data that selected trend252. Mechanical payers are the most robust class in the literature.
+- **Status:** active.
