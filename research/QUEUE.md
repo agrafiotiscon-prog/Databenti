@@ -103,7 +103,7 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
 - [x] R8.8 (2026-10-04: vault/04-backtesting/next-ideas-r9.md) When R8.2-R8.7 are done: write the next 3-5 ideas from the literature into this queue (mechanism first).
 
 ## R9: forced, scheduled flows outside equities (vault/04-backtesting/next-ideas-r9.md); $0 cached data
-- [ ] R9.1 Engineering E-1: random-timing placebo (G12) in scripts/run_hypothesis.py (tick runner), with tests.
+- [x] R9.1 (2026-10-04: research/placebo.py + --placebo-draws 200 default; dry run on H-028 8 months: G12 measured, p 0.30, nothing logged) Engineering E-1: random-timing placebo (G12) in scripts/run_hypothesis.py (tick runner), with tests.
 - [x] R9.2 (2026-10-04, D-059: 1/12, not promising) H-029 front-running the commodity index roll (GSCI 5th-9th business day; Mou 2011): near/far
       calendar spread via portfolio.signals.near_far_returns; coverage of roll months first; placebo.
 - [x] R9.3 (2026-10-04, D-060: 9/12 gates, strongest candidate, not promoted) H-030 Treasury futures month-end (index duration extension / Etula et al. 2020): long ZN/ZB last
