@@ -75,20 +75,43 @@ Ordered. Split big items before starting them. Tick `[x]` when done and note the
 - [x] H-021 (s6 routine, D-045/D-046): buy after 3-day selloff 3/12, placebo p 0.99; closed.
 - [x] R7.1 (s6, D-048/D-049): 26-market daily data ($2.26) + portfolio engine; H-022 trend/carry portfolio: OOS −4.3%/yr, Sharpe −0.28; closed.
 - [x] R7.2 (s6, D-050): H-023 combined book registered (trend252 + pre-FOMC), scripts/run_h023.py; development numbers descriptive only: $1M 8.4%/yr Sharpe 0.53 (hindsight), $100k 2.3%/yr.
-- [ ] R7.3 H-023 single holdout evaluation: waiting for the user's explicit go (research/HOLDOUT_UNLOCK); data ~$0.27.
-- [ ] R6.4 H-007 confirmation (superseded by R7.3): needs the USER (holdout unlock or paper trading). Do not re-test on development data.
-- [ ] R6.3 Next idea: needs either cached data ($0: 238 RTH trade days 2024-11..2025-09, 15 y of hourly
-      bars) or the user's OK for more spend ($1.08 left under the cap). Candidates must have a stated
-      payer and a horizon of minutes+; write registry + protocol first.
+- [x] R7.3 (2026-10-04, D-052): H-023 holdout CONFIRM by rule (book Sharpe 0.72, +8.7% on $1M; trend +$108k, FOMC -$18k);
+      weak evidence (1 year). Holdout spent + re-locked. vault/results/h023-holdout.md
+- [x] R6.4 H-007 confirmation: superseded by R7.3 (H-007 is the FOMC sleeve of H-023).
+
+## R8: active research again (user, 2026-10-04: "each routine should do new research, engineering and testing")
+Rules: $0 data only (cached: 26 futures daily 2010-06..2025-09, ES hourly 2010..2025-09, 238 RTH trade days);
+~$3.4 credit left, spend none without the user. One item per firing. Register (mechanism + space + budget)
+BEFORE results; coverage check first (D-042); G1-G12; every variant through trials.append(). Target (D-048):
+Sharpe >= 1 net. The 2025-10..2026-10 holdout is SPENT (D-052): no new idea may be checked on it; a
+future confirmation needs data after 2026-10-04 (forward test). Prefer ideas that are DIFFERENT payers from trend (the trend sleeve is already H-023).
+- [x] R8.1 (2026-10-04: portfolio/signals.py BUILDERS + cross_sectional + momentum_score; run_portfolio.py --hypothesis; tests) Engineering: generic portfolio-hypothesis runner (refactor scripts/run_portfolio.py so a new
+      cross-market signal only adds a signal function in portfolio/signals.py), with tests; no new result.
+- [ ] R8.2 H-024 cross-sectional carry across the 26 markets (Koijen, Moskowitz, Pedersen & Vrugt 2018):
+      rank by annualised front/next slope within sector, long top / short bottom, vol-scaled. Payer: hedgers.
+- [ ] R8.3 H-025 cross-sectional (relative) momentum 3/6/12 m, within-sector ranks (Asness, Moskowitz &
+      Pedersen 2013). Small space (<= 6 variants).
+- [ ] R8.4 H-026 commodity basis-momentum (Boons & Prado 2019): momentum of front minus second-contract returns.
+- [ ] R8.5 H-027 pre-FOMC drift replication on the other equity-index futures in the universe (daily bars,
+      close t-1 -> close t on FOMC days): an out-of-market check of H-007's mechanism, not a new tuned strategy.
+- [ ] R8.6 Engineering: risk-parity sleeve combiner (inverse-vol / correlation-aware weights across passing or
+      near-passing sleeves), tested on synthetic data; only combines sleeves registered BEFORE seeing the combo.
+- [ ] R8.7 Order-flow on the 238 RTH days: trade-imbalance (signed volume) predicting 5-30 min ES returns
+      (Chordia & Subrahmanyam 2004 style); 1 year -> expect "insufficient data" on G7; report honestly.
+- [ ] R8.9 Forward paper-tracking of the trend252 book (daily signals + simulated fills logged, no broker):
+      needs the user's OK for ongoing data cost (~$0.06/day for 26 daily bars x2) - listed under Needs the user.
+- [ ] R8.8 When R8.2-R8.7 are done: write the next 3-5 ideas from the literature into this queue (mechanism first).
 
 ## Later: new hypotheses (one at a time, mechanism first; see vault/03-order-flow/evidence-review.md)
 
 ## Needs the user
+- **(2026-10-04) Forward paper tracking of the confirmed trend252 book (R8.9):** a few cents/day of daily bars;
+  ~$3.4 credit left. Asked in chat.
 - **(session 6, after H-022) Direction for the 15%/yr goal (D-048/D-049) - waiting for the user:**
   (1) accept Sharpe ~0.4-0.5 and confirm a pre-registered combination (trend252 + H-007) on the holdout
   or by paper trading; (2) buy multi-year ES tick data (~$140/yr PAYG or a subscription) for order-flow
-  research; (3) leverage (not recommended: ~-60% drawdowns). Until the user answers, the routine does not
-  start new hypotheses on the 26-market data (would add trials while the direction is open).
+  research; (3) leverage (not recommended: ~-60% drawdowns). **Answered 2026-10-04:** option 1 (single
+  H-023 holdout run) and resume active research every firing (R8).
 - (resolved by D-019: credit spent on 1 year of RTH trades; $117.15 of $120 cap used)
 - **Old: Data budget for real backtests.** ES trades cost about $0.55 per full UTC day (tbbo ≈ $0.92):
   one year of trades ≈ $140, more than the remaining pay-as-you-go credit (~$112 after

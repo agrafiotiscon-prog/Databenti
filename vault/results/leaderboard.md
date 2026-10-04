@@ -1,12 +1,17 @@
 ---
 type: result
-date: 2026-10-03
+date: 2026-10-04
 tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
 Total hypothesis trials logged: **174** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
+
+**Holdout confirmation (D-052):** [H-023](h023-holdout.md) (trend252 portfolio + pre-FOMC sleeve, chosen in hindsight
+and pre-registered in D-050) was run once on the 2025-10..2026-10 holdout: **CONFIRM by its fixed rule** - book
++8.7%, Sharpe 0.72 on $1M; all profit from the trend sleeve (Sharpe 0.89), the FOMC sleeve lost (−$18k, 8 trades);
++1.6% at $100k. One year = weak evidence (Sharpe SE ~1). The holdout is now spent.
 
 | Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
 |---|---|---|---|---|---|---|---|

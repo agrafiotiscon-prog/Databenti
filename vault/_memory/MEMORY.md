@@ -23,10 +23,10 @@ tags: [memory, state]
   provisional lock from today − 12 months is enforced by `data/holdout.py`). Broker **not chosen**
   → IBKR fees as the default profile (`config/costs.toml`).
 
-## Current state (2026-10-03, session 6)
+## Current state (2026-10-04, session 6)
 - Phases 0–2 done. **Phase 2 features validated on the first real day** (2024-03-05, ES), incl.
   a visual check ([day-check](../results/day-check-2024-03-05-rth.md)).
-- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **≈ $121.2** (see Budget below)
+- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **≈ $121.5** (see Budget below)
   in total; earlier ($10.02 before `cache/download_log.csv` existed + $0.04 logged there; `spend_log.csv`
   also logs dry runs, so never sum it). Cached
   locally (not in git): 2024-03-05 trades/tbbo/mbo/status, trades for the 2024-03 roll window
@@ -67,11 +67,17 @@ tags: [memory, state]
 - **User target (D-048): ~15%/yr = Sharpe ≥ 1 at 15% vol** → [return-targets](../04-backtesting/return-targets.md).
   R7: 26 CME futures daily bars 2010-2025 cached (`data/universe.py`, `portfolio/`). H-022 trend+carry
   portfolio OOS −4.3%/yr (Sharpe −0.28); trend252 in hindsight 0.41 (D-049).
-  User chose option 1 → **H-023** combined book (trend252 + H-007) registered with holdout criteria (D-050);
-  hindsight-only: $1M 8.4%/yr Sharpe 0.53, $100k 2.3%/yr (integer contracts). **Next: holdout run needs the
-  user's go** (`research/HOLDOUT_UNLOCK`, data ≈ $0.27).
-- **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.2** (+ ≤ $0.15 possible
-  partial charges from 3 interrupted streams) → ≈ $3.7 of credit left. No more data purchases without the user. One year cannot pass G7.
+  User chose option 1 → **H-023** combined book (trend252 + H-007), pre-registered (D-050). **Holdout run once
+  2026-10-04 → CONFIRM by the fixed rule (D-052)** → [h023-holdout](../results/h023-holdout.md): book +8.7%,
+  Sharpe 0.72 on $1M; trend sleeve +$108k (Sharpe 0.89, spread across sectors), FOMC sleeve −$18k (8 trades);
+  $100k +1.6%. Weak evidence (1 y, Sharpe SE ~1). **Holdout is spent and re-locked**: never select/tune on it;
+  future confirmation = forward data after 2026-10-04.
+- **Routine resumed active research (D-051, user 2026-10-04):** QUEUE section R8 ($0 cached data; cross-sectional
+  carry/momentum, basis-momentum, FOMC replication on other index futures, sleeve combiner, order-flow imbalance).
+  R8.1 done: `portfolio/signals.py` (BUILDERS, cross_sectional, momentum_score) + `run_portfolio.py --hypothesis`.
+  Next: R8.2 H-024 cross-sectional carry. Asked the user about forward paper tracking (R8.9, cents/day).
+- **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.5** (+ ≤ $0.15 possible
+  partial charges from 3 interrupted streams) → ≈ $3.4 of credit left. No more data purchases without the user. One year cannot pass G7.
 
 ## Open questions
 - Recheck detector calibration (D-018) on more MBO days (needs the user's OK for MBO)

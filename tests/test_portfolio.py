@@ -59,3 +59,29 @@ def test_roll_pays_both_legs():
     roll = df.loc[d[200], "contracts"]
     assert roll >= 2 * 1 and roll > pos_before.median()  # closing old + opening new, not just the change
     assert (df["costs"] >= 0).all()
+
+
+def test_cross_sectional_ranks_within_sector_and_ignores_missing():
+    from portfolio.signals import cross_sectional
+    idx = [date(2020, 1, d) for d in (2, 3)]
+    sc = {"ES": pd.Series([3.0, 1.0], index=idx), "NQ": pd.Series([2.0, np.nan], index=idx),
+          "RTY": pd.Series([1.0, 2.0], index=idx), "YM": pd.Series([0.0, 3.0], index=idx),
+          "CL": pd.Series([9.0, 9.0], index=idx)}            # alone in its sector -> always 0
+    out = cross_sectional(sc, by_sector=True, frac=0.25, min_names=3)
+    # day 1: 4 equity names, k = 1 -> ES long, YM short
+    assert [out[r][idx[0]] for r in ("ES", "NQ", "RTY", "YM")] == [1.0, 0.0, 0.0, -1.0]
+    # day 2: 3 valid names, k = floor(0.75) = 0 -> nobody positioned
+    assert all(out[r][idx[1]] == 0.0 for r in ("ES", "NQ", "RTY", "YM"))
+    assert (out["CL"] == 0).all()
+
+
+def test_momentum_score_is_causal():
+    from portfolio.signals import momentum_score
+    p = prepare(make_root())
+    s = momentum_score(p, 20, skip=5)
+    r2 = p.r.copy()
+    r2.iloc[300:] = 0.05                                     # change the future
+    p2 = prepare(make_root())
+    p2.r = r2
+    s2 = momentum_score(p2, 20, skip=5)
+    assert np.allclose(s.iloc[:300].fillna(0), s2.iloc[:300].fillna(0))

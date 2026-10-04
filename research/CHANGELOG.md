@@ -36,3 +36,4 @@
 - 2026-10-03 R7.1: 26-market daily bars ($2.26) + portfolio engine; H-022 trend/carry portfolio OOS -4.3%/yr, Sharpe -0.28, placebo p 0.96; closed (D-049). 174 trials.
 - 2026-10-03 (routine 17:15) Paused new hypotheses pending the user's choice of direction after H-022 (QUEUE 'Needs the user').
 - 2026-10-03 R7.2 H-023 combined book registered + scripts/run_h023.py; descriptive dev numbers (hindsight) $1M 8.4%/yr Sharpe 0.53; holdout run waits for the user's go (D-050).
+- 2026-10-04 R7.3 H-023 holdout (user go): CONFIRM by rule, Sharpe 0.72, trend +$108k, FOMC -$18k; weak (1 y). Holdout re-locked (D-052). R8.1 generic portfolio runner + cross-sectional signals.

@@ -292,3 +292,13 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Register H-023 = H-022 trend252 portfolio + H-007 lm24h ES sleeve, no parameters, with pass/fail criteria fixed before any holdout data is read. Development-period numbers for the book are descriptive only. The holdout is read only after the user's explicit go (unlock file).
 - **Why:** User: 'Continue' after being told option 1 is the default. Both components were selected after seeing results, so only untouched data can test them. Holdout data for 2025-10..2026-10 (26 markets daily + ES hourly) costs < $0.5, inside the remaining ~$3.7.
 - **Status:** active.
+
+## D-051 — H-023 holdout unlocked by user; routine resumes research (R8) (2026-10-04)
+- **Decision:** User authorised the single H-023 holdout evaluation (research/HOLDOUT_UNLOCK created on their instruction, 2026-10-04) and asked that every routine firing resume new research, engineering and testing; QUEUE R8 added ($0 cached data only). After the H-023 run the unlock file is removed again so later research cannot touch the holdout.
+- **Why:** User message 2026-10-04: 'do that and also each routine should do new research now, engineering and testing'. Re-locking keeps the holdout unseen by new hypotheses, which are not pre-registered against it.
+- **Status:** active.
+
+## D-052 — H-023 holdout: CONFIRM by pre-registered rule, weak evidence; holdout spent and re-locked (2026-10-04)
+- **Decision:** H-023 evaluated once on the holdout 2025-10-03..2026-10-02: book +$90k on $1M (8.7%, Sharpe 0.72, maxDD -8.6%); trend sleeve +$108k (Sharpe 0.89), FOMC sleeve -$18k (8 trades). Verdict CONFIRM by the D-050 criteria. H-023 closed; research/HOLDOUT_UNLOCK removed. Trend252 portfolio becomes the reference sleeve; H-007 is not promoted on its own.
+- **Why:** Criteria fixed before the run (net > 0, Sharpe >= 0.4, trend net > 0) were all met. But one year has Sharpe SE ~1, the FOMC sleeve lost, and at $100k the book made 1.6%, so this is a passed falsification test, not proof. The used year may not be reused for selection.
+- **Status:** active.

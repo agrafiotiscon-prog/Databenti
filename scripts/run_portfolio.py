@@ -1,8 +1,9 @@
-"""Evaluate H-022 (diversified futures trend/carry portfolio) once. Protocol: registry H-022 + D-023/D-048.
+"""Evaluate a portfolio hypothesis once (H-022 and later cross-market ones). Protocol: registry + D-023/D-048.
 
-  python scripts/run_portfolio.py [--coverage-only]
+  python scripts/run_portfolio.py [--hypothesis H-0xx] [--coverage-only]
 
-Coverage (D-042) is printed and written before any P&L is computed.
+Signals come from portfolio.signals.BUILDERS[hypothesis] (default: the engine's built-in signals,
+used by H-022). Coverage (D-042) is printed and written before any P&L is computed.
 """
 from __future__ import annotations
 
@@ -24,12 +25,13 @@ from data.holdout import check as holdout_check             # noqa: E402
 from data.universe import BY_ROOT, UNIVERSE                 # noqa: E402
 from portfolio.data import build, load_bars                 # noqa: E402
 from portfolio.engine import prepare, simulate              # noqa: E402
+from portfolio.signals import BUILDERS, builtin             # noqa: E402
 from research import clusters, gates, registry, stats, trials   # noqa: E402
 from research.walkforward import walk_forward               # noqa: E402
 from scripts.fetch_futures_daily import path_for            # noqa: E402
 from scripts.run_h001 import md                             # noqa: E402
 
-HYP, CAPITAL, SMALL = "H-022", 1_000_000.0, 100_000.0
+CAPITAL, SMALL = 1_000_000.0, 100_000.0
 
 
 def load_all(dl):
@@ -63,9 +65,11 @@ def oos_stats(daily: pd.Series, capital: float) -> dict:
 def main(argv=None) -> int:
     from data.download import Downloader
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--hypothesis", default="H-022")
     ap.add_argument("--coverage-only", action="store_true")
     ap.add_argument("--placebo-draws", type=int, default=300)
     a = ap.parse_args(argv)
+    HYP = a.hypothesis
     hyp = registry.load(HYP)
     if not a.coverage_only and (hyp.status != "open" or trials.count(hypothesis=HYP) + hyp.space_size > hyp.trial_budget):
         raise SystemExit(f"{HYP}: closed or already evaluated (single evaluation).")
@@ -82,11 +86,18 @@ def main(argv=None) -> int:
         return 0
     cal = sorted(set().union(*[p.dates for p in preps]))
     holdout_check(cal)
+    built = BUILDERS.get(HYP, builtin)(preps)
+    for p in preps:
+        for v, by_root in built.items():
+            p.signals[v] = by_root[p.root].reindex(p.dates).fillna(0.0)
     c = load_costs()
     fee = c.fee(1)
     scen = {"base": (1.0, fee), "fees1.5": (1.0, fee * 1.5), "stress": (2.0, fee * 1.5), "plus1tick": (2.0, fee)}
     grid = list(hyp.grid())
     variants = [g["variant"] for g in grid]
+    missing = [v for v in variants if v not in built]
+    if missing:
+        raise SystemExit(f"{HYP}: no signal for variants {missing} (portfolio/signals.py)")
     S = {lab: {v: simulate(preps, v, CAPITAL, sl, fe) for v in variants} for lab, (sl, fe) in scen.items()}
     D = {lab: pd.DataFrame({v: S[lab][v]["net"] for v in variants}).reindex(cal).fillna(0.0) for lab in scen}
     folds = walk_forward(cal, train_months=36, test_months=12, step_months=12, embargo_days=1)
@@ -170,10 +181,10 @@ def main(argv=None) -> int:
     by_year = pd.DataFrame({"oos_net": yrs.round(0), "return_pct": (100 * yrs / CAPITAL).round(2)})
     fam = pd.DataFrame({v: oos_stats(D["base"][v], CAPITAL) for v in variants}).T
     fam["net_full"] = full_net.round(0)
-    out = ROOT / "vault" / "results" / "h022-report.md"
+    out = ROOT / "vault" / "results" / f"{HYP.lower()}-report.md"
     out.write_text("\n".join([
-        "---", "type: result", f"date: {date.today().isoformat()}", "tags: [R7, H-022, gates, portfolio]", "---",
-        f"# H-022 diversified futures portfolio: gate verdict **{verdict}**", "",
+        "---", "type: result", f"date: {date.today().isoformat()}", f"tags: [R7, {HYP}, gates, portfolio]", "---",
+        f"# {HYP} futures portfolio: gate verdict **{verdict}**", "",
         f"{hyp.title}. {len(preps)} markets, {len(cal)} dates {cal[0]}..{cal[-1]}; {len(folds)} folds (3 y / 1 y). "
         f"DSR N = {n_global}. Capital $1M, integer contracts, 15% vol target, next-day-close execution, "
         "1 tick + fees per contract side (stress 2 ticks + fees x1.5). Coverage: [futures-daily-check](futures-daily-check.md).", "",

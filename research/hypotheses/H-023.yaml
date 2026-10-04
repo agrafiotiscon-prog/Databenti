@@ -22,4 +22,4 @@ space:
   variant: [fixed]
 trial_budget: 1
 registered: 2026-10-03
-status: open
+status: closed   # holdout evaluated once 2026-10-04: CONFIRM by pre-registered criteria (D-052)
