@@ -5,8 +5,10 @@
 
 Sleeves (rules fixed in advance, nothing is tuned here):
   * trend252 - H-023's confirmed trend sleeve: portfolio.engine.target_contracts on the 26 markets, $1M
-  * h030     - H-030 candidate, pre-registered rule "pre|3|all": long ZT/ZF/ZN/ZB ($250k notional each)
+  * h030     - H-030 rule "pre|3|all" (confirmed on TN/UB, D-062): long ZT/ZF/ZN/ZB ($250k notional each)
                from the close 3 trading days before month-end to the month-end close
+  * h035_watch - H-035 rule "5|es" (not confirmed, 6/12 gates, placebo p 0.047; D-065): ES $1M notional over the last
+               5 days of the month, side = -sign(ES - ZN month-to-date at entry)
 For each as-of date the ledger gets one row per sleeve and market: the target contracts decided at that
 close (to be traded at the next close) and the close itself, so P&L can be marked later from the ledger alone.
 Running it forward needs fresh daily bars (a few cents/day of data) - only with the user's OK (R8.9/R9.6).
@@ -32,6 +34,7 @@ from scripts.fetch_futures_daily import path_for            # noqa: E402
 
 CAPITAL = 1_000_000.0
 H030_MARKETS, H030_K, H030_NOTIONAL = ("ZT", "ZF", "ZN", "ZB"), 3, 250_000.0
+H035_K, H035_NOTIONAL = 5, 1_000_000.0   # watch sleeve (D-065): pre-registered H-035 rule 5|es, not confirmed
 COLS = ["asof", "sleeve", "root", "target", "close", "instrument_id"]
 
 
@@ -45,6 +48,26 @@ def h030_target(dates: list, asof: date, k: int = H030_K) -> int:
         return 0
     i = month.index(asof)
     return 1 if len(month) - 1 - k <= i < len(month) - 1 else 0
+
+
+def h035_side(rds: dict, asof: date, k: int = H035_K) -> int:
+    """H-035 rule 5|es: during the last k decision closes before month-end, side = -sign(ES - ZN log return from
+    the previous month-end close to the entry close E = k trading days before month-end); 0 otherwise."""
+    es_dates = rds["ES"].dates
+    month = [d for d in es_dates if (d.year, d.month) == (asof.year, asof.month)]
+    if asof not in month or not (len(month) - 1 - k <= month.index(asof) < len(month) - 1):
+        return 0
+    entry = month[len(month) - 1 - k]
+    prev = [d for d in es_dates if d < month[0]]
+    if not prev:
+        return 0
+
+    def lr(rd):
+        from portfolio.data import chain_returns
+        r = chain_returns(cut(rd, entry))
+        return float(np.log1p(r[(r.index > prev[-1]) & (r.index <= entry)]).sum())
+    rel = lr(rds["ES"]) - lr(rds["ZN"])
+    return 0 if rel == 0 or np.isnan(rel) else int(-np.sign(rel))
 
 
 def snapshot(rds: dict, asof: date) -> pd.DataFrame:
@@ -67,6 +90,12 @@ def snapshot(rds: dict, asof: date) -> pd.DataFrame:
         n = max(1, int(round(H030_NOTIONAL / (px * BY_ROOT[r].point_value))))
         # the full calendar of the month is needed to know month-end; use the uncut dates (exchange calendar)
         rows.append([asof, "h030", r, n * h030_target(rds[r].dates, asof), px, int(held)])
+    es = cut(rds["ES"], asof)
+    if es.dates and es.dates[-1] == asof:
+        held = es.held[asof]
+        px = float(es.closes[held][asof])
+        n = max(1, int(round(H035_NOTIONAL / (px * BY_ROOT["ES"].point_value))))
+        rows.append([asof, "h035_watch", "ES", n * h035_side(rds, asof), px, int(held)])
     return pd.DataFrame(rows, columns=COLS)
 
 

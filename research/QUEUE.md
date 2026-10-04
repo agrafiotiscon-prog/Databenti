@@ -129,13 +129,13 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
 ## R10: more independent, low-correlation sleeves (user 2026-10-04: "profits still low, continue until you exceed expectations")
 Goal: Sharpe >= 1 net for the book (D-048). Each idea: registry first, coverage, G1-G12, then a confirmation on unseen
 instruments/data before it may join the paper book. Prefer $0 cached data; credit left ~$3.3.
-- [ ] R10.1 H-034 equity index turn-of-the-month (Lakonishok & Smidt 1988; McConnell & Xu 2008: returns concentrated in
+- [x] R10.1 (2026-10-04, D-065: 3/12, placebo p 0.88) H-034 equity index turn-of-the-month (Lakonishok & Smidt 1988; McConnell & Xu 2008: returns concentrated in
       the last day + first 3 days of the month; payer: month-start inflows from payroll/pension contributions). ES/NQ/RTY/YM
       daily (cached). G12 placebo vs random 4-day windows is essential (equity drift). Confirmation market if it passes:
       none unseen in equities -> forward only.
-- [ ] R10.2 H-035 month-end in short-rate futures (SOFR SR3 / Fed funds ZQ): month-end funding/repo pressure is a
+- [x] R10.2 (replaced by H-035 month-end rebalancing pressure: 6/12, placebo p 0.047, watch sleeve; D-065) H-035 month-end in short-rate futures (SOFR SR3 / Fed funds ZQ): month-end funding/repo pressure is a
       documented money-market effect; same flow family as H-030 but a different instrument. Needs data (~$0.1?): price first.
-- [ ] R10.3 H-036 trend sleeve improvement with a PRE-REGISTERED rule only: volatility-managed trend (Moreira & Muir 2017
+- [x] R10.3 (2026-10-04, D-065: 6/12, no gain) H-036 trend sleeve improvement with a PRE-REGISTERED rule only: volatility-managed trend (Moreira & Muir 2017
       apply vol-scaling to factors; Harvey et al. 2018 "The impact of volatility targeting") - scale the trend sleeve by its
       own trailing vol; judged forward-only because trend252 was selected on this data.
 - [ ] R10.4 Quarter-end / year-end subset of H-030 (larger index extensions at quarter-ends) - descriptive only (subset

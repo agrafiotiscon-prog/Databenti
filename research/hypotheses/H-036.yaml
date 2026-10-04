@@ -20,4 +20,4 @@ space:
   scale_win: [21, 63, 126]
 trial_budget: 3
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: 6/12, no improvement over trend252, placebo p 0.25 (D-065)

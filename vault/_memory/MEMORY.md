@@ -59,7 +59,7 @@ tags: [memory, state]
   rebalancing: run 1 buggy (dropped 2/3 of months, looked good), fixed re-run 1/12 → closed (D-041/42).
   Lesson: check event coverage first. H-020 vol-managed long: 8/12 gates (most) but placebo p 0.118,
   79 trades → not promoted (D-044). H-021 buy-the-selloff 3/12, placebo p 0.99 (D-046).
-  Total hypothesis trials: 216. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
+  Total hypothesis trials: 227. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
   fills), conservative; queue_l1 mildly optimistic.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
@@ -92,7 +92,8 @@ tags: [memory, state]
   `paper_track.py --live`, D-063). $100k whole contracts, last 5 y: book +3.9%/yr (H-030 +4.7%, trend −0.8%: trend
   sleeve untradeable at $100k) → [100k](../results/combined-book-100k-last5y.md). Micros (R9.8): $100k book +5.6%/yr last 5 y.
   H-033 post-month-end short: does not confirm (D-064). User: keep going until expectations are exceeded → QUEUE R10
-  (turn-of-month equities, SOFR/ZQ month-end, vol-managed trend forward-only). Asked the user about forward paper tracking (R8.9, cents/day).
+  → R10 run in parallel: H-034 turn-of-month 3/12 (drift), **H-035 rebalancing pressure 6/12, placebo
+  p 0.047 → forward watch sleeve** (paper_track `h035_watch`), H-036 vol-managed trend no gain (D-065). Asked the user about forward paper tracking (R8.9, cents/day).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.6** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $3.3 of credit left. No more data purchases without the user. One year cannot pass G7.
 

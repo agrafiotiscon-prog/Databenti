@@ -22,4 +22,4 @@ space:
   markets: [es, eq4]
 trial_budget: 4
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: 6/12, placebo p 0.047, not promoted; forward watch sleeve (D-065)

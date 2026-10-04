@@ -28,4 +28,15 @@ def test_snapshot_targets_match_full_history_targets(tmp_path):
     append(ledger, snapshot(rds, rds["ES"].dates[331]))             # re-run replaces, not duplicates
     assert len(pd.read_csv(ledger)) == 2 * len(snap)
     m = mark(ledger)
-    assert set(m["sleeve"]) <= {"trend252", "h030"} and len(m) == len(snap)
+    assert set(m["sleeve"]) <= {"trend252", "h030", "h035_watch"} and len(m) == len(snap)
+
+
+def test_h035_side_window_and_sign():
+    from scripts.paper_track import h035_side
+    rds = {r: make_root(root=r, seed=i, drift=d) for i, (r, d) in enumerate((("ES", 0.004), ("ZN", -0.001)))}
+    dates = rds["ES"].dates
+    month = [d for d in dates if (d.year, d.month) == (dates[200].year, dates[200].month)]
+    flags = [h035_side(rds, d) for d in month]
+    assert all(f == 0 for f in flags[:-6]) and flags[-1] == 0
+    window = flags[-6:-1]
+    assert len(set(window)) == 1 and window[0] in (-1, 1)        # one side for the whole window

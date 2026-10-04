@@ -5,7 +5,7 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **215** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **227** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 **Holdout confirmation (D-052):** [H-023](h023-holdout.md) (trend252 portfolio + pre-FOMC sleeve, chosen in hindsight
@@ -34,6 +34,9 @@ and pre-registered in D-050) was run once on the 2025-10..2026-10 holdout: **CON
 | 4i | [H-028](h028-report.md) follow 5/15-min aggressor **trade-flow imbalance** for 15/30 min (ES RTH ticks) | 1 y ticks (238 days) | 1/12 | 171 | +$2,566 | 0.65 | insufficient data, and **0/8 variants net > 0 full-period** - OOS gain is fold-selection luck |
 | 4j | [H-029](h029-report.md) front-run GSCI commodity index roll (near/far spread) | 15 y daily, 12 commodities | 1/12 | 1,123 | −$90,703 | −1.88 (daily) | not promising: all 4 variants < 0, 11/13 years < 0 (D-059) |
 | 3f | [H-031](h031-report.md) Treasury auction cycle (short pre / long post) | 15 y daily + 1,012 auctions | 4/12 | 807 | +$30,591 | 0.50 (daily) | not promising: negative at stress, PBO 0.69; placebo pass = bond drift (D-061) |
+| 2a | [H-035](h035-report.md) **month-end rebalancing pressure**: trade against MTD stocks-vs-bonds over the last 3/5 days (ES / 4 indices) | 15 y daily | 6/12 | 400 | +$315,850 on $1M (+2.5%/yr) | 1.25 (daily) | **passes G12 (p 0.047)**, all variants > 0; fails t/DSR, PBO 0.65, concentration, G7 - forward **watch sleeve** (D-065) |
+| 3g | [H-036](h036-report.md) volatility-managed trend (21/63/126-day book vol target) | 15 y daily, 26 futures | 6/12 | 9,767 | +6.2%/yr at 16% vol | 1.34 (daily) | no gain over trend252; placebo p 0.25 |
+| 4k | [H-034](h034-report.md) equity turn of the month (T-1 → 1st/3rd day) | 15 y daily | 3/12 | 422 | −$64,463 | −0.38 (daily) | equity drift: placebo p 0.88 |
 | 4c | [H-016](h016-report.md) pre-holiday (long) | 15 y hourly | 0/12 | 31 | −$2,365 | −0.45 | not promising; ~2-3 events/yr, placebo p = 0.54 |
 | 4b | [H-015](h015-report.md) macro-announcement days (jobs, CPI) | 15 y hourly | 0/12 | 165 | −$6,057 | −0.28 | not promising; placebo p = 0.53 (no premium vs random days) |
 | 4 | [H-011](h011-report.md) VWAP-deviation fade | 1 y trades | 3/11 | 256 | +$4,070 | 0.68 | not promising (0/4 variants > 0 full period) |

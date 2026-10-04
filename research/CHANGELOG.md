@@ -50,3 +50,4 @@
 - 2026-10-04 R9.6 H-032 (user OK, $0.12 TN/UB daily bars bought after registration): CONFIRMS H-030 on all 4 criteria (D-062). Descriptive combined book trend252 + H-030 at 15% vol: 12.7%/yr, Sharpe 0.82 (hindsight). Next R9.7 forward paper tracking.
 - 2026-10-04 R9.7 forward paper tracking live (paper_track.py --live, ROUTINE 2b, D-063); $100k whole-contract book last 5 y: +3.9%/yr (trend sleeve untradeable at $100k); R9.8 micro contracts queued.
 - 2026-10-04 H-033 short after month-end (TN/UB): does not confirm (D-064). R9.8 micros: $100k book +5.6%/yr last 5 y. R10 queued (user: continue until expectations exceeded).
+- 2026-10-04 R10 parallel: H-034 3/12 (drift), H-035 6/12 placebo p 0.047 -> watch sleeve in paper_track, H-036 6/12 no gain (D-065).

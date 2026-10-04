@@ -362,3 +362,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-033 (TN/UB, pre-registered): stress net -$21k, t 0.21, placebo p 0.11 -> DOES NOT CONFIRM, closed. Engine accepts per-market specs/fees; data/universe.py MICRO table: $100k book with micros 2020-10..2025-09 +5.6%/yr (vs +3.9% full-size), Sharpe 0.44. Paper tracking continues with full-size sleeve definitions; $100k reporting uses micros.
 - **Why:** Pre-registered criteria; micros are the realistic way a $100k account would run the trend sleeve.
 - **Status:** active.
+
+## D-065 — R10 parallel batch: H-034 drift, H-035 watch sleeve, H-036 no gain (2026-10-04)
+- **Decision:** H-034 turn-of-month: 3/12, placebo p 0.88 (equity drift), closed. H-035 month-end rebalancing pressure: 6/12, placebo p 0.047, OOS +2.5%/yr, all variants > 0; not promoted; rule 5|es added to forward paper tracking as a watch sleeve (not in the book). H-036 vol-managed trend: 6/12, no Sharpe gain over trend252, closed.
+- **Why:** Pre-registered gates. H-035 has a documented mechanical payer and passes the placebo but not significance/stability; no unseen equity market exists for a confirmation, so forward data is the test.
+- **Status:** active.
