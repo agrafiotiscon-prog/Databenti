@@ -1,6 +1,6 @@
 ---
 type: result
-date: 2026-10-03
+date: 2026-10-04
 tags: [R7, coverage, D-042]
 ---
 # R7 daily futures data: coverage before any P&L (D-042)
