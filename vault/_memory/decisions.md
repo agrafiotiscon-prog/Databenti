@@ -317,3 +317,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-026 evaluated once (4 variants): 4/12 gates, OOS +3.1%/yr, Sharpe 0.20, placebo p 0.13, all variants profitable full-period; closed. Not combined with the trend book now (would be selection on development data); candidate for a future pre-registered forward test if more data is approved.
 - **Why:** Fails significance, PBO, MC and G12. The ex-energy result was seen only after the run, so no sub-universe re-test.
 - **Status:** active.
+
+## D-056 — H-027 pre-FOMC replication on NQ/RTY/YM: does not replicate; H-007 prior lowered (2026-10-04)
+- **Decision:** H-027 (fixed, 1 trial): pooled +$144k over 122 FOMC days but t 1.13, placebo p 0.17 vs random days -> DOES NOT REPLICATE; closed. With the H-023 holdout FOMC sleeve loss (-$18k), H-007 is no longer treated as a candidate; the FOMC sleeve is dropped from future combined-book plans.
+- **Why:** Pre-registered criteria (t >= 2, placebo p <= 0.05) not met; the effect is indistinguishable from equity drift post-2010, consistent with the literature on the drift's decline.
+- **Status:** active.

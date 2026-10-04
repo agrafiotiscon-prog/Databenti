@@ -40,3 +40,4 @@
 - 2026-10-04 R8.2 H-024 cross-sectional carry: not promising, 1/12 gates, OOS -1.5%/yr, placebo p 0.57 (D-053).
 - 2026-10-04 R8.3 H-025 cross-sectional momentum: not promising, 1/12, OOS -1.3%/yr, placebo p 0.40 (D-054).
 - 2026-10-04 R8.4 H-026 commodity basis-momentum: 4/12, OOS +3.1%/yr, Sharpe 0.20, placebo p 0.13; not promoted (D-055).
+- 2026-10-04 R8.5 H-027 pre-FOMC replication NQ/RTY/YM: DOES NOT REPLICATE (t 1.13, placebo p 0.17); H-007 prior lowered (D-056).

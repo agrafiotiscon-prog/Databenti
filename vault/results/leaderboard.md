@@ -5,7 +5,7 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **189** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **190** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 **Holdout confirmation (D-052):** [H-023](h023-holdout.md) (trend252 portfolio + pre-FOMC sleeve, chosen in hindsight
@@ -29,6 +29,7 @@ and pre-registered in D-050) was run once on the 2025-10..2026-10 holdout: **CON
 | 4g | [H-024](h024-report.md) **cross-sectional carry**, 26 futures, within-sector / global ranks | 15 y daily, 26 futures | 1/12 | 7,118 contract trades | −1.5%/yr on $1M | −0.35 (daily) | not promising; equity+FX carry positive, commodity carry lost; placebo p 0.57 |
 | 4h | [H-025](h025-report.md) **cross-sectional momentum** 6/12 m (skip 1 m), within-sector / global | 15 y daily, 26 futures | 1/12 | 10,193 contract trades | −1.3%/yr on $1M | −0.32 (daily) | not promising; PBO 0.45, placebo p 0.40; equity gain = likely drift |
 | 3e | [H-026](h026-report.md) **commodity basis-momentum** (front − second contract, 6/12 m; time-series + cross-sectional) | 15 y daily, 12 commodities | 4/12 | 6,425 contract trades | +3.1%/yr on $1M | 0.71 (daily) | not promising but best of R8: all 4 variants > 0, 8/13 years; placebo p 0.13, PBO 0.53; energy −$395k |
+| — | [H-027](h027-report.md) pre-FOMC drift **replication** on NQ/RTY/YM (daily, fixed) | 15 y daily | n/a (replication) | 122 events | +$143,874 | 1.13 | **does not replicate**: placebo p 0.17 vs random days; NQ t 1.83, YM 0.59, RTY 0.50 - lowers H-007's prior (D-056) |
 | 4c | [H-016](h016-report.md) pre-holiday (long) | 15 y hourly | 0/12 | 31 | −$2,365 | −0.45 | not promising; ~2-3 events/yr, placebo p = 0.54 |
 | 4b | [H-015](h015-report.md) macro-announcement days (jobs, CPI) | 15 y hourly | 0/12 | 165 | −$6,057 | −0.28 | not promising; placebo p = 0.53 (no premium vs random days) |
 | 4 | [H-011](h011-report.md) VWAP-deviation fade | 1 y trades | 3/11 | 256 | +$4,070 | 0.68 | not promising (0/4 variants > 0 full period) |

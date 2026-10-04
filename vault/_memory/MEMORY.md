@@ -53,13 +53,13 @@ tags: [memory, state]
   H-012 FOMC-cycle even weeks scored 6/11 but was **demoted by a placebo test** (shifted calendars do
   as well → equity drift); H-007 placebo p = 0.063. **New gate G12** (placebo/random timing,
   D-032). H-013 intraday periodicity negative (D-031). G12 placebo: H-005, H-009 are drift. H-014 TSMOM
-  not promising (t 0.51). **Only H-007 shows timing beyond drift (p 0.063).** H-015 macro days: 0/12, placebo p 0.53.
+  not promising (t 0.51). Only H-007 showed timing beyond drift (p 0.063) - weakened by D-052/D-056. H-015 macro days: 0/12, placebo p 0.53.
   H-016 pre-holiday 0/12; H-017 OPEX week 5/12 (placebo p 0.43); H-018 Monday reversal 5/12
   (placebo p 0.24 vs Tue-Fri) - all closed (D-039). H-019 month-end
   rebalancing: run 1 buggy (dropped 2/3 of months, looked good), fixed re-run 1/12 → closed (D-041/42).
   Lesson: check event coverage first. H-020 vol-managed long: 8/12 gates (most) but placebo p 0.118,
   79 trades → not promoted (D-044). H-021 buy-the-selloff 3/12, placebo p 0.99 (D-046).
-  Total hypothesis trials: 189. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
+  Total hypothesis trials: 190. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
   fills), conservative; queue_l1 mildly optimistic.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
@@ -77,7 +77,8 @@ tags: [memory, state]
   R8.1 done: `portfolio/signals.py` (BUILDERS, cross_sectional, momentum_score) + `run_portfolio.py --hypothesis`.
   H-024 cross-sectional carry: not promising (1/12, OOS −1.5%/yr, placebo p 0.57; D-053). H-025 cross-sectional
   momentum: not promising (1/12, −1.3%/yr, placebo p 0.40; D-054). H-026 basis-momentum: 4/12, +3.1%/yr,
-  Sharpe 0.20, placebo p 0.13 (best of R8, not promoted; D-055). Next: R8.5 H-027 FOMC replication on NQ/RTY/YM. Asked the user about forward paper tracking (R8.9, cents/day).
+  Sharpe 0.20, placebo p 0.13 (best of R8, not promoted; D-055). H-027 FOMC replication on NQ/RTY/YM: does
+  not replicate (t 1.13, placebo p 0.17) → H-007 no longer a candidate (D-056). Next: R8.6 sleeve combiner (engineering). Asked the user about forward paper tracking (R8.9, cents/day).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.5** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $3.4 of credit left. No more data purchases without the user. One year cannot pass G7.
 
