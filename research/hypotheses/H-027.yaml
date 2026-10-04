@@ -8,7 +8,7 @@ mechanism: >
   free parameters, not a tuned strategy; it can raise or lower the prior for H-007, nothing more.
   Caveat: NQ/RTY/YM are highly correlated with ES, so this is a weak independence check (mostly a check
   that H-007 was not an ES/hourly-data artefact).
-direction: long
+direction: follow   # long only, as H-007
 horizon: "one day, 8 times a year"
 features: [daily_closes_v0, fomc_calendar]
 fixed:
