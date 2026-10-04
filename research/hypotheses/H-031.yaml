@@ -1,0 +1,23 @@
+id: H-031
+title: Treasury auction cycle - short the matching future before note/bond auctions, long after (Lou, Yan & Zhang 2013)
+mechanism: >
+  Primary dealers must absorb large, scheduled Treasury supply and demand a price concession: yields rise in
+  the days before an auction and fall after it (Lou, Yan & Zhang 2013 RFS, "Anticipated and repeated shocks
+  in liquid markets", 1980-2008). Payer: the issuer via dealers' inventory/balance-sheet cost. Post-2008
+  balance-sheet constraints could make it stronger or arbitrage could have removed it. Prior: low-moderate.
+direction: both
+horizon: "3-5 trading days around each auction"
+features: [daily_closes_v0, treasury_auction_calendar]
+fixed:
+  events: "config/treasury_auctions.csv (fiscaldata.treasury.gov, nominal fixed-rate notes/bonds 2010-2025-09; 2Y->ZT, 5Y->ZF, 7Y/10Y->ZN, 20Y/30Y->ZB; 3Y dropped); an auction date that is not a trading date of the future is skipped and counted"
+  windows: "pre: SHORT, exposed to the returns of trading days t-k .. t-1 (enter at close of t-k-1, exit at close of t-1); post: LONG, exposed to days t+1 .. t+k (enter at close of t, exit at close of t+k). t = auction date (results at 13:00 ET, before the close)"
+  sizing: "$250,000 notional per auction position, integer contracts >= 1; overlapping windows add"
+  costs: "1 tick + $2.26 per contract per side; roll inside a window pays 2 sides; fees1.5, stress, plus1tick scenarios"
+  protocol: "research/daily_eval.py (walk-forward 36/12/12, choice on train net p5 at fees x1.5, G1-G12); capital $1M; ohlcv-1d 2010-06..2025-09 (development only)"
+  g12: "placebo: the same window/k on random trading dates of the same future that are at least k+1 days from any auction of that future, same count per future, 300 draws"
+space:
+  window: [pre, post]
+  k: [3, 5]
+trial_budget: 4
+registered: 2026-10-04
+status: open

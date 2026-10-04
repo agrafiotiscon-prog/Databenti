@@ -80,3 +80,18 @@ def test_bugfix_reruns_widen_the_budget_only_with_a_cited_decision():
         registry.parse({**H, "trial_budget": 13, "bugfix_reruns": ["D-041"]})
     with pytest.raises(registry.RegistryError):
         registry.parse({**H, "trial_budget": 12, "bugfix_reruns": ["oops"]})
+
+
+def test_parallel_appends_keep_the_chain_valid(tmp_path):
+    import multiprocessing as mp
+    from research import trials
+    path = tmp_path / "t.jsonl"
+    path.write_text("")
+    rec = {"family": "engine-sanity", "hypothesis": "none", "params": {}, "data": "x", "fill_mode": "x", "results": {}}
+    ctx = mp.get_context("fork")
+    procs = [ctx.Process(target=lambda: [trials.append(rec, path=path) for _ in range(10)]) for _ in range(4)]
+    for p in procs:
+        p.start()
+    for p in procs:
+        p.join()
+    assert trials.verify(path) == 40

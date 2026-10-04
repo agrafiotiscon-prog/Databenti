@@ -1,0 +1,27 @@
+id: H-029
+title: Front-running the commodity index roll - short near / long next contract around the GSCI roll (5th-9th business day)
+mechanism: >
+  Commodity index funds (S&P GSCI and similar) roll their front contracts into the next on fixed, published
+  business days (GSCI: 5th-9th business day of the month, 20% per day), price-insensitively. Selling the
+  near and buying the next contract ahead of and during that flow is paid by the rollers (Mou 2011,
+  "Limits to arbitrage and commodity index investment: front-running the Goldman roll", large profits
+  2000-2010). Bessembinder, Carrion, Tuttle & Venkataraman (2016 JFE) find the roll's price impact is now
+  small and temporary, so post-2010 decay is likely. Prior: low-moderate. A calendar spread has little
+  outright exposure, so it is a different payer from trend.
+direction: fade
+horizon: "1-9 business days around the monthly roll window"
+features: [daily_closes_v0_v1, gsci_roll_calendar]
+fixed:
+  markets_and_roll_months: "S&P GSCI roll schedule (contract months held; the roll happens in the month before the expiring contract): CL, HO, RB, NG every month; GC Jan Mar May Jul Nov; SI, HG, ZC, ZW Feb Apr Jun Aug Nov; ZS Feb Apr Jun Oct Dec; LE Jan Mar May Jul Sep Nov; HE Jan Mar May Jun Jul Sep Nov"
+  business_days: "the market's own trading dates in the data; R = 5th trading day of the month (first roll day)"
+  position: "at entry, near/far = the two instruments of v.0/v.1 ordered by expiry (portfolio/data.py); short near, long far, same contract count n = round($83,333 / (near price x point value)) >= 1 on both legs; instruments fixed for the whole hold; P&L = n x point value x (change in far close - change in near close)"
+  entry_exit: "enter at the close of trading day R - entry_k, exit at the close of trading day exit_bd of the month (exit_bd 5 = into the roll start, 9 = roll end)"
+  costs: "per leg per side 1 tick + $2.26 (4 contract sides per spread round trip); fees1.5, stress (2 ticks + fees x1.5), plus1tick scenarios"
+  protocol: "research/daily_eval.py (same as H-022: walk-forward 36/12/12, choice on train net p5 at fees x1.5, G1-G12); capital $1M; data ohlcv-1d v.0/v.1 2010-06..2025-09 (development only)"
+  g12: "placebo: same entry/exit offsets anchored on a random trading day 11-17 of the month (outside the roll), same months and markets, 300 draws"
+space:
+  entry_k: [1, 5]
+  exit_bd: [5, 9]
+trial_budget: 4
+registered: 2026-10-04
+status: open

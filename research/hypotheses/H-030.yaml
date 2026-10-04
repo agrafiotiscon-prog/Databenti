@@ -1,0 +1,27 @@
+id: H-030
+title: Treasury futures around month-end - long into the last days of the month (index extension) or into the first days (cash-need reversal)
+mechanism: >
+  Two scheduled, price-insensitive flows around month-end. (1) Bond index funds benchmarked to the Bloomberg
+  US Treasury / Aggregate indices extend duration when the index rebalances on the last business day of the
+  month, buying long Treasuries into month-end [inferred: practitioner evidence; no peer-reviewed futures
+  study found]. (2) Etula, Rinne, Suominen & Vaittinen (2020 RFS, "Dash for cash") document monthly price
+  pressure from institutional cash needs around month turns, with reversal afterwards. Both predict a
+  positive return in a fixed window (pre: last k days; post: first k days of the next month). Payer:
+  index-tracking and cash-constrained institutions. Prior: low-moderate.
+direction: follow
+horizon: "3-5 trading days, monthly"
+features: [daily_closes_v0, month_calendar]
+fixed:
+  markets: "long_end = ZN + ZB; all = ZT + ZF + ZN + ZB; each market $1M / (number of markets) notional, integer contracts >= 1"
+  calendar: "month-end = last trading date of the month in the ZN data (CME rates calendar)"
+  windows: "pre: long from the close k trading days before month-end to the month-end close (exposed to the last k days); post: long from the month-end close to the close of the k-th trading day of the next month"
+  costs: "1 tick + $2.26 per contract per side; a v.0 change inside a window pays a roll; fees1.5, stress, plus1tick scenarios"
+  protocol: "research/daily_eval.py (walk-forward 36/12/12, choice on train net p5 at fees x1.5, G1-G12); capital $1M; ohlcv-1d 2010-06..2025-09 (development only)"
+  g12: "placebo: the same window type, k and markets anchored on a random trading date at least 6 trading days away from any month-end, one per month, 300 draws"
+space:
+  window: [pre, post]
+  k: [3, 5]
+  markets: [long_end, all]
+trial_budget: 8
+registered: 2026-10-04
+status: open
