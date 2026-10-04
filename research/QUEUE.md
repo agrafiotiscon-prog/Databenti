@@ -94,7 +94,7 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
 - [x] R8.4 (2026-10-04, D-055: 4/12, OOS +3.1%/yr, Sharpe 0.20, placebo p 0.13; best of R8, not promoted) H-026 commodity basis-momentum (Boons & Prado 2019): momentum of front minus second-contract returns.
 - [x] R8.5 (2026-10-04, D-056: DOES NOT REPLICATE, t 1.13, placebo p 0.17; H-007 prior lowered) H-027 pre-FOMC drift replication on the other equity-index futures in the universe (daily bars,
       close t-1 -> close t on FOMC days): an out-of-market check of H-007's mechanism, not a new tuned strategy.
-- [ ] R8.6 Engineering: risk-parity sleeve combiner (inverse-vol / correlation-aware weights across passing or
+- [x] R8.6 (2026-10-04: portfolio/combine.py inverse_vol + ERC, causal trailing weights, vol target; tests/test_combine.py; no result) Engineering: risk-parity sleeve combiner (inverse-vol / correlation-aware weights across passing or
       near-passing sleeves), tested on synthetic data; only combines sleeves registered BEFORE seeing the combo.
 - [ ] R8.7 Order-flow on the 238 RTH days: trade-imbalance (signed volume) predicting 5-30 min ES returns
       (Chordia & Subrahmanyam 2004 style); 1 year -> expect "insufficient data" on G7; report honestly.
