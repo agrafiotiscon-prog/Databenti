@@ -1,0 +1,24 @@
+id: H-039
+title: Quarter-end dollar funding squeeze - long USD (short foreign-currency futures) over the last days of each calendar quarter
+mechanism: >
+  Since 2008, bank balance-sheet regulation (leverage ratio and G-SIB scores measured at quarter-ends) makes banks
+  shrink dollar intermediation at quarter-ends; covered-interest-parity deviations and the cost of borrowing USD
+  spike then (Du, Tepper & Verdelhan 2018 JF, "Deviations from covered interest rate parity"). Borrowers who need
+  dollars over the quarter-end pay up, which should firm the USD spot/futures price into the quarter-end and give
+  it back after. Payer: dollar borrowers over a regulatory reporting date. Prior: low-moderate (the effect is
+  clearest in swap/basis markets; the spot/futures pass-through is uncertain).
+direction: follow
+horizon: "3-5 trading days, quarterly"
+features: [daily_closes_v0, quarter_calendar]
+fixed:
+  window: "short the foreign-currency futures (= long USD) from the close k trading days before the last trading day of March, June, September and December to that quarter-end close"
+  markets: "g3 = 6E, 6J, 6B; g6 = 6E, 6J, 6B, 6A, 6C, 6S; $1M / (number of markets) notional each, integer contracts >= 1"
+  costs: "1 tick + $2.26 per contract per side; roll inside a window pays 2 sides (FX futures roll in the quarterly expiry months - counted); fees1.5 / stress / plus1tick"
+  protocol: "research/daily_eval.py via scripts/run_r9.py (walk-forward 36/12/12, G1-G12); capital $1M; ohlcv-1d 2010-06..2025-09; ~61 quarter-ends x markets"
+  g12: "placebo: same window and markets anchored on a random non-quarter month-end (Jan, Feb, Apr, May, Jul, Aug, Oct, Nov) - tests whether quarter-ends differ from ordinary month-ends - 300 draws"
+space:
+  k: [3, 5]
+  markets: [g3, g6]
+trial_budget: 4
+registered: 2026-10-04
+status: open

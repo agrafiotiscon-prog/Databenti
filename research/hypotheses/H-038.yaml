@@ -1,0 +1,23 @@
+id: H-038
+title: Return seasonality - hold each futures market in the direction of its average return in the same calendar month over the previous years
+mechanism: >
+  Keloharju, Linnainmaa & Nyberg (2016 JF, "Return seasonalities") show that assets (stocks, commodities, country
+  indices) earn similar relative returns in the same calendar month year after year; for commodities this fits
+  seasonal production/consumption and hedging-demand cycles (harvests, heating/driving seasons, livestock cycles)
+  whose risk premium recurs on the calendar. Payer: seasonal hedgers. Time-series form (sign of the market's own
+  past same-month mean), so it does not rely on the thin cross-section that failed in H-024/H-025. Prior: low-moderate.
+direction: both
+horizon: "one calendar month, rebalanced monthly"
+features: [daily_closes_v0_v1, month_calendar]
+fixed:
+  signal: "on the last trading day of month m-1, for each market: mean of its monthly (same-instrument chain) log returns in calendar month m over the previous `years` years (all of them must be available); signal = sign(mean); held through month m"
+  universe: "commods = the 12 commodity markets; all = the 26 markets of data/universe.py"
+  sizing_execution_costs: "portfolio/engine.simulate with the signal as a custom signal (15%/sqrt(N) inverse-vol per market, book scaled to 15% vol, next-day-close execution, rolls pay both legs, 1 tick + $2.26 per side; stress scenarios); capital $1M"
+  protocol: "research/daily_eval.py via scripts/run_r9.py (walk-forward 36/12/12, G1-G12); ohlcv-1d 2010-06..2025-09 (first signals need `years` of history)"
+  g12: "placebo: each market's monthly signal series circularly shifted by a random whole number of months (1-11, so the calendar link is broken), 150 draws"
+space:
+  years: [5, 10]
+  universe: [commods, all]
+trial_budget: 4
+registered: 2026-10-04
+status: open

@@ -445,10 +445,177 @@ def h036(dl, hyp, coverage_only):
     return D, T, placebo, cov, "26 CME futures ohlcv-1d v.0/v.1", "trend252 engine, book vol target on scale_win days, 1 tick + fees"
 
 
+FX3, FX6 = ["6E", "6J", "6B"], ["6E", "6J", "6B", "6A", "6C", "6S"]
+FX_SETS = {"g3": FX3, "g6": FX6}
+
+
+# ---------------------------------------------------------------- H-037 FX month-end hedge rebalancing
+def h037(dl, hyp, coverage_only):
+    roots = ["ES"] + FX6
+    rds = {r: load(dl, r) for r in roots}
+    om = {r: Outright(rds[r], BY_ROOT[r].point_value, BY_ROOT[r].tick_value) for r in roots}
+    fee = load_costs().fee(1)
+    es = om["ES"]
+    lr_es = pd.Series(np.log1p(es.r), index=es.dates)
+    es_me = month_end_index(es)
+    mes = [es.dates[i] for i in es_me]
+
+    def events(k, anchors=None):
+        out = []
+        for i in (anchors if anchors is not None else es_me):
+            if i - k < 1:
+                continue
+            entry, exit_ = es.dates[i - k], es.dates[i]
+            prev = [d for d in mes if d < entry]
+            if not prev:
+                continue
+            eq = lr_es[(lr_es.index > prev[-1]) & (lr_es.index <= entry)].sum()
+            if eq != 0 and not np.isnan(eq):
+                out.append((entry, exit_, int(np.sign(eq))))
+        return out
+
+    ev = events(3)
+    cov = pd.DataFrame([{"market": r, "first": om[r].dates[0], "last": om[r].dates[-1],
+                         "events_on_market_k3": sum(a in om[r].pos_i and b in om[r].pos_i for a, b, _ in ev)} for r in FX6])
+    cov["es_events_k3"] = len(ev)
+    print(cov.to_string(), flush=True)
+    if coverage_only:
+        return
+    cal = sorted(set().union(*[rds[r].dates for r in FX6]))
+    holdout_check(cal)
+
+    def fn(g, scen, rng=None):
+        slip, fm = SCEN_COSTS[scen]
+        mk = FX_SETS[g["markets"]]
+        evs = events(g["k"], random_month_anchors(es, rng) if rng is not None else None)
+        nets, ents = [], []
+        for r in mk:
+            w = [(a, b, sd) for a, b, sd in evs if a in om[r].pos_i and b in om[r].pos_i]
+            nets.append(window_pnl(om[r], w, CAPITAL / len(mk), slip, fee * fm)[0])
+            ents.append(entries(w, om[r].dates))
+        return pd.concat(nets, axis=1).sum(axis=1), pd.concat(ents, axis=1).sum(axis=1)
+
+    D, T = assemble(hyp, cal, fn)
+
+    def placebo(final, oos_dates, n):
+        k, mk = final.split("|")
+        g, rng = {"k": int(k), "markets": mk}, np.random.default_rng(37)
+        return [fn(g, "base", rng)[0].reindex(oos_dates).fillna(0.0).sum() for _ in range(n)]
+
+    return D, T, placebo, cov, "ES + 6E/6J/6B/6A/6C/6S ohlcv-1d v.0", "outright FX, side = sign(ES MTD), 1 tick + fees per side"
+
+
+# ---------------------------------------------------------------- H-038 return seasonality
+def seasonal_signal(p, years: int, shift: int = 0) -> pd.Series:
+    """Signal on each date d = sign(mean log return of the market in calendar month M over the previous `years`
+    years), where M = month of the NEXT trading day (shifted by `shift` months for the placebo). Uses only
+    completed months of earlier years (causal)."""
+    lr = np.log1p(p.r)
+    keys = [np.array([d.year for d in lr.index]), np.array([d.month for d in lr.index])]
+    mret = lr.groupby(keys).sum(min_count=15)                  # index: (year, month)
+    out = pd.Series(0.0, index=pd.Index(p.dates))
+    for j in range(len(p.dates) - 1):
+        nd = p.dates[j + 1]
+        y, mth = nd.year, (nd.month - 1 + shift) % 12 + 1
+        vals = [mret.get((y - i, mth), np.nan) for i in range(1, years + 1)]
+        if all(np.isfinite(v) for v in vals):
+            out.iloc[j] = float(np.sign(np.mean(vals)))
+    return out
+
+
+def h038(dl, hyp, coverage_only):
+    from portfolio.engine import prepare, simulate
+    from data.universe import UNIVERSE
+    from portfolio.signals import COMMODITY_SECTORS
+    preps = [prepare(load(dl, s.root)) for s in UNIVERSE]
+    cal = sorted(set().union(*[p.dates for p in preps]))
+    sig = {(p.root, y): seasonal_signal(p, y) for p in preps for y in (5, 10)}
+    cov = pd.DataFrame([{"market": p.root, "share_signal_5y": round(float((sig[(p.root, 5)] != 0).mean()), 3),
+                         "share_signal_10y": round(float((sig[(p.root, 10)] != 0).mean()), 3)} for p in preps])
+    print(cov.to_string(), flush=True)
+    if coverage_only:
+        return
+    holdout_check(cal)
+    fee = load_costs().fee(1)
+    uni = {"commods": {p.root for p in preps if BY_ROOT[p.root].sector in COMMODITY_SECTORS},
+           "all": {p.root for p in preps}}
+
+    def overrides(g, shifts=None):
+        out = {}
+        for p in preps:
+            if p.root not in uni[g["universe"]]:
+                out[p.root] = pd.Series(0.0, index=pd.Index(p.dates))
+            elif shifts is None:
+                out[p.root] = sig[(p.root, g["years"])]
+            else:
+                out[p.root] = seasonal_signal(p, g["years"], shifts[p.root])
+        return out
+
+    def fn(g, scen, shifts=None):
+        slip, fm = SCEN_COSTS[scen]
+        o = simulate(preps, "trend252", CAPITAL, slip, fee * fm, signal_override=overrides(g, shifts))
+        return o["net"], o["trades"]
+
+    D, T = assemble(hyp, cal, fn)
+
+    def placebo(final, oos_dates, n):
+        y, u = final.split("|")
+        g, rng, res = {"years": int(y), "universe": u}, np.random.default_rng(38), []
+        for _ in range(n):
+            shifts = {p.root: int(rng.integers(1, 12)) for p in preps}
+            res.append(fn(g, "base", shifts)[0].reindex(oos_dates).fillna(0.0).sum())
+        return res
+
+    return D, T, placebo, cov, "26 CME futures ohlcv-1d v.0/v.1", "engine sizing with seasonal sign signal, 1 tick + fees"
+
+
+# ---------------------------------------------------------------- H-039 quarter-end USD funding
+def h039(dl, hyp, coverage_only):
+    rds = {r: load(dl, r) for r in FX6}
+    om = {r: Outright(rds[r], BY_ROOT[r].point_value, BY_ROOT[r].tick_value) for r in FX6}
+    fee = load_costs().fee(1)
+    qe = {r: [i for i in month_end_index(om[r]) if om[r].dates[i].month in (3, 6, 9, 12)] for r in FX6}
+    other = {r: [i for i in month_end_index(om[r]) if om[r].dates[i].month not in (3, 6, 9, 12)] for r in FX6}
+
+    def windows(r, k, anchors):
+        m = om[r]
+        return [(m.dates[i - k], m.dates[i], -1) for i in anchors if i - k >= 0]
+
+    cov = pd.DataFrame([{"market": r, "quarter_ends": len(qe[r]), "windows_k5": len(windows(r, 5, qe[r])),
+                         "other_month_ends": len(other[r])} for r in FX6])
+    print(cov.to_string(), flush=True)
+    if coverage_only:
+        return
+    cal = sorted(set().union(*[rd.dates for rd in rds.values()]))
+    holdout_check(cal)
+
+    def fn(g, scen, rng=None):
+        slip, fm = SCEN_COSTS[scen]
+        mk = FX_SETS[g["markets"]]
+        nets, ents = [], []
+        for r in mk:
+            anchors = qe[r] if rng is None else sorted(rng.choice(other[r], size=len(qe[r]), replace=False))
+            w = windows(r, g["k"], anchors)
+            nets.append(window_pnl(om[r], w, CAPITAL / len(mk), slip, fee * fm)[0])
+            ents.append(entries(w, om[r].dates))
+        return pd.concat(nets, axis=1).sum(axis=1), pd.concat(ents, axis=1).sum(axis=1)
+
+    D, T = assemble(hyp, cal, fn)
+
+    def placebo(final, oos_dates, n):
+        k, mk = final.split("|")
+        g, rng = {"k": int(k), "markets": mk}, np.random.default_rng(39)
+        return [fn(g, "base", rng)[0].reindex(oos_dates).fillna(0.0).sum() for _ in range(n)]
+
+    return D, T, placebo, cov, "6E/6J/6B/6A/6C/6S ohlcv-1d v.0", "short FX futures (long USD) into quarter-end, 1 tick + fees"
+
+
 BUILDERS = {"H-029": (h029, "commodity index roll front-running"), "H-030": (h030, "Treasury month-end"),
             "H-031": (h031, "Treasury auction cycle"), "H-034": (h034, "turn of the month (equities)"),
-            "H-035": (h035, "month-end rebalancing pressure (equities)"), "H-036": (h036, "volatility-managed trend")}
-N_PLACEBO = {"H-036": 150}
+            "H-035": (h035, "month-end rebalancing pressure (equities)"), "H-036": (h036, "volatility-managed trend"),
+            "H-037": (h037, "FX month-end hedge rebalancing"), "H-038": (h038, "return seasonality"),
+            "H-039": (h039, "quarter-end USD funding")}
+N_PLACEBO = {"H-036": 150, "H-038": 150}
 
 
 def main(argv=None) -> int:

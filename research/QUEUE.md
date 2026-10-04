@@ -98,7 +98,7 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
       near-passing sleeves), tested on synthetic data; only combines sleeves registered BEFORE seeing the combo.
 - [x] R8.7 (2026-10-04, D-057: H-028 insufficient data, 0/8 variants > 0; closed) Order-flow on the 238 RTH days: trade-imbalance (signed volume) predicting 5-30 min ES returns
       (Chordia & Subrahmanyam 2004 style); 1 year -> expect "insufficient data" on G7; report honestly.
-- [ ] R8.9 Forward paper-tracking of the trend252 book (daily signals + simulated fills logged, no broker):
+- [x] R8.9 (superseded by R9.7: paper_track.py --live from 2026-10-05) Forward paper-tracking of the trend252 book (daily signals + simulated fills logged, no broker):
       needs the user's OK for ongoing data cost (~$0.06/day for 26 daily bars x2) - listed under Needs the user.
 - [x] R8.8 (2026-10-04: vault/04-backtesting/next-ideas-r9.md) When R8.2-R8.7 are done: write the next 3-5 ideas from the literature into this queue (mechanism first).
 
@@ -138,8 +138,13 @@ instruments/data before it may join the paper book. Prefer $0 cached data; credi
 - [x] R10.3 (2026-10-04, D-065: 6/12, no gain) H-036 trend sleeve improvement with a PRE-REGISTERED rule only: volatility-managed trend (Moreira & Muir 2017
       apply vol-scaling to factors; Harvey et al. 2018 "The impact of volatility targeting") - scale the trend sleeve by its
       own trailing vol; judged forward-only because trend252 was selected on this data.
-- [ ] R10.4 Quarter-end / year-end subset of H-030 (larger index extensions at quarter-ends) - descriptive only (subset
+- [x] R10.4 (2026-10-04, descriptive: quarter-end windows +17.8 bp vs other month-ends +19.6 bp, year-end +21.1 - no amplification; nothing added) Quarter-end / year-end subset of H-030 (larger index extensions at quarter-ends) - descriptive only (subset
       of a confirmed rule; no new trial unless registered as a separate sizing rule).
+
+## R11 (user: "OK move on"; run in parallel)
+- [ ] R11.1 H-037 FX month-end hedge rebalancing (Melvin & Prins 2015)
+- [ ] R11.2 H-038 return seasonality, time-series (Keloharju, Linnainmaa & Nyberg 2016)
+- [ ] R11.3 H-039 quarter-end USD funding squeeze (Du, Tepper & Verdelhan 2018)
 
 ## Needs the user
 - **(2026-10-04) H-030 confirmation (R9.6):** ~$0.1 of UB/TN daily bars for a pre-registered replication; and/or forward paper tracking. Asked in chat.

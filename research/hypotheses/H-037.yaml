@@ -1,0 +1,24 @@
+id: H-037
+title: FX month-end hedge rebalancing - sell USD (long foreign-currency futures) into month-end after US equities rose during the month, buy USD after they fell
+mechanism: >
+  Foreign investors who hold US equities and hedge the currency risk must adjust their FX hedges when the value of
+  the equities changes; many rebalance at the month-end London 4 p.m. fix. After a US equity rally the hedge is too
+  small, so they sell USD forward at month-end (and buy USD after a decline). Melvin & Prins (2015 JFM, "Equity
+  hedging and exchange rates at the London 4 p.m. fix") document this predictable month-end USD move. Payer:
+  hedgers rebalancing on a schedule, price-insensitively. Prior: moderate.
+direction: follow
+horizon: "3-5 trading days, monthly"
+features: [daily_closes_v0, month_calendar]
+fixed:
+  signal: "at the entry close E (k trading days before month-end), eq = ES log return from the previous month-end close to E; side = +sign(eq) on the foreign-currency futures (long 6E/6J/6B/6A/6C/6S = short USD after a US equity rise)"
+  window: "enter at the close of E, exit at the month-end close (exposed to the last k days)"
+  markets: "g3 = 6E, 6J, 6B; g6 = 6E, 6J, 6B, 6A, 6C, 6S; $1M / (number of markets) notional each, integer contracts >= 1"
+  costs: "1 tick + $2.26 per contract per side; roll inside a window pays 2 sides; fees1.5 / stress / plus1tick"
+  protocol: "research/daily_eval.py via scripts/run_r9.py (walk-forward 36/12/12, G1-G12); capital $1M; ohlcv-1d 2010-06..2025-09"
+  g12: "placebo: same rule (signal from the previous month-end to the entry) on a random trading date >= 6 days from month-end, one per month, 300 draws"
+space:
+  k: [3, 5]
+  markets: [g3, g6]
+trial_budget: 4
+registered: 2026-10-04
+status: open
