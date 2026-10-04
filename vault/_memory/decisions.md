@@ -357,3 +357,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** scripts/paper_track.py --live runs at every routine firing (ROUTINE step 2b): fetches only new ohlcv-1d bars (run cap $0.05), logs trend252 + H-030 targets for every closed trading day from 2026-10-05. The 2025-10..2026-10 data (holdout, spent in D-052) is used only to warm up the trend signals, never to select or evaluate. $100k realism: the trend sleeve is nearly untradeable with full-size contracts (book +3.9%/yr over 2020-10..2025-09, almost all from H-030); micro contracts queued (R9.8).
 - **Why:** User approved forward tracking ('if u think it is worth it do it'). Forward data after 2026-10-04 is the only truly new evidence. Warm-up needs the most recent 252 days; using spent holdout data for that selects nothing.
 - **Status:** active.
+
+## D-064 — H-033 post-month-end short: does not confirm; micro contracts adopted for $100k sizing (2026-10-04)
+- **Decision:** H-033 (TN/UB, pre-registered): stress net -$21k, t 0.21, placebo p 0.11 -> DOES NOT CONFIRM, closed. Engine accepts per-market specs/fees; data/universe.py MICRO table: $100k book with micros 2020-10..2025-09 +5.6%/yr (vs +3.9% full-size), Sharpe 0.44. Paper tracking continues with full-size sleeve definitions; $100k reporting uses micros.
+- **Why:** Pre-registered criteria; micros are the realistic way a $100k account would run the trend sleeve.
+- **Status:** active.

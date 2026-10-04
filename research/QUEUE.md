@@ -122,9 +122,24 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
       run scripts/paper_track.py for the new dates (trend252 + H-030, book = combine.py 15% vol), commit the ledger daily;
       monthly summary vs the descriptive expectation (vault/results/combined-trend-h030-descriptive.md).
 
-- [ ] R9.8 $100k realism: whole contracts make the trend sleeve nearly untradeable at $100k (most contracts too large;
+- [x] R9.8 (2026-10-04, D-064: micros -> $100k book +5.6%/yr last 5 y) $100k realism: whole contracts make the trend sleeve nearly untradeable at $100k (most contracts too large;
       2023 had no positions). Map the universe to CME micro contracts where they exist (MES, MNQ, M2K, MYM, MGC, SIL,
       MCL, M6E, M6A, M6B, micro ags?) and price the data before asking the user; re-run the $100k book descriptively.
+
+## R10: more independent, low-correlation sleeves (user 2026-10-04: "profits still low, continue until you exceed expectations")
+Goal: Sharpe >= 1 net for the book (D-048). Each idea: registry first, coverage, G1-G12, then a confirmation on unseen
+instruments/data before it may join the paper book. Prefer $0 cached data; credit left ~$3.3.
+- [ ] R10.1 H-034 equity index turn-of-the-month (Lakonishok & Smidt 1988; McConnell & Xu 2008: returns concentrated in
+      the last day + first 3 days of the month; payer: month-start inflows from payroll/pension contributions). ES/NQ/RTY/YM
+      daily (cached). G12 placebo vs random 4-day windows is essential (equity drift). Confirmation market if it passes:
+      none unseen in equities -> forward only.
+- [ ] R10.2 H-035 month-end in short-rate futures (SOFR SR3 / Fed funds ZQ): month-end funding/repo pressure is a
+      documented money-market effect; same flow family as H-030 but a different instrument. Needs data (~$0.1?): price first.
+- [ ] R10.3 H-036 trend sleeve improvement with a PRE-REGISTERED rule only: volatility-managed trend (Moreira & Muir 2017
+      apply vol-scaling to factors; Harvey et al. 2018 "The impact of volatility targeting") - scale the trend sleeve by its
+      own trailing vol; judged forward-only because trend252 was selected on this data.
+- [ ] R10.4 Quarter-end / year-end subset of H-030 (larger index extensions at quarter-ends) - descriptive only (subset
+      of a confirmed rule; no new trial unless registered as a separate sizing rule).
 
 ## Needs the user
 - **(2026-10-04) H-030 confirmation (R9.6):** ~$0.1 of UB/TN daily bars for a pre-registered replication; and/or forward paper tracking. Asked in chat.
