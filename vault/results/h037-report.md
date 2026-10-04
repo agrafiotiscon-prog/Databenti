@@ -88,3 +88,8 @@ Net by scenario (OOS): {'base': 77805, 'fees1.5': 74653, 'stress': 58005, 'plus1
 5|g6            1.01         2.67   0.379       -4.53    1.504  159567.0  1098.0
 ```
 
+
+## Reading (2026-10-04)
+Not promoted (5/12: G1, G2, G5, G7, G8), but close: placebo p 0.057, all 4 variants positive full-period (t 1.5-2.1),
+9/13 OOS years positive, positive at stress costs. Small (+0.6%/yr OOS at 2.4% vol at 1x notional). Third member of the
+month-end rebalancing family (H-030 bonds, H-035 equities). Pre-registered confirmation on never-used FX futures 6N/6M: H-040.

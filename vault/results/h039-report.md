@@ -88,3 +88,8 @@ Net by scenario (OOS): {'base': -28650, 'fees1.5': -29703, 'stress': -35423, 'pl
 5|g6           -0.20         1.59  -0.124       -4.89   -0.493  -31062.0   372.0
 ```
 
+
+## Reading (2026-10-04)
+Not promising (1/12, insufficient trades): long USD into quarter-ends is flat (best variant t 0.01) and worse than the
+same trade into ordinary month-ends (placebo p 1.0). The quarter-end dollar-funding squeeze visible in cross-currency
+basis does not show up in FX futures returns over 3-5 days. Closed.

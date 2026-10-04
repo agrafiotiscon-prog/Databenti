@@ -20,4 +20,4 @@ space:
   universe: [commods, all]
 trial_budget: 4
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: 0/12, strongly negative (D-066)

@@ -108,3 +108,8 @@ Net by scenario (OOS): {'base': -918006, 'fees1.5': -927453, 'stress': -1016106,
 10|all               -3.03        10.91  -0.277      -85.40   -1.102 -477990.0  3507.0
 ```
 
+
+## Reading (2026-10-04)
+Not promising (0/12): following each market's past same-calendar-month return lost in every variant (−3% to −6%/yr,
+drawdowns beyond −60% at the 15% vol target); placebo p 0.97 (calendar-shifted signals do better). Futures return
+seasonality does not survive in 2015-2025 for this universe. Closed.

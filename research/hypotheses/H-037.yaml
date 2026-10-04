@@ -21,4 +21,4 @@ space:
   markets: [g3, g6]
 trial_budget: 4
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: 5/12, placebo p 0.057, all variants > 0; confirmation H-040 (D-066)

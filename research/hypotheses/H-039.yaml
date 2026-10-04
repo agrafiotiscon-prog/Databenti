@@ -21,4 +21,4 @@ space:
   markets: [g3, g6]
 trial_budget: 4
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: 1/12, quarter-ends = ordinary month-ends (D-066)
