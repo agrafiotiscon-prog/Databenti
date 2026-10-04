@@ -312,3 +312,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-025 evaluated once (4 variants): 1/12 gates, OOS -1.3%/yr, Sharpe -0.09, PBO 0.45, placebo p 0.40; closed. Relative-value (cross-sectional) premia on this 26-market universe: two failures (H-024, H-025); deprioritise further cross-sectional ideas unless the universe grows.
 - **Why:** Pre-registered protocol; both cross-sectional books lose after costs, with thin sectors (2-6 names) and gains only in equities, which looks like drift.
 - **Status:** active.
+
+## D-055 — H-026 commodity basis-momentum: not promising (4/12), closed (2026-10-04)
+- **Decision:** H-026 evaluated once (4 variants): 4/12 gates, OOS +3.1%/yr, Sharpe 0.20, placebo p 0.13, all variants profitable full-period; closed. Not combined with the trend book now (would be selection on development data); candidate for a future pre-registered forward test if more data is approved.
+- **Why:** Fails significance, PBO, MC and G12. The ex-energy result was seen only after the run, so no sub-universe re-test.
+- **Status:** active.

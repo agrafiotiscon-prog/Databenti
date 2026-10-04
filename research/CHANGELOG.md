@@ -39,3 +39,4 @@
 - 2026-10-04 R7.3 H-023 holdout (user go): CONFIRM by rule, Sharpe 0.72, trend +$108k, FOMC -$18k; weak (1 y). Holdout re-locked (D-052). R8.1 generic portfolio runner + cross-sectional signals.
 - 2026-10-04 R8.2 H-024 cross-sectional carry: not promising, 1/12 gates, OOS -1.5%/yr, placebo p 0.57 (D-053).
 - 2026-10-04 R8.3 H-025 cross-sectional momentum: not promising, 1/12, OOS -1.3%/yr, placebo p 0.40 (D-054).
+- 2026-10-04 R8.4 H-026 commodity basis-momentum: 4/12, OOS +3.1%/yr, Sharpe 0.20, placebo p 0.13; not promoted (D-055).
