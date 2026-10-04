@@ -68,8 +68,11 @@ def expiry_spacing_years(rd) -> float:
 
 
 def carry_value(rd) -> pd.Series:
-    """Annualised carry log(P_near / P_far) / spacing_years on each date (NaN if unknown)."""
+    """Annualised carry log(P_near / P_far) / gap_years on each date (NaN if unknown). gap_years = the
+    gap between the two instruments' last appearances in v.0/v.1 (contract calendar, not prices); when the
+    far one is still listed at the end of the data, the root's median expiry spacing is used."""
     sp = expiry_spacing_years(rd)
+    END = pd.Timestamp.max.date()
     out = pd.Series(np.nan, index=pd.Index(rd.dates))
     for d in rd.dates:
         i0, i1 = rd.held.get(d), rd.nxt.get(d)
@@ -78,8 +81,10 @@ def carry_value(rd) -> pd.Series:
         p0, p1 = rd.closes[i0].get(d), rd.closes[i1].get(d)
         if p0 is None or p1 is None or p0 <= 0 or p1 <= 0:
             continue
-        near, far = (p0, p1) if rd.expiry_rank[i0] < rd.expiry_rank[i1] else (p1, p0)
-        out[d] = float(np.log(near / far)) / sp
+        (near, n_id), (far, f_id) = sorted([(p0, i0), (p1, i1)], key=lambda t: rd.expiry_rank[t[1]])
+        a, b = rd.expiry_rank[n_id][0], rd.expiry_rank[f_id][0]
+        gap = (b - a).days / 365.25 if b != END and a != END and (b - a).days >= 20 else sp
+        out[d] = float(np.log(near / far)) / gap
     return out
 
 
