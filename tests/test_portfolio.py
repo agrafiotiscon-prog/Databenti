@@ -105,3 +105,14 @@ def test_h024_builder_returns_all_registered_variants():
     d = preps[0].dates[100]
     # 4 equity names, k = 1: largest carry (most backwardated: negative jump) long, most contango short
     assert out["xsc_sector"]["ES"][d] == 1.0 and out["xsc_sector"]["YM"][d] == -1.0
+
+
+def test_h025_builder_ranks_winners_long():
+    from portfolio.signals import BUILDERS
+    drifts = (0.006, 0.002, -0.002, -0.006)                 # gaps far above the 1%/day noise over 252 days
+    preps = [prepare(make_root(root=r, seed=i, drift=dr)) for i, (r, dr) in enumerate(zip(("ES", "NQ", "RTY", "YM"), drifts))]
+    out = BUILDERS["H-025"](preps)
+    assert set(out) == {"xsm126_sector", "xsm252_sector", "xsm126_global", "xsm252_global"}
+    d = preps[0].dates[-1]
+    assert out["xsm252_sector"]["ES"][d] == 1.0 and out["xsm252_sector"]["YM"][d] == -1.0
+    assert out["xsm252_sector"]["ES"].iloc[:200].eq(0).all()        # warm-up: 80% of 252 + 21 skip

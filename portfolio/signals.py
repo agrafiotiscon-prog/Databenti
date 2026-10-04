@@ -95,3 +95,13 @@ def h024(preps: list[Prepared]) -> dict:
     return {"xsc_sector": cross_sectional(raw, by_sector=True), "xsc_global": cross_sectional(raw, by_sector=False),
             "xsc_sector_smooth": cross_sectional(smooth, by_sector=True),
             "xsc_global_smooth": cross_sectional(smooth, by_sector=False)}
+
+
+@register("H-025")
+def h025(preps: list[Prepared]) -> dict:
+    out = {}
+    for lb in (126, 252):
+        sc = {p.root: momentum_score(p, lb, skip=21) for p in preps}
+        out[f"xsm{lb}_sector"] = cross_sectional(sc, by_sector=True)
+        out[f"xsm{lb}_global"] = cross_sectional(sc, by_sector=False)
+    return out
