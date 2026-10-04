@@ -1,0 +1,28 @@
+id: H-028
+title: Trade-flow imbalance continuation - follow strong 5/15-min aggressor imbalance in ES RTH for 15/30 min
+mechanism: >
+  Order-flow imbalance moves prices (Cont, Kukanov & Stoikov 2014; Chordia & Subrahmanyam 2004 find
+  imbalances predict next-period returns because informed or liquidity-demanding traders split orders
+  over time, so a large one-sided aggressor flow tends to continue: Kyle 1985, Hasbrouck 1991). Who pays:
+  liquidity providers who absorb the first part of a split parent order and are run over by the rest.
+  Prior: LOW. Most of the price impact is contemporaneous; the predictive part at 15-30 min is small
+  relative to an ES round trip (~1.36 ticks + slippage). One year of tick data (238 RTH days) cannot
+  pass G7 (needs >= 2 OOS years), so the best possible verdict is "insufficient data" - run anyway
+  to learn whether there is anything worth buying more data for.
+direction: follow
+horizon: "15 or 30 min"
+features: [aggressor_signed_volume]
+fixed:
+  data: "ES RTH trades 2024-11-01..2025-09-30 (238 cached days, quotes rebuilt from trades, D-019); 1 contract"
+  decision_times: "every 30 min from 09:00 to 14:00 CT (11 per day); at most one open trade at a time (holds <= 30 min)"
+  imbalance: "imb = (buy-aggressor volume - sell-aggressor volume) / total volume over the `window` minutes strictly before the decision time (side N excluded from the numerator)"
+  thresholds: "fixed before any P&L from the |imb| distribution on every 20th cached day (feature only): window 5 -> q75 0.07, q90 0.09; window 15 -> q75 0.05, q90 0.065"
+  entry_exit: "market order at the first trade at/after the decision time (+100 ms latency, worse-of-book), side = sign(imb) if |imb| >= threshold; time exit at decision time + hold; no stop, no target"
+  protocol: "scripts/run_hypothesis.py (D-020): walk-forward 6/1/1 months, variant chosen on train net p5 at fees x1.5; gates G1-G11 (G12 not built into this runner)"
+space:
+  window: [5, 15]
+  level: [q75, q90]
+  hold: [15, 30]
+trial_budget: 8
+registered: 2026-10-04
+status: open
