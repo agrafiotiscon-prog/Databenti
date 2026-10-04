@@ -181,7 +181,7 @@ def main(argv=None) -> int:
     by_year = pd.DataFrame({"oos_net": yrs.round(0), "return_pct": (100 * yrs / CAPITAL).round(2)})
     fam = pd.DataFrame({v: oos_stats(D["base"][v], CAPITAL) for v in variants}).T
     fam["net_full"] = full_net.round(0)
-    out = ROOT / "vault" / "results" / f"{HYP.lower()}-report.md"
+    out = ROOT / "vault" / "results" / f"{HYP.lower().replace('-', '')}-report.md"
     out.write_text("\n".join([
         "---", "type: result", f"date: {date.today().isoformat()}", f"tags: [R7, {HYP}, gates, portfolio]", "---",
         f"# {HYP} futures portfolio: gate verdict **{verdict}**", "",

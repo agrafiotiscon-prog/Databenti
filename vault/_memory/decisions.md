@@ -302,3 +302,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-023 evaluated once on the holdout 2025-10-03..2026-10-02: book +$90k on $1M (8.7%, Sharpe 0.72, maxDD -8.6%); trend sleeve +$108k (Sharpe 0.89), FOMC sleeve -$18k (8 trades). Verdict CONFIRM by the D-050 criteria. H-023 closed; research/HOLDOUT_UNLOCK removed. Trend252 portfolio becomes the reference sleeve; H-007 is not promoted on its own.
 - **Why:** Criteria fixed before the run (net > 0, Sharpe >= 0.4, trend net > 0) were all met. But one year has Sharpe SE ~1, the FOMC sleeve lost, and at $100k the book made 1.6%, so this is a passed falsification test, not proof. The used year may not be reused for selection.
 - **Status:** active.
+
+## D-053 — H-024 cross-sectional carry: not promising, closed (2026-10-04)
+- **Decision:** H-024 evaluated once (4 variants): 1/12 gates, OOS -1.5%/yr, Sharpe -0.10, placebo p 0.57; closed. No FX/equity-only carry re-test on this data (would be post-hoc selection).
+- **Why:** Pre-registered protocol and gates; the only profitable sectors (equity, FX) were identified after seeing results, so testing them now would be snooping. A future FX-carry idea needs fresh data or an independent prior.
+- **Status:** active.

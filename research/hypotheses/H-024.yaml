@@ -26,4 +26,4 @@ space:
   variant: [xsc_sector, xsc_global, xsc_sector_smooth, xsc_global_smooth]
 trial_budget: 4
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: not promising, 1/12 gates (D-053)

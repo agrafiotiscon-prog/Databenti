@@ -87,7 +87,7 @@ Sharpe >= 1 net. The 2025-10..2026-10 holdout is SPENT (D-052): no new idea may 
 future confirmation needs data after 2026-10-04 (forward test). Prefer ideas that are DIFFERENT payers from trend (the trend sleeve is already H-023).
 - [x] R8.1 (2026-10-04: portfolio/signals.py BUILDERS + cross_sectional + momentum_score; run_portfolio.py --hypothesis; tests) Engineering: generic portfolio-hypothesis runner (refactor scripts/run_portfolio.py so a new
       cross-market signal only adds a signal function in portfolio/signals.py), with tests; no new result.
-- [ ] R8.2 H-024 cross-sectional carry across the 26 markets (Koijen, Moskowitz, Pedersen & Vrugt 2018):
+- [x] R8.2 (2026-10-04, D-053: not promising, 1/12, OOS -1.5%/yr, placebo p 0.57; vault/results/h024-report.md) H-024 cross-sectional carry across the 26 markets (Koijen, Moskowitz, Pedersen & Vrugt 2018):
       rank by annualised front/next slope within sector, long top / short bottom, vol-scaled. Payer: hedgers.
 - [ ] R8.3 H-025 cross-sectional (relative) momentum 3/6/12 m, within-sector ranks (Asness, Moskowitz &
       Pedersen 2013). Small space (<= 6 variants).

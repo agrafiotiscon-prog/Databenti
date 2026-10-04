@@ -37,3 +37,4 @@
 - 2026-10-03 (routine 17:15) Paused new hypotheses pending the user's choice of direction after H-022 (QUEUE 'Needs the user').
 - 2026-10-03 R7.2 H-023 combined book registered + scripts/run_h023.py; descriptive dev numbers (hindsight) $1M 8.4%/yr Sharpe 0.53; holdout run waits for the user's go (D-050).
 - 2026-10-04 R7.3 H-023 holdout (user go): CONFIRM by rule, Sharpe 0.72, trend +$108k, FOMC -$18k; weak (1 y). Holdout re-locked (D-052). R8.1 generic portfolio runner + cross-sectional signals.
+- 2026-10-04 R8.2 H-024 cross-sectional carry: not promising, 1/12 gates, OOS -1.5%/yr, placebo p 0.57 (D-053).
