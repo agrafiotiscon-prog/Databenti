@@ -5,7 +5,7 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **214** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **215** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 **Holdout confirmation (D-052):** [H-023](h023-holdout.md) (trend252 portfolio + pre-FOMC sleeve, chosen in hindsight
@@ -15,7 +15,7 @@ and pre-registered in D-050) was run once on the 2025-10..2026-10 holdout: **CON
 
 | Rank | Hypothesis | Data | Gates passed | OOS trades | OOS net | OOS t | Verdict |
 |---|---|---|---|---|---|---|---|
-| **1a** | [H-030](h030-report.md) **Treasury futures long into month-end** (last 3/5 days; ZN+ZB or all 4) | 15 y daily, ZT/ZF/ZN/ZB | **9/12** (most ever) | 472 | +$173,130 on $1M (+1.4%/yr at ~2% vol) | 2.21 (daily) | **strongest candidate, not promoted** (fails G3 DSR N=214, G5 plateau vs opposite-sign post variants, G11). All pre variants t~3, all post variants < 0; scales with duration (ZT 4 bp → ZB 27 bp); stable 2010-17 vs 2018-25; needs independent confirmation (D-060) |
+| **1a** | [H-030](h030-report.md) **Treasury futures long into month-end** (last 3/5 days; ZN+ZB or all 4) | 15 y daily, ZT/ZF/ZN/ZB | **9/12** (most ever) | 472 | +$173,130 on $1M (+1.4%/yr at ~2% vol) | 2.21 (daily) | **strongest candidate, not promoted** (fails G3 DSR N=214, G5 plateau vs opposite-sign post variants, G11). All pre variants t~3, all post variants < 0; scales with duration (ZT 4 bp → ZB 27 bp); stable 2010-17 vs 2018-25; **CONFIRMED on TN/UB by [H-032](h032-report.md)** (t 4.5, drift-neutral t 5.1, 15/16 years; D-062) |
 | 1b | [H-020](h020-report.md) volatility-managed long (63-day vol < 1-y median) | 15 y hourly | **8/12** (most) | 79 | +$182,206 | 3.89* | not promoted: **fails G12 (p = 0.118: regime series shifted in time with the same 57% long share earn nearly as much - mostly equity drift)**, G1 (79 multi-week holds), G3 (raw-N DSR 0.56). *per-trade t is inflated by month-long holds |
 | **1** | [H-007](h007-report.md) pre-FOMC drift (24 h window) | 15 y hourly | **6/11** | 98 | +$21,296 | **1.95** | best candidate; placebo vs random days p = 0.063 (borderline); fails G1 (8 events/yr), G3, G5, G6, G10 |
 | ~~1=~~ | [H-012](h012-report.md) FOMC-cycle even weeks | 15 y hourly | 6/11 | 226 | +$82,006 | 1.23 | **DEMOTED by placebo: 22/30 shifted calendars do as well (p ≈ 0.74) - the profit is equity drift, not a Fed effect**; passes G1 (226 trades); fails G3 (t < 2, DSR), G4/G10 (2-variant space), G6 (2023-24 = +$61k), G11 |

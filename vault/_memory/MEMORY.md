@@ -26,7 +26,7 @@ tags: [memory, state]
 ## Current state (2026-10-04, session 6)
 - Phases 0–2 done. **Phase 2 features validated on the first real day** (2024-03-05, ES), incl.
   a visual check ([day-check](../results/day-check-2024-03-05-rth.md)).
-- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **≈ $121.5** (see Budget below)
+- **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **≈ $121.6** (see Budget below)
   in total; earlier ($10.02 before `cache/download_log.csv` existed + $0.04 logged there; `spend_log.csv`
   also logs dry runs, so never sum it). Cached
   locally (not in git): 2024-03-05 trades/tbbo/mbo/status, trades for the 2024-03 roll window
@@ -59,7 +59,7 @@ tags: [memory, state]
   rebalancing: run 1 buggy (dropped 2/3 of months, looked good), fixed re-run 1/12 → closed (D-041/42).
   Lesson: check event coverage first. H-020 vol-managed long: 8/12 gates (most) but placebo p 0.118,
   79 trades → not promoted (D-044). H-021 buy-the-selloff 3/12, placebo p 0.99 (D-046).
-  Total hypothesis trials: 214. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
+  Total hypothesis trials: 215. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
   fills), conservative; queue_l1 mildly optimistic.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
@@ -86,9 +86,12 @@ tags: [memory, state]
   (OOS t 2.2, all pre variants t~3, scales with duration, stable both halves, not a roll artefact; D-060) →
   [h030-report](../results/h030-report.md); H-031 auction cycle 4/12 (D-061). Next: H-030 confirmation (UB/TN
   replication ~$0.1 needs the user's OK; paper tracking). R9.1 done: tick runner now measures G12 (`research/placebo.py`). R9.5 done: `scripts/paper_track.py` (trend252 + H-030 pre|3|all ledger, replay-tested;
-  forward running needs data = user's OK). Next: queue empty of $0 items except new ideas → write R10 ideas. Asked the user about forward paper tracking (R8.9, cents/day).
-- **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.5** (+ ≤ $0.15 possible
-  partial charges from 3 interrupted streams) → ≈ $3.4 of credit left. No more data purchases without the user. One year cannot pass G7.
+  forward running needs data = user's OK). **H-032 CONFIRMS H-030 on TN/UB** (never used before;
+  t 4.5, drift-neutral t 5.1, 15/16 yrs; D-062) → [h032-report](../results/h032-report.md). Working book trend252 + H-030 at
+  15% vol: hindsight 12.7%/yr, Sharpe 0.82 → [combined](../results/combined-trend-h030-descriptive.md). Next: R9.7 forward
+  paper tracking live (user OK'd: 'if u think it is worth it do it'). Asked the user about forward paper tracking (R8.9, cents/day).
+- **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.6** (+ ≤ $0.15 possible
+  partial charges from 3 interrupted streams) → ≈ $3.3 of credit left. No more data purchases without the user. One year cannot pass G7.
 
 ## Open questions
 - Recheck detector calibration (D-018) on more MBO days (needs the user's OK for MBO)

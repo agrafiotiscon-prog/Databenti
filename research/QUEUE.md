@@ -110,12 +110,17 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
       k days; month-end coverage first (H-019 lesson); placebo vs random windows.
 - [x] R9.4 (2026-10-04, D-061: 4/12, not promising; calendar in config/treasury_auctions.csv) H-031 Treasury auction cycle (Lou, Yan & Zhang 2013): needs the auction calendar from TreasuryDirect
       (no Databento cost); fetch into config/ if the network allows, else park under "Needs the user".
-- [ ] R9.6 H-030 confirmation: pre-register a replication on UB + TN daily bars (not used so far; ~$0.1, needs the user's OK)
+- [x] R9.6 (2026-10-04, D-062: H-032 CONFIRMS on TN/UB) H-030 confirmation: pre-register a replication on UB + TN daily bars (not used so far; ~$0.1, needs the user's OK)
       with the exact H-030 rule fixed in advance (pre-window, k=3, long), and add H-030 to forward paper tracking (R8.9).
 - [x] R9.5 (2026-10-04: scripts/paper_track.py ledger + mark; engine.target_contracts refactor, identical to stored H-022 P&L to 1e-11; replay on Sept 2025 OK) Engineering E-2: forward paper-tracking skeleton for trend252, tested on cached data (running it
       forward waits for the user, R8.9).
 
 ## Later: new hypotheses (one at a time, mechanism first; see vault/03-order-flow/evidence-review.md)
+
+## Next (user approved, 2026-10-04)
+- [ ] R9.7 Forward paper tracking live: daily fetch of the last few days of ohlcv-1d v.0/v.1 for the 26 markets (cost-guarded, cap $0.05/day),
+      run scripts/paper_track.py for the new dates (trend252 + H-030, book = combine.py 15% vol), commit the ledger daily;
+      monthly summary vs the descriptive expectation (vault/results/combined-trend-h030-descriptive.md).
 
 ## Needs the user
 - **(2026-10-04) H-030 confirmation (R9.6):** ~$0.1 of UB/TN daily bars for a pre-registered replication; and/or forward paper tracking. Asked in chat.

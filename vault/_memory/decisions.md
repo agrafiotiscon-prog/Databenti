@@ -347,3 +347,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-031 (4 variants): 4/12, OOS +0.2%/yr t 0.5, negative at stress; placebo pass reflects bond drift; closed.
 - **Why:** Pre-registered protocol; the Lou-Yan-Zhang pattern is at most faint after 2010.
 - **Status:** active.
+
+## D-062 — H-030 confirmed on TN/UB (H-032); trend252 + H-030 is the working book for forward tracking (2026-10-04)
+- **Decision:** H-032 (pre-registered, data bought after registration, user OK): CONFIRMS H-030 on all four criteria (stress net +$180k, per-window t 4.46, drift-neutral t 5.05, placebo p 0.000, 15/16 years). H-030 pre|3|all becomes a confirmed sleeve. Working book = trend252 + H-030 risk-balanced at 15% vol (descriptive hindsight: 12.7%/yr, Sharpe 0.82, max DD -21%). Next: forward paper tracking of this exact book (user: 'if u think it is worth it do it').
+- **Why:** Independent-instrument confirmation of a fixed rule removes the main overfitting worry for H-030 (it still shares Treasury-market risk). The combined numbers are in-sample upper bounds; only forward data can confirm the book.
+- **Status:** active.
