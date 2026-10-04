@@ -24,4 +24,4 @@ space:
   variant: [xsm126_sector, xsm252_sector, xsm126_global, xsm252_global]
 trial_budget: 4
 registered: 2026-10-04
-status: open
+status: closed   # evaluated once 2026-10-04: not promising, 1/12 gates (D-054)

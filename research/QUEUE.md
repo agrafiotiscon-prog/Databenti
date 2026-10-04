@@ -89,7 +89,7 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
       cross-market signal only adds a signal function in portfolio/signals.py), with tests; no new result.
 - [x] R8.2 (2026-10-04, D-053: not promising, 1/12, OOS -1.5%/yr, placebo p 0.57; vault/results/h024-report.md) H-024 cross-sectional carry across the 26 markets (Koijen, Moskowitz, Pedersen & Vrugt 2018):
       rank by annualised front/next slope within sector, long top / short bottom, vol-scaled. Payer: hedgers.
-- [ ] R8.3 H-025 cross-sectional (relative) momentum 3/6/12 m, within-sector ranks (Asness, Moskowitz &
+- [x] R8.3 (2026-10-04, D-054: not promising, 1/12, OOS -1.3%/yr, placebo p 0.40) H-025 cross-sectional (relative) momentum 3/6/12 m, within-sector ranks (Asness, Moskowitz &
       Pedersen 2013). Small space (<= 6 variants).
 - [ ] R8.4 H-026 commodity basis-momentum (Boons & Prado 2019): momentum of front minus second-contract returns.
 - [ ] R8.5 H-027 pre-FOMC drift replication on the other equity-index futures in the universe (daily bars,

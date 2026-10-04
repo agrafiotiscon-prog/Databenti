@@ -307,3 +307,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-024 evaluated once (4 variants): 1/12 gates, OOS -1.5%/yr, Sharpe -0.10, placebo p 0.57; closed. No FX/equity-only carry re-test on this data (would be post-hoc selection).
 - **Why:** Pre-registered protocol and gates; the only profitable sectors (equity, FX) were identified after seeing results, so testing them now would be snooping. A future FX-carry idea needs fresh data or an independent prior.
 - **Status:** active.
+
+## D-054 — H-025 cross-sectional momentum: not promising, closed (2026-10-04)
+- **Decision:** H-025 evaluated once (4 variants): 1/12 gates, OOS -1.3%/yr, Sharpe -0.09, PBO 0.45, placebo p 0.40; closed. Relative-value (cross-sectional) premia on this 26-market universe: two failures (H-024, H-025); deprioritise further cross-sectional ideas unless the universe grows.
+- **Why:** Pre-registered protocol; both cross-sectional books lose after costs, with thin sectors (2-6 names) and gains only in equities, which looks like drift.
+- **Status:** active.
