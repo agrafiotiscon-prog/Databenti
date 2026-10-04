@@ -1,0 +1,24 @@
+id: H-040
+title: Confirmation of H-037 (FX month-end hedge rebalancing) on currency futures never used before - 6N (NZD) and 6M (MXN)
+mechanism: >
+  H-037 (5/12 gates, placebo p 0.057, all variants positive full-period) found that FX futures move with the month's
+  US equity return over the last days of the month - consistent with foreign holders of US equities rebalancing
+  their currency hedges at the month-end fix (Melvin & Prins 2015). If real, the same rule must work on currency
+  futures that played no part in finding it. 6N and 6M were never downloaded in this project. Fixed rule, no free
+  parameters; data ~$0.16 (routine budget; user approval of confirmations, 2026-10-04). Caveat: NZD and MXN are
+  smaller hedge currencies and partly risk-on currencies (they also rise with equities generally), so the
+  drift-neutral and placebo criteria matter most.
+direction: follow
+horizon: "5 trading days, monthly"
+features: [daily_closes_v0, month_calendar]
+fixed:
+  rule: "H-037 variant 5 (last folds' choice): at the entry close E = 5 trading days before month-end, eq = ES log return from the previous month-end close to E; long the foreign-currency future if eq > 0, short if eq < 0; exit at the month-end close"
+  markets: "6N (100,000 NZD, tick 0.00005 = $5) and 6M (500,000 MXN, tick 0.00001 = $5); $250,000 notional each, integer contracts >= 1"
+  data: "ohlcv-1d v.0/v.1 2010-06-07..2025-09-30 (development period only)"
+  costs: "1 tick + $2.26 per contract per side; roll inside a window pays 2 sides; stress = 2 ticks + fees x1.5"
+  criteria: "CONFIRMS if ALL of: (1) pooled net > 0 at stress costs; (2) per-window t >= 2; (3) drift-neutral t >= 2 for side x (window return - the market's mean 5-day return); (4) placebo p <= 0.05 (same rule with entry/exit anchored on random trading dates >= 6 days from month-end, one per month, 1,000 draws). Otherwise DOES NOT CONFIRM"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-04
+status: open
