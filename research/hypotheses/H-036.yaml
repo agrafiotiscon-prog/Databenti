@@ -1,0 +1,23 @@
+id: H-036
+title: Volatility-managed trend - the trend252 portfolio with a short-window book volatility target (21/63/126 days instead of 252)
+mechanism: >
+  Moreira & Muir (2017 JF, "Volatility-managed portfolios") show that scaling factor exposure by the inverse of recent
+  realised variance raises Sharpe ratios because volatility is persistent while expected returns do not rise with it;
+  Harvey, Hoyle, Korgaonkar, Rattray, Sargaison & Van Hemert (2018 JPM, "The impact of volatility targeting") find
+  vol targeting helps most for momentum/trend-like and risk assets. Here: the trend252 book is rescaled to 15% vol
+  using a shorter trailing window. Caveat: trend252 itself was selected on this data (H-022/H-023), so even a pass is
+  weaker evidence than for a fresh idea; forward tracking would be the real test. Prior: moderate for a small
+  improvement, low for a large one.
+direction: both
+horizon: "weeks to months"
+features: [daily_closes_v0_v1]
+fixed:
+  base: "portfolio/engine.simulate variant trend252 exactly as H-022/H-023 except the book-level scale k = 15% / trailing realised vol over scale_win days (min observations max(15, 0.6 x window)), capped at 2.5x, lagged as in the engine"
+  costs: "as H-022: 1 tick + $2.26 per contract side; fees1.5 / stress / plus1tick; capital $1M, integer contracts"
+  protocol: "research/daily_eval.py via scripts/run_r9.py (walk-forward 36/12/12, G1-G12); ohlcv-1d 2010-06..2025-09"
+  g12: "placebo as H-022: each market's trend signal circularly shifted by an independent random offset (>= 63 days), 150 draws"
+space:
+  scale_win: [21, 63, 126]
+trial_budget: 3
+registered: 2026-10-04
+status: open

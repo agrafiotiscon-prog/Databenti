@@ -280,8 +280,175 @@ def h031(dl, hyp, coverage_only):
         "outright short pre / long post auction, closes, 1 tick + fees per side, $250k per position"
 
 
+# ---------------------------------------------------------------- shared month helpers (R10)
+def month_end_index(m) -> list[int]:
+    """Positions (in m.dates) of each month's last trading date."""
+    return [m.pos_i[ds[-1]] for ds in by_month(m.dates).values()]
+
+
+def random_month_anchors(m, rng) -> list[int]:
+    """One random position per month, >= 6 trading days from both month boundaries."""
+    out = []
+    for ds in by_month(m.dates).values():
+        if len(ds) >= 14:
+            out.append(m.pos_i[ds[int(rng.integers(5, len(ds) - 6))]])
+    return out
+
+
+EQ4 = ["ES", "NQ", "RTY", "YM"]
+EQ_SETS = {"es": ["ES"], "eq4": EQ4}
+
+
+# ---------------------------------------------------------------- H-034 turn of the month
+def h034(dl, hyp, coverage_only):
+    rds = {r: load(dl, r) for r in EQ4}
+    om = {r: Outright(rds[r], BY_ROOT[r].point_value, BY_ROOT[r].tick_value) for r in EQ4}
+    fee = load_costs().fee(1)
+
+    def windows(r, n_after, anchors=None):
+        m, out = om[r], []
+        for i in (anchors if anchors is not None else month_end_index(m)):
+            if i - 1 >= 0 and i + n_after < len(m.dates):
+                out.append((m.dates[i - 1], m.dates[i + n_after], 1))
+        return out
+
+    cov = pd.DataFrame([{"market": r, "first": om[r].dates[0], "last": om[r].dates[-1],
+                         "month_ends": len(month_end_index(om[r])), "windows_n3": len(windows(r, 3))} for r in EQ4])
+    print(cov.to_string(), flush=True)
+    if coverage_only:
+        return
+    cal = sorted(set().union(*[rd.dates for rd in rds.values()]))
+    holdout_check(cal)
+
+    def fn(g, scen, rng=None):
+        slip, fm = SCEN_COSTS[scen]
+        mk = EQ_SETS[g["markets"]]
+        nets, ents = [], []
+        for r in mk:
+            anchors = random_month_anchors(om[r], rng) if rng is not None else None
+            w = windows(r, g["n_after"], anchors)
+            nets.append(window_pnl(om[r], w, CAPITAL / len(mk), slip, fee * fm)[0])
+            ents.append(entries(w, om[r].dates))
+        return pd.concat(nets, axis=1).sum(axis=1), pd.concat(ents, axis=1).sum(axis=1)
+
+    D, T = assemble(hyp, cal, fn)
+
+    def placebo(final, oos_dates, n):
+        a, mk = final.split("|")
+        g, rng = {"n_after": int(a), "markets": mk}, np.random.default_rng(34)
+        return [fn(g, "base", rng)[0].reindex(oos_dates).fillna(0.0).sum() for _ in range(n)]
+
+    return D, T, placebo, cov, "ES/NQ/RTY/YM ohlcv-1d v.0", "long outright T-1 close -> n-th day of new month, 1 tick + fees per side"
+
+
+# ---------------------------------------------------------------- H-035 rebalancing pressure
+def h035(dl, hyp, coverage_only):
+    roots = EQ4 + ["ZN"]
+    rds = {r: load(dl, r) for r in roots}
+    om = {r: Outright(rds[r], BY_ROOT[r].point_value, BY_ROOT[r].tick_value) for r in roots}
+    fee = load_costs().fee(1)
+    es, zn = om["ES"], om["ZN"]
+    lr_es = pd.Series(np.log1p(es.r), index=es.dates)
+    lr_zn = pd.Series(np.log1p(zn.r), index=zn.dates)
+    es_me = month_end_index(es)
+
+    def signal(prev_me_date, entry_date):
+        a = lr_es[(lr_es.index > prev_me_date) & (lr_es.index <= entry_date)].sum()
+        b = lr_zn[(lr_zn.index > prev_me_date) & (lr_zn.index <= entry_date)].sum()
+        rel = a - b
+        return 0 if rel == 0 or np.isnan(rel) else int(-np.sign(rel))
+
+    def events(k, anchors=None):
+        """[(entry_date, exit_date, side)] on the ES calendar: anchor = month-end (or placebo date)."""
+        out = []
+        idx = anchors if anchors is not None else es_me
+        mes = [es.dates[i] for i in es_me]
+        for i in idx:
+            if i - k < 1:
+                continue
+            entry, exit_ = es.dates[i - k], es.dates[i]
+            prev = [d for d in mes if d < entry and (entry - d).days > 0]
+            if not prev:
+                continue
+            sd = signal(prev[-1], entry)
+            if sd:
+                out.append((entry, exit_, sd))
+        return out
+
+    ev3 = events(3)
+    cov = pd.DataFrame([{"es_month_ends": len(es_me), "events_k3": len(ev3),
+                         "short_share": round(float(np.mean([e[2] < 0 for e in ev3])), 3),
+                         "zn_first": zn.dates[0], "zn_last": zn.dates[-1]}])
+    print(cov.to_string(), flush=True)
+    if coverage_only:
+        return
+    cal = sorted(set().union(*[rds[r].dates for r in EQ4]))
+    holdout_check(cal)
+
+    def on_market(r, ev):
+        """Map ES-calendar events to market r's own dates (same entry/exit dates when traded)."""
+        m = om[r]
+        return [(a, b, sd) for a, b, sd in ev if a in m.pos_i and b in m.pos_i]
+
+    def fn(g, scen, rng=None):
+        slip, fm = SCEN_COSTS[scen]
+        mk = EQ_SETS[g["markets"]]
+        ev = events(g["k"], random_month_anchors(es, rng) if rng is not None else None)
+        nets, ents = [], []
+        for r in mk:
+            w = on_market(r, ev)
+            nets.append(window_pnl(om[r], w, CAPITAL / len(mk), slip, fee * fm)[0])
+            ents.append(entries(w, om[r].dates))
+        return pd.concat(nets, axis=1).sum(axis=1), pd.concat(ents, axis=1).sum(axis=1)
+
+    D, T = assemble(hyp, cal, fn)
+
+    def placebo(final, oos_dates, n):
+        k, mk = final.split("|")
+        g, rng = {"k": int(k), "markets": mk}, np.random.default_rng(35)
+        return [fn(g, "base", rng)[0].reindex(oos_dates).fillna(0.0).sum() for _ in range(n)]
+
+    return D, T, placebo, cov, "ES/NQ/RTY/YM + ZN ohlcv-1d v.0", "outright, side = -sign(ES-ZN MTD), 1 tick + fees per side"
+
+
+# ---------------------------------------------------------------- H-036 volatility-managed trend
+def h036(dl, hyp, coverage_only):
+    from portfolio.engine import prepare, simulate
+    from data.universe import UNIVERSE
+    preps = [prepare(load(dl, s.root)) for s in UNIVERSE]
+    cal = sorted(set().union(*[p.dates for p in preps]))
+    cov = pd.DataFrame([{"markets": len(preps), "first": cal[0], "last": cal[-1], "days": len(cal)}])
+    print(cov.to_string(), flush=True)
+    if coverage_only:
+        return
+    holdout_check(cal)
+    fee = load_costs().fee(1)
+
+    def fn(g, scen, override=None):
+        slip, fm = SCEN_COSTS[scen]
+        out = simulate(preps, "trend252", CAPITAL, slip, fee * fm, signal_override=override, scale_win=g["scale_win"])
+        return out["net"], out["trades"]
+
+    D, T = assemble(hyp, cal, fn)
+
+    def placebo(final, oos_dates, n):
+        g, rng, res = {"scale_win": int(final)}, np.random.default_rng(36), []
+        for _ in range(n):
+            ov = {}
+            for p in preps:
+                s = p.signals["trend252"]
+                k = int(rng.integers(63, max(64, len(s) - 63)))
+                ov[p.root] = pd.Series(np.roll(s.to_numpy(), k), index=s.index)
+            res.append(fn(g, "base", ov)[0].reindex(oos_dates).fillna(0.0).sum())
+        return res
+
+    return D, T, placebo, cov, "26 CME futures ohlcv-1d v.0/v.1", "trend252 engine, book vol target on scale_win days, 1 tick + fees"
+
+
 BUILDERS = {"H-029": (h029, "commodity index roll front-running"), "H-030": (h030, "Treasury month-end"),
-            "H-031": (h031, "Treasury auction cycle")}
+            "H-031": (h031, "Treasury auction cycle"), "H-034": (h034, "turn of the month (equities)"),
+            "H-035": (h035, "month-end rebalancing pressure (equities)"), "H-036": (h036, "volatility-managed trend")}
+N_PLACEBO = {"H-036": 150}
 
 
 def main(argv=None) -> int:
@@ -300,7 +467,8 @@ def main(argv=None) -> int:
     D, T, placebo, cov, data_desc, fill_desc = res
     out = ROOT / "vault" / "results" / f"{hyp.id.lower().replace('-', '')}-report.md"
     r = daily_eval.evaluate(hyp, D, T, CAPITAL, placebo, data_desc, fill_desc, out, title,
-                            notes=["## Coverage (before P&L, D-042)", md(cov, index=False)])
+                            notes=["## Coverage (before P&L, D-042)", md(cov, index=False)],
+                            n_placebo=N_PLACEBO.get(hyp.id, 300))
     print(r["table"].to_string())
     print("verdict:", r["verdict"], "| OOS:", r["oos"], "| placebo p", r["placebo_p"])
     print(r["by_year"].to_string()); print(r["family"].to_string()); print("saved", out)

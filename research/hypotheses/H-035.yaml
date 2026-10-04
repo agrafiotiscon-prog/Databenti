@@ -1,0 +1,25 @@
+id: H-035
+title: Month-end rebalancing pressure in equity index futures - trade AGAINST the month's stock-vs-bond outperformance over the last days of the month
+mechanism: >
+  Pension funds, balanced funds and target-date funds rebalance to fixed stock/bond weights around month-end. When
+  stocks have outperformed bonds during the month they must sell stocks (and buy bonds) into month-end, and vice
+  versa; Harvey, Mazzoleni & Melone (2025, "The Unintended Consequences of Rebalancing", NBER/SSRN working paper)
+  document predictable equity returns in the last days of the month driven by this flow. Payer: mechanical
+  rebalancers. Different from H-019 (unconditional fade, closed) - here the direction depends on the month's relative
+  performance. Prior: moderate (recent, well-identified mechanism; post-publication decay unknown).
+direction: fade
+horizon: "3-5 trading days, monthly"
+features: [daily_closes_v0, month_calendar]
+fixed:
+  signal: "at the entry close E (k trading days before month-end), rel = log return of ES minus log return of ZN from the previous month-end close to E (same-instrument chain returns); position = -sign(rel) (short equities after they beat bonds, long after they lagged)"
+  window: "enter at the close of E, exit at the month-end close (exposed to the last k days)"
+  markets: "es = ES only; eq4 = ES, NQ, RTY, YM (all take the same side from the ES-vs-ZN signal); $1M / (number of markets) notional each, integer contracts >= 1"
+  costs: "1 tick + $2.26 per contract per side; roll inside a window pays 2 sides; fees1.5 / stress / plus1tick"
+  protocol: "research/daily_eval.py via scripts/run_r9.py (walk-forward 36/12/12, G1-G12); capital $1M; ohlcv-1d 2010-06..2025-09"
+  g12: "placebo: the same rule (signal measured from the previous month-end to the entry) anchored on a random trading date >= 6 days from month-end, one per month, 300 draws"
+space:
+  k: [3, 5]
+  markets: [es, eq4]
+trial_budget: 4
+registered: 2026-10-04
+status: open

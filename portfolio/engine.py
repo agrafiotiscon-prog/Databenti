@@ -48,8 +48,10 @@ def prepare(rd: RootData) -> Prepared:
 
 
 def target_contracts(preps: list[Prepared], variant: str, capital: float,
-                     signal_override: dict | None = None, specs: dict | None = None) -> dict[str, pd.Series]:
-    """Integer contracts decided at each date's close (traded at the next close), per root."""
+                     signal_override: dict | None = None, specs: dict | None = None,
+                     scale_win: int = SCALE_WIN) -> dict[str, pd.Series]:
+    """Integer contracts decided at each date's close (traded at the next close), per root. scale_win = trailing
+    window of the book-level vol scaling (252 = H-022/H-023 definition; shorter = volatility-managed, H-036)."""
     cal = sorted(set().union(*[p.dates for p in preps]))
     # 1. unscaled weights w = sig * 0.15 / sqrt(N) / sigma  (fraction of capital per market)
     sigs, active = {}, pd.Series(0, index=pd.Index(cal))
@@ -68,7 +70,8 @@ def target_contracts(preps: list[Prepared], variant: str, capital: float,
     for p in preps:
         contrib = (w[p.root].shift(2) * p.r).fillna(0.0)        # weight decided at t-2 is held over (t-1, t]
         u = u.add(contrib.reindex(cal, fill_value=0.0), fill_value=0.0)
-    rv = u.rolling(SCALE_WIN, min_periods=SCALE_MIN_OBS).std() * np.sqrt(252)
+    min_obs = SCALE_MIN_OBS if scale_win == SCALE_WIN else max(15, int(0.6 * scale_win))
+    rv = u.rolling(scale_win, min_periods=min_obs).std() * np.sqrt(252)
     k = (VOL_TARGET / rv).clip(upper=SCALE_CAP).fillna(1.0)
     out = {}
     for p in preps:
@@ -80,11 +83,12 @@ def target_contracts(preps: list[Prepared], variant: str, capital: float,
 
 
 def simulate(preps: list[Prepared], variant: str, capital: float, slip_ticks: float, fee_side: float | dict,
-             signal_override: dict | None = None, detail: bool = False, specs: dict | None = None) -> pd.DataFrame:
+             signal_override: dict | None = None, detail: bool = False, specs: dict | None = None,
+             scale_win: int = SCALE_WIN) -> pd.DataFrame:
     """Daily portfolio P&L (detail=True: one row per market-day). signal_override: root -> pd.Series
     replacing the variant's signal (placebo). specs: root -> Spec overriding data/universe.py (e.g. micro
     contracts: same prices, smaller point value); fee_side may be a dict root -> fee."""
-    targets = target_contracts(preps, variant, capital, signal_override, specs)
+    targets = target_contracts(preps, variant, capital, signal_override, specs, scale_win)
     # 3. per market: integer targets, lagged execution, P&L and costs
     rows = []
     for p in preps:

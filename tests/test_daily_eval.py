@@ -28,3 +28,16 @@ def test_spread_pnl_short_near_long_far():
     net, ent = spread_pnl(rd, BY_ROOT["CL"], [(d[10], d[14])], notional=83_333, slip=1.0, fee=2.26)
     n = max(1, round(83_333 / (rd.closes[1][d[10]] * 1000)))
     assert np.isclose(net.sum(), n * 1000 * 1.0 - 4 * n * (10.0 + 2.26)) and ent.sum() == 1
+
+
+def test_month_helpers_bounds():
+    from scripts.run_r9 import by_month, month_end_index, random_month_anchors
+    rd = make_root(root="ES", n=300)
+    m = Outright(rd, 50.0, 12.5)
+    me = month_end_index(m)
+    assert all(m.dates[i] == ds[-1] for i, ds in zip(me, by_month(m.dates).values()))
+    rng = np.random.default_rng(0)
+    for i in random_month_anchors(m, rng):
+        ds = by_month(m.dates)[(m.dates[i].year, m.dates[i].month)]
+        j = ds.index(m.dates[i])
+        assert 5 <= j <= len(ds) - 7                      # >= 6 days from both month boundaries
