@@ -48,7 +48,7 @@ def prepare(rd: RootData) -> Prepared:
 
 
 def target_contracts(preps: list[Prepared], variant: str, capital: float,
-                     signal_override: dict | None = None) -> dict[str, pd.Series]:
+                     signal_override: dict | None = None, specs: dict | None = None) -> dict[str, pd.Series]:
     """Integer contracts decided at each date's close (traded at the next close), per root."""
     cal = sorted(set().union(*[p.dates for p in preps]))
     # 1. unscaled weights w = sig * 0.15 / sqrt(N) / sigma  (fraction of capital per market)
@@ -72,23 +72,25 @@ def target_contracts(preps: list[Prepared], variant: str, capital: float,
     k = (VOL_TARGET / rv).clip(upper=SCALE_CAP).fillna(1.0)
     out = {}
     for p in preps:
-        pv = BY_ROOT[p.root].point_value
+        pv = (specs or BY_ROOT).get(p.root, BY_ROOT[p.root]).point_value
         kk = k.reindex(p.dates).to_numpy()
         tgt = np.round(kk * w[p.root].to_numpy() * capital / (pv * p.price.fillna(1.0).to_numpy()))
         out[p.root] = pd.Series(np.nan_to_num(tgt), index=pd.Index(p.dates))
     return out
 
 
-def simulate(preps: list[Prepared], variant: str, capital: float, slip_ticks: float, fee_side: float,
-             signal_override: dict | None = None, detail: bool = False) -> pd.DataFrame:
+def simulate(preps: list[Prepared], variant: str, capital: float, slip_ticks: float, fee_side: float | dict,
+             signal_override: dict | None = None, detail: bool = False, specs: dict | None = None) -> pd.DataFrame:
     """Daily portfolio P&L (detail=True: one row per market-day). signal_override: root -> pd.Series
-    replacing the variant's signal (placebo)."""
-    targets = target_contracts(preps, variant, capital, signal_override)
+    replacing the variant's signal (placebo). specs: root -> Spec overriding data/universe.py (e.g. micro
+    contracts: same prices, smaller point value); fee_side may be a dict root -> fee."""
+    targets = target_contracts(preps, variant, capital, signal_override, specs)
     # 3. per market: integer targets, lagged execution, P&L and costs
     rows = []
     for p in preps:
-        spec = BY_ROOT[p.root]
-        pv, cost_c = spec.point_value, slip_ticks * spec.tick_value + fee_side
+        spec = (specs or BY_ROOT).get(p.root, BY_ROOT[p.root])
+        fee = fee_side.get(p.root, 0.0) if isinstance(fee_side, dict) else fee_side
+        pv, cost_c = spec.point_value, slip_ticks * spec.tick_value + fee
         tgt = targets[p.root].to_numpy()
         held = p.held.to_numpy()
         pos_prev, inst_prev = 0.0, None

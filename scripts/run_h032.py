@@ -1,6 +1,8 @@
-"""H-032: confirmation of H-030 (long into month-end) on TN and UB, never used before. Single evaluation.
+"""Month-end confirmations on TN and UB (single evaluation each):
+  H-032: long the 3 trading days INTO month-end (confirms H-030)
+  H-033: short the 3 trading days AFTER month-end (reversal)
 
-  python scripts/run_h032.py [--coverage-only]
+  python scripts/run_h032.py [--hypothesis H-032|H-033] [--coverage-only]
 """
 from __future__ import annotations
 
@@ -25,7 +27,9 @@ from scripts.fetch_futures_daily import path_for            # noqa: E402
 from scripts.run_h001 import md                             # noqa: E402
 from scripts.run_r9 import by_month                         # noqa: E402
 
-HYP, K, NOTIONAL = "H-032", 3, 250_000.0
+K, NOTIONAL = 3, 250_000.0
+MODE = {"H-032": ("pre", 1), "H-033": ("post", -1)}
+HYP, WINDOW, SIDE = "H-032", "pre", 1
 SPECS = {"TN": Spec("TN", "rates", 1000, 1 / 64), "UB": Spec("UB", "rates", 1000, 1 / 32)}
 # registry: "TN from its 2016 listing" - the 2010-2012 bars under the TN root are a different, illiquid product
 # (median daily volume 9-1,392 contracts vs 50k+ from 2016)
@@ -33,11 +37,16 @@ FIRST = {"TN": date(2016, 1, 11), "UB": date(2010, 6, 7)}
 
 
 def pre_windows(m: Outright, anchors) -> list[tuple]:
+    """H-032: (close K days before anchor, anchor close, long); H-033: (anchor close, K days after, short)."""
     out = []
     for a in anchors:
         i = m.pos_i.get(a)
-        if i is not None and i - K >= 0:
-            out.append((m.dates[i - K], a, 1))
+        if i is None:
+            continue
+        if WINDOW == "pre" and i - K >= 0:
+            out.append((m.dates[i - K], a, SIDE))
+        elif WINDOW == "post" and i + K < len(m.dates):
+            out.append((a, m.dates[i + K], SIDE))
     return out
 
 
@@ -48,9 +57,13 @@ def window_returns(m: Outright, windows) -> np.ndarray:
 def main(argv=None) -> int:
     from data.download import Downloader
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--hypothesis", choices=sorted(MODE), default="H-032")
     ap.add_argument("--coverage-only", action="store_true")
     ap.add_argument("--draws", type=int, default=1000)
     a = ap.parse_args(argv)
+    global HYP, WINDOW, SIDE
+    HYP = a.hypothesis
+    WINDOW, SIDE = MODE[HYP]
     hyp = registry.load(HYP)
     if not a.coverage_only and (hyp.status != "open" or trials.count(hypothesis=HYP) >= hyp.trial_budget):
         raise SystemExit(f"{HYP}: closed or already evaluated (single evaluation).")
@@ -89,12 +102,12 @@ def main(argv=None) -> int:
         net, _ = window_pnl(m, w, NOTIONAL, 1.0, fee)
         rr = window_returns(m, w)
         all3 = pd.Series(m.r).rolling(K).sum().dropna().to_numpy()
-        ex = rr - all3.mean()
+        ex = SIDE * (rr - all3.mean())                        # positive = the position beats the drift
         excess += list(ex)
         for (s, e, _), x in zip(w, rr):
             pnl = float(net.iloc[m.pos_i[s]:m.pos_i[e] + 1].sum())
             win_pnl.append(pnl)
-            rows.append({"market": r, "month_end": e, "ret_bp": x * 1e4, "pnl": pnl})
+            rows.append({"market": r, "month_end": e if WINDOW == "pre" else s, "ret_bp": x * 1e4, "pnl": pnl})
     win_pnl, excess = np.array(win_pnl), np.array(excess)
     t_win = float(win_pnl.mean() / win_pnl.std() * np.sqrt(len(win_pnl)))
     t_ex = float(excess.mean() / excess.std() * np.sqrt(len(excess)))
@@ -121,15 +134,14 @@ def main(argv=None) -> int:
            "placebo_p": round(p, 4), "placebo_median": round(float(np.median(sims))),
            "years_positive": f"{int((yrs > 0).sum())}/{len(yrs)}"}
     trials.append({"family": HYP, "hypothesis": HYP, "params": {"variant": "fixed"},
-                   "data": "TN/UB ohlcv-1d v.0/v.1 2010-06..2025-09 (first use)", "fill_mode": "closes, 1 tick + fees per side",
+                   "data": f"TN/UB ohlcv-1d v.0/v.1 2010-06..2025-09 ({WINDOW} window)", "fill_mode": "closes, 1 tick + fees per side",
                    "results": res})
-    out = ROOT / "vault" / "results" / "h032-report.md"
+    out = ROOT / "vault" / "results" / f"{HYP.lower().replace('-', '')}-report.md"
     out.write_text("\n".join([
-        "---", "type: result", f"date: {date.today().isoformat()}", "tags: [R9, H-032, H-030, confirmation]", "---",
-        f"# H-032 confirmation of H-030 on TN/UB (never used before): **{verdict}**", "",
-        "Pre-registered (research/hypotheses/H-032.yaml, committed before the data was downloaded): CONFIRMS only if stress net > 0, "
-        "per-window t >= 2, drift-neutral t >= 2 and random-window placebo p <= 0.05. Rule: long 3 trading days into month-end, "
-        "$250k notional per market.", "", "## Coverage (before P&L)", md(cov, index=False), "",
+        "---", "type: result", f"date: {date.today().isoformat()}", f"tags: [R9, {HYP}, month-end, confirmation]", "---",
+        f"# {HYP} month-end test on TN/UB ({'long 3 days into' if WINDOW == 'pre' else 'short 3 days after'} month-end): **{verdict}**", "",
+        f"Pre-registered (research/hypotheses/{HYP}.yaml, committed before the run): CONFIRMS only if stress net > 0, "
+        "per-window t >= 2, drift-neutral t >= 2 and random-window placebo p <= 0.05. $250k notional per market.", "", "## Coverage (before P&L)", md(cov, index=False), "",
         "## Result", "```", "\n".join(f"{k}: {v}" for k, v in res.items()), "```", "",
         "## Per market", md(per), "", "## By year (pooled $)", md(yrs.to_frame("net")), "",
         "## Roll months (Feb/May/Aug/Nov) vs others: mean window return, bp", md(roll), ""]) + "\n")

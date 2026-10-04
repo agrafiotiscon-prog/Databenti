@@ -36,3 +36,22 @@ UNIVERSE = [
 ]
 BY_ROOT = {s.root: s for s in UNIVERSE}
 START, END = "2010-06-07", "2025-10-01"          # END exclusive; holdout starts 2025-10-03
+
+# CME micro contracts (R9.8): same underlying and price quote, point value scaled by `factor`. Used only to make
+# small-account sizing realistic (no separate price data: micros track the full-size contract by arbitrage).
+# Sizes from CME contract specs [doc]; launch dates marked [assumption] are not verified - a backtest that applies
+# a micro before its launch is optimistic for that period. Rates, grains (micro ags launched 2023) and livestock
+# have no micro used here.
+MICRO = {
+    "ES": ("MES", 0.1), "NQ": ("MNQ", 0.1), "RTY": ("M2K", 0.1), "YM": ("MYM", 0.1),     # May 2019
+    "GC": ("MGC", 0.1), "SI": ("SIL", 0.2), "HG": ("MHG", 0.1),                          # MHG 2021 [assumption]
+    "CL": ("MCL", 0.1), "NG": ("MNG", 0.1),                                               # 2021 [assumption]
+    "6E": ("M6E", 0.1), "6A": ("M6A", 0.1), "6B": ("M6B", 0.1), "6J": ("MJY", 0.1),
+    "6C": ("MCD", 0.1), "6S": ("MSF", 0.1),
+}
+MICRO_FEE_SIDE = 0.352 + 0.02 + 0.25   # MES per side in config/costs.toml (exchange + NFA + IBKR); assumed for all micros
+
+
+def micro_specs() -> dict:
+    """root -> Spec with the micro point value (same tick size, so tick value scales too)."""
+    return {r: Spec(r, BY_ROOT[r].sector, BY_ROOT[r].point_value * f, BY_ROOT[r].tick) for r, (_, f) in MICRO.items()}

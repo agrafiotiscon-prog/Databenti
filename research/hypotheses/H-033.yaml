@@ -1,0 +1,24 @@
+id: H-033
+title: Treasury futures after month-end - SHORT the first 3 trading days of the new month (reversal of month-end price pressure), tested on TN/UB
+mechanism: >
+  If month-end buying (H-030, confirmed on TN/UB in H-032) is price pressure from index rebalancing and
+  institutional cash needs rather than information, part of it should reverse once the flow is done
+  (Etula, Rinne, Suominen & Vaittinen 2020 RFS, "Dash for cash": monthly price pressure followed by reversal).
+  In H-030 every post-month-end LONG variant lost (full-period t -1.0 to -2.1 on ZT/ZF/ZN/ZB), i.e. the idea
+  comes from data already seen - so it is tested ONLY on TN and UB, whose post-month-end windows were never
+  looked at (H-032 used only the 3 days before month-end). Payer: whoever bought at the month-end pressure peak.
+  Prior: low-moderate (the in-sample reversal was weaker than the pre-month-end rise).
+direction: fade
+horizon: "3 trading days, monthly"
+features: [daily_closes_v0, month_calendar]
+fixed:
+  rule: "SHORT from the month-end close to the close of the 3rd trading day of the next month; month-end = last trading date of the month in each contract's own data"
+  markets: "TN (from its 2016 listing) and UB, $250,000 notional each, integer contracts >= 1"
+  data: "ohlcv-1d v.0/v.1 2010-06-07..2025-09-30 (already cached for H-032; development period only)"
+  costs: "1 tick + $2.26 per contract per side; roll inside a window pays 2 sides; stress = 2 ticks + fees x1.5"
+  criteria: "CONFIRMS if ALL of: (1) pooled net > 0 at stress costs; (2) per-window t >= 2; (3) drift-neutral t >= 2 for (market's mean 3-day return - window return), i.e. the short beats the drift; (4) random-window placebo p <= 0.05 (same markets, same 3-day short, random trading dates >= 6 days from month-end, 1,000 draws). Otherwise DOES NOT CONFIRM"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-04
+status: open
