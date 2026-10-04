@@ -85,7 +85,8 @@ tags: [memory, state]
   H-029 GSCI roll 1/12 (D-059); **H-030 Treasury long into month-end 9/12 gates - strongest ever, not promoted**
   (OOS t 2.2, all pre variants t~3, scales with duration, stable both halves, not a roll artefact; D-060) →
   [h030-report](../results/h030-report.md); H-031 auction cycle 4/12 (D-061). Next: H-030 confirmation (UB/TN
-  replication ~$0.1 needs the user's OK; paper tracking). R9.1 done: tick runner now measures G12 (`research/placebo.py`). Next: R9.5 paper-tracking skeleton. Asked the user about forward paper tracking (R8.9, cents/day).
+  replication ~$0.1 needs the user's OK; paper tracking). R9.1 done: tick runner now measures G12 (`research/placebo.py`). R9.5 done: `scripts/paper_track.py` (trend252 + H-030 pre|3|all ledger, replay-tested;
+  forward running needs data = user's OK). Next: queue empty of $0 items except new ideas → write R10 ideas. Asked the user about forward paper tracking (R8.9, cents/day).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.5** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $3.4 of credit left. No more data purchases without the user. One year cannot pass G7.
 

@@ -112,7 +112,7 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
       (no Databento cost); fetch into config/ if the network allows, else park under "Needs the user".
 - [ ] R9.6 H-030 confirmation: pre-register a replication on UB + TN daily bars (not used so far; ~$0.1, needs the user's OK)
       with the exact H-030 rule fixed in advance (pre-window, k=3, long), and add H-030 to forward paper tracking (R8.9).
-- [ ] R9.5 Engineering E-2: forward paper-tracking skeleton for trend252, tested on cached data (running it
+- [x] R9.5 (2026-10-04: scripts/paper_track.py ledger + mark; engine.target_contracts refactor, identical to stored H-022 P&L to 1e-11; replay on Sept 2025 OK) Engineering E-2: forward paper-tracking skeleton for trend252, tested on cached data (running it
       forward waits for the user, R8.9).
 
 ## Later: new hypotheses (one at a time, mechanism first; see vault/03-order-flow/evidence-review.md)

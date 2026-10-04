@@ -47,10 +47,9 @@ def prepare(rd: RootData) -> Prepared:
     return Prepared(rd.root, rd.dates, r, sigma, price, rd.held, rd.closes, sig, rd)
 
 
-def simulate(preps: list[Prepared], variant: str, capital: float, slip_ticks: float, fee_side: float,
-             signal_override: dict | None = None, detail: bool = False) -> pd.DataFrame:
-    """Daily portfolio P&L (detail=True: one row per market-day). signal_override: root -> pd.Series
-    replacing the variant's signal (placebo)."""
+def target_contracts(preps: list[Prepared], variant: str, capital: float,
+                     signal_override: dict | None = None) -> dict[str, pd.Series]:
+    """Integer contracts decided at each date's close (traded at the next close), per root."""
     cal = sorted(set().union(*[p.dates for p in preps]))
     # 1. unscaled weights w = sig * 0.15 / sqrt(N) / sigma  (fraction of capital per market)
     sigs, active = {}, pd.Series(0, index=pd.Index(cal))
@@ -71,14 +70,26 @@ def simulate(preps: list[Prepared], variant: str, capital: float, slip_ticks: fl
         u = u.add(contrib.reindex(cal, fill_value=0.0), fill_value=0.0)
     rv = u.rolling(SCALE_WIN, min_periods=SCALE_MIN_OBS).std() * np.sqrt(252)
     k = (VOL_TARGET / rv).clip(upper=SCALE_CAP).fillna(1.0)
+    out = {}
+    for p in preps:
+        pv = BY_ROOT[p.root].point_value
+        kk = k.reindex(p.dates).to_numpy()
+        tgt = np.round(kk * w[p.root].to_numpy() * capital / (pv * p.price.fillna(1.0).to_numpy()))
+        out[p.root] = pd.Series(np.nan_to_num(tgt), index=pd.Index(p.dates))
+    return out
+
+
+def simulate(preps: list[Prepared], variant: str, capital: float, slip_ticks: float, fee_side: float,
+             signal_override: dict | None = None, detail: bool = False) -> pd.DataFrame:
+    """Daily portfolio P&L (detail=True: one row per market-day). signal_override: root -> pd.Series
+    replacing the variant's signal (placebo)."""
+    targets = target_contracts(preps, variant, capital, signal_override)
     # 3. per market: integer targets, lagged execution, P&L and costs
     rows = []
     for p in preps:
         spec = BY_ROOT[p.root]
         pv, cost_c = spec.point_value, slip_ticks * spec.tick_value + fee_side
-        kk = k.reindex(p.dates).to_numpy()
-        tgt = np.round(kk * w[p.root].to_numpy() * capital / (pv * p.price.fillna(1.0).to_numpy()))
-        tgt = np.nan_to_num(tgt)
+        tgt = targets[p.root].to_numpy()
         held = p.held.to_numpy()
         pos_prev, inst_prev = 0.0, None
         for j, d in enumerate(p.dates):
