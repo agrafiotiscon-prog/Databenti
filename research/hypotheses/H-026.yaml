@@ -1,0 +1,29 @@
+id: H-026
+title: Commodity basis-momentum - trade the 12 commodity futures by the momentum of front minus second-contract returns
+mechanism: >
+  Boons & Prado (2019 JF, "Basis-Momentum"): the difference between the past 12-month return of the
+  nearest and the second-nearest commodity future predicts returns, beyond carry and momentum. Payer:
+  imbalances between hedgers' and speculators' demand along the curve that market makers absorb
+  at a price; when the front outperforms the next contract, the curve is under supply/demand pressure
+  that resolves with a risk premium. They report it both cross-sectionally and as a time-series signal;
+  after H-024/H-025 (cross-sectional failures on this thin universe, D-054) the time-series form is the
+  primary test and the cross-sectional form is included only for completeness. Prior: low-moderate
+  (out-of-sample evidence after 2014 is thin; commodities lost money in H-022/H-024/H-025).
+direction: both
+horizon: "weeks to months (daily rebalance)"
+features: [daily_closes_v0_v1, contract_calendar]
+fixed:
+  universe: the 12 commodity markets of data/universe.py (energy CL NG RB HO; metals GC SI HG; grains ZC ZS ZW; livestock LE HE); other markets get signal 0. ohlcv-1d v.0/v.1 2010-06-07..2025-09-30 (development only; holdout spent, D-052)
+  returns: "near/far = the two instruments of v.0/v.1 on day t-1 ordered by expiry (portfolio/data.py); r_near(t), r_far(t) = each instrument's own close-to-close return t-1 -> t (NaN if unknown)"
+  score: "BM(t, L) = sum over (t-L, t] of [log(1+r_near) - log(1+r_far)], NaN until 80% of the window exists"
+  ts_variants: "signal = sign(BM)"
+  xs_variants: "portfolio.signals.cross_sectional across the 12 commodities (global, frac 1/3)"
+  sizing_execution_costs: exactly as H-022 (portfolio/engine.simulate). N_active counts all 26 markets with a valid vol, so the commodity sleeve is under-sized before the portfolio scale k (15% target / trailing realised vol, capped 2.5x) brings it back; this is accepted and identical across variants
+  protocol: walk-forward 36/12/12 months, variant chosen on train net p5 at fees x1.5 (D-023), G1-G12 via scripts/run_portfolio.py --hypothesis H-026; G3 uses the OOS daily t-stat
+  g12: each market's signal circularly shifted by an independent random offset (>= 63 days), 300 draws
+  target_metric: OOS annualised net return and Sharpe; user target (D-048) Sharpe >= 1.0
+space:
+  variant: [tsbm126, tsbm252, xsbm126, xsbm252]
+trial_budget: 4
+registered: 2026-10-04
+status: open

@@ -105,3 +105,42 @@ def h025(preps: list[Prepared]) -> dict:
         out[f"xsm{lb}_sector"] = cross_sectional(sc, by_sector=True)
         out[f"xsm{lb}_global"] = cross_sectional(sc, by_sector=False)
     return out
+
+
+COMMODITY_SECTORS = ("energy", "metals", "grains", "livestock")
+
+
+def near_far_returns(rd) -> pd.DataFrame:
+    """Own close-to-close returns t-1 -> t of the near and far instrument (by expiry) of day t-1's v.0/v.1."""
+    rows = {}
+    for a, b in zip(rd.dates, rd.dates[1:]):
+        i0, i1 = rd.held.get(a), rd.nxt.get(a)
+        if i1 is None or (isinstance(i1, float) and np.isnan(i1)) or i0 == i1:
+            continue
+        n_id, f_id = sorted((i0, i1), key=lambda i: rd.expiry_rank[i])
+        rr = []
+        for i in (n_id, f_id):
+            s = rd.closes[i]
+            pa, pb = s.get(a), s.get(b)
+            rr.append(pb / pa - 1 if pa is not None and pb is not None and pa > 0 else np.nan)
+        rows[b] = rr
+    df = pd.DataFrame.from_dict(rows, orient="index", columns=["near", "far"])
+    return df.reindex(rd.dates)
+
+
+def basis_momentum(rd, lookback: int) -> pd.Series:
+    nf = near_far_returns(rd)
+    d = np.log1p(nf["near"]) - np.log1p(nf["far"])
+    return d.rolling(lookback, min_periods=int(0.8 * lookback)).sum()
+
+
+@register("H-026")
+def h026(preps: list[Prepared]) -> dict:
+    com = [p for p in preps if BY_ROOT[p.root].sector in COMMODITY_SECTORS]
+    zero = {p.root: pd.Series(0.0, index=pd.Index(p.dates)) for p in preps}
+    out = {}
+    for lb in (126, 252):
+        sc = {p.root: basis_momentum(p.rd, lb) for p in com}
+        out[f"tsbm{lb}"] = {**zero, **{r: np.sign(s).fillna(0.0) for r, s in sc.items()}}
+        out[f"xsbm{lb}"] = {**zero, **cross_sectional(sc, by_sector=False)}
+    return out

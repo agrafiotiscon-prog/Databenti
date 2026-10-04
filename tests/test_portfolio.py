@@ -116,3 +116,16 @@ def test_h025_builder_ranks_winners_long():
     d = preps[0].dates[-1]
     assert out["xsm252_sector"]["ES"][d] == 1.0 and out["xsm252_sector"]["YM"][d] == -1.0
     assert out["xsm252_sector"]["ES"].iloc[:200].eq(0).all()        # warm-up: 80% of 252 + 21 skip
+
+
+def test_basis_momentum_sign_and_commodity_only():
+    from portfolio.signals import BUILDERS, basis_momentum
+    # make the far (instrument 2) lag the near: scale its moves down -> near outperforms in an uptrend
+    rd = make_root(root="CL", drift=0.003)
+    rd.closes[2] = rd.closes[1] ** 0.8 * rd.closes[1].iloc[0] ** 0.2
+    bm = basis_momentum(rd, 126)
+    assert bm.iloc[150] > 0
+    preps = [prepare(rd), prepare(make_root(root="ES"))]
+    out = BUILDERS["H-026"](preps)
+    assert set(out) == {"tsbm126", "tsbm252", "xsbm126", "xsbm252"}
+    assert (out["tsbm126"]["ES"] == 0).all() and out["tsbm126"]["CL"].iloc[150] == 1.0
