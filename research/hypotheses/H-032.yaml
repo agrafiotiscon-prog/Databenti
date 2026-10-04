@@ -1,0 +1,24 @@
+id: H-032
+title: Confirmation of H-030 on Treasury futures never used before - long TN (Ultra 10-Year) and UB (Ultra Bond) into month-end
+mechanism: >
+  H-030 (D-060) found Treasury futures rise over the last days of each month (index duration extension /
+  month-end institutional flows), scaling with duration and stable over 2010-2025, but it was not promoted
+  (9/12 gates). If the mechanism is real it must also appear in Treasury futures that played no part in
+  finding it. TN (Ultra 10-Year, listed 2016) and UB (Ultra T-Bond) were never downloaded or looked at in
+  this project. This is a CONFIRMATION of one fixed rule with no free parameters; the user approved the data
+  (~$0.1, 2026-10-04: "if u think it is worth it do it"). Caveat: TN/UB are highly correlated with ZN/ZB, so
+  this mostly tests that H-030 was not an artefact of the four contracts used; it is not fully independent.
+direction: follow
+horizon: "3 trading days, monthly"
+features: [daily_closes_v0, month_calendar]
+fixed:
+  rule: "H-030 variant pre|3 (the last walk-forward fold's choice): long from the close 3 trading days before month-end to the month-end close; month-end = last trading date of the month in each contract's own data"
+  markets: "TN (point value $1,000, tick 1/64) and UB (point value $1,000, tick 1/32); $250,000 notional each, integer contracts >= 1"
+  data: "ohlcv-1d v.0/v.1 2010-06-07..2025-09-30 (development period only; the spent holdout stays locked); TN from its 2016 listing"
+  costs: "1 tick + $2.26 per contract per side; roll inside a window pays 2 sides; stress = 2 ticks + fees x1.5"
+  criteria: "CONFIRMS if ALL of: (1) pooled net > 0 at stress costs; (2) per-window t >= 2 on pooled window P&L; (3) drift-neutral: t >= 2 for (window return - the market's mean 3-day return) pooled over markets/windows; (4) random-window placebo p <= 0.05 (same markets, same 3-day long, random trading dates >= 6 days from month-end, one per month, 1,000 draws). Otherwise DOES NOT CONFIRM. Reported, not used to decide: per market, by year, roll vs non-roll months"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-04
+status: open
