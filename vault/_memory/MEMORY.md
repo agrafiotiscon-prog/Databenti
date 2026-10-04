@@ -88,8 +88,9 @@ tags: [memory, state]
   replication ~$0.1 needs the user's OK; paper tracking). R9.1 done: tick runner now measures G12 (`research/placebo.py`). R9.5 done: `scripts/paper_track.py` (trend252 + H-030 pre|3|all ledger, replay-tested;
   forward running needs data = user's OK). **H-032 CONFIRMS H-030 on TN/UB** (never used before;
   t 4.5, drift-neutral t 5.1, 15/16 yrs; D-062) → [h032-report](../results/h032-report.md). Working book trend252 + H-030 at
-  15% vol: hindsight 12.7%/yr, Sharpe 0.82 → [combined](../results/combined-trend-h030-descriptive.md). Next: R9.7 forward
-  paper tracking live (user OK'd: 'if u think it is worth it do it'). Asked the user about forward paper tracking (R8.9, cents/day).
+  15% vol: hindsight 12.7%/yr, Sharpe 0.82 → [combined](../results/combined-trend-h030-descriptive.md). **Forward paper tracking LIVE** from 2026-10-05 (ROUTINE step 2b,
+  `paper_track.py --live`, D-063). $100k whole contracts, last 5 y: book +3.9%/yr (H-030 +4.7%, trend −0.8%: trend
+  sleeve untradeable at $100k) → [100k](../results/combined-book-100k-last5y.md). Next: R9.8 micro contracts. Asked the user about forward paper tracking (R8.9, cents/day).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $121.6** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $3.3 of credit left. No more data purchases without the user. One year cannot pass G7.
 

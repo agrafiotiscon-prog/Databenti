@@ -1,6 +1,7 @@
 """Forward paper tracking (R9.5): record what the confirmed/candidate rules would hold, day by day. No broker.
 
   python scripts/paper_track.py --asof 2025-09-30 [--ledger research/paper/ledger.csv] [--replay-days 0]
+  python scripts/paper_track.py --live                 # forward: fetch new daily bars, log every new closed day
 
 Sleeves (rules fixed in advance, nothing is tuned here):
   * trend252 - H-023's confirmed trend sleeve: portfolio.engine.target_contracts on the 26 markets, $1M
@@ -100,18 +101,72 @@ def mark(ledger: Path) -> pd.DataFrame:
     return pd.DataFrame(out, columns=["date", "sleeve", "root", "gross"])
 
 
+LIVE_START = date(2026, 10, 5)        # first forward trading day (D-063); earlier data is signal warm-up only
+MAX_FETCH_USD = 0.05                  # per run, all symbols together (user-approved forward tracking, R9.7)
+_spent = [0.0]
+
+
+def live_bars(dl, sym: str, today: date):
+    """Development file + spent-holdout file (warm-up only, D-063) + forward files fetched since LIVE_START.
+    Fetches [last fetched end, today) once per day when missing (cost-guarded)."""
+    from datetime import datetime, timezone
+    from data.cost_guard import Request
+    folder = dl.cache_dir / dl.dataset / "ohlcv-1d-range" / sym
+    parts = [load_bars(path_for(dl, sym))]
+    hold = folder / "2025-10-01_2026-10-04.dbn.zst"
+    if hold.exists():
+        parts.append(load_bars(hold))
+    fwd = sorted(folder.glob("fwd_*.dbn.zst"))
+    start = max([date.fromisoformat(f.stem.split(".")[0].split("_")[2]) for f in fwd], default=LIVE_START)
+    if today > start:
+        iso = lambda d: datetime.combine(d, datetime.min.time(), tzinfo=timezone.utc).isoformat()   # noqa: E731
+        req = Request(dl.dataset, "ohlcv-1d", sym, "continuous", iso(start), iso(today))
+        path = folder / f"fwd_{start}_{today}.dbn.zst"
+        try:
+            cost = dl.guard.check([req])
+            if _spent[0] + cost > MAX_FETCH_USD:
+                raise RuntimeError(f"run fetch cap ${MAX_FETCH_USD} reached")
+            dl.check_total_cap(cost)
+            _spent[0] += cost
+            dl._download([(req, path)])
+        except Exception as e:                      # no new data yet (weekend/holiday) or fetch failure: keep going
+            print(f"  [live] {sym}: no fetch ({type(e).__name__}: {str(e)[:80]})")
+        fwd = sorted(folder.glob("fwd_*.dbn.zst"))
+    for f in fwd:
+        try:
+            parts.append(load_bars(f))
+        except Exception:
+            pass
+    df = pd.concat(parts)
+    return df[~df.index.duplicated(keep="last")].sort_index()
+
+
 def main(argv=None) -> int:
     from data.download import Downloader
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--asof", type=date.fromisoformat, required=True)
+    ap.add_argument("--asof", type=date.fromisoformat, default=None)
+    ap.add_argument("--live", action="store_true", help="fetch new bars and log every closed day >= LIVE_START")
     ap.add_argument("--replay-days", type=int, default=0, help="also write the N trading days before --asof")
     ap.add_argument("--ledger", type=Path, default=ROOT / "research" / "paper" / "ledger.csv")
     a = ap.parse_args(argv)
     dl = Downloader()
-    rds = {s.root: build(s.root, load_bars(path_for(dl, f"{s.root}.v.0")), load_bars(path_for(dl, f"{s.root}.v.1")))
-           for s in UNIVERSE}
-    cal = sorted(set().union(*[rd.dates for rd in rds.values()]))
-    days = [d for d in cal if d <= a.asof][-(a.replay_days + 1):]
+    if a.live:
+        today = date.today()
+        rds = {s.root: build(s.root, live_bars(dl, f"{s.root}.v.0", today), live_bars(dl, f"{s.root}.v.1", today))
+               for s in UNIVERSE}
+        cal = sorted(set().union(*[rd.dates for rd in rds.values()]))
+        done = set(pd.to_datetime(pd.read_csv(a.ledger)["asof"]).dt.date) if a.ledger.exists() else set()
+        days = [d for d in cal if d >= LIVE_START and d < today and d not in done]
+        if not days:
+            print("live: no new closed trading day since the last ledger entry")
+            return 0
+    else:
+        if a.asof is None:
+            raise SystemExit("--asof or --live is required")
+        rds = {s.root: build(s.root, load_bars(path_for(dl, f"{s.root}.v.0")), load_bars(path_for(dl, f"{s.root}.v.1")))
+               for s in UNIVERSE}
+        cal = sorted(set().union(*[rd.dates for rd in rds.values()]))
+        days = [d for d in cal if d <= a.asof][-(a.replay_days + 1):]
     for d in days:
         append(a.ledger, snapshot(rds, d))
     m = mark(a.ledger)

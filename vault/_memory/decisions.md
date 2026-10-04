@@ -352,3 +352,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-032 (pre-registered, data bought after registration, user OK): CONFIRMS H-030 on all four criteria (stress net +$180k, per-window t 4.46, drift-neutral t 5.05, placebo p 0.000, 15/16 years). H-030 pre|3|all becomes a confirmed sleeve. Working book = trend252 + H-030 risk-balanced at 15% vol (descriptive hindsight: 12.7%/yr, Sharpe 0.82, max DD -21%). Next: forward paper tracking of this exact book (user: 'if u think it is worth it do it').
 - **Why:** Independent-instrument confirmation of a fixed rule removes the main overfitting worry for H-030 (it still shares Treasury-market risk). The combined numbers are in-sample upper bounds; only forward data can confirm the book.
 - **Status:** active.
+
+## D-063 — Forward paper tracking live from 2026-10-05; spent holdout year used only as signal warm-up (2026-10-04)
+- **Decision:** scripts/paper_track.py --live runs at every routine firing (ROUTINE step 2b): fetches only new ohlcv-1d bars (run cap $0.05), logs trend252 + H-030 targets for every closed trading day from 2026-10-05. The 2025-10..2026-10 data (holdout, spent in D-052) is used only to warm up the trend signals, never to select or evaluate. $100k realism: the trend sleeve is nearly untradeable with full-size contracts (book +3.9%/yr over 2020-10..2025-09, almost all from H-030); micro contracts queued (R9.8).
+- **Why:** User approved forward tracking ('if u think it is worth it do it'). Forward data after 2026-10-04 is the only truly new evidence. Warm-up needs the most recent 252 days; using spent holdout data for that selects nothing.
+- **Status:** active.

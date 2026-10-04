@@ -118,9 +118,13 @@ future confirmation needs data after 2026-10-04 (forward test). Prefer ideas tha
 ## Later: new hypotheses (one at a time, mechanism first; see vault/03-order-flow/evidence-review.md)
 
 ## Next (user approved, 2026-10-04)
-- [ ] R9.7 Forward paper tracking live: daily fetch of the last few days of ohlcv-1d v.0/v.1 for the 26 markets (cost-guarded, cap $0.05/day),
+- [x] R9.7 (2026-10-04: scripts/paper_track.py --live + ROUTINE step 2b; first live day 2026-10-05) Forward paper tracking live: daily fetch of the last few days of ohlcv-1d v.0/v.1 for the 26 markets (cost-guarded, cap $0.05/day),
       run scripts/paper_track.py for the new dates (trend252 + H-030, book = combine.py 15% vol), commit the ledger daily;
       monthly summary vs the descriptive expectation (vault/results/combined-trend-h030-descriptive.md).
+
+- [ ] R9.8 $100k realism: whole contracts make the trend sleeve nearly untradeable at $100k (most contracts too large;
+      2023 had no positions). Map the universe to CME micro contracts where they exist (MES, MNQ, M2K, MYM, MGC, SIL,
+      MCL, M6E, M6A, M6B, micro ags?) and price the data before asking the user; re-run the $100k book descriptively.
 
 ## Needs the user
 - **(2026-10-04) H-030 confirmation (R9.6):** ~$0.1 of UB/TN daily bars for a pre-registered replication; and/or forward paper tracking. Asked in chat.
