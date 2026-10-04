@@ -85,3 +85,23 @@ def test_momentum_score_is_causal():
     p2.r = r2
     s2 = momentum_score(p2, 20, skip=5)
     assert np.allclose(s.iloc[:300].fillna(0), s2.iloc[:300].fillna(0))
+
+
+def test_carry_value_sign_and_annualisation():
+    from portfolio.signals import carry_value, expiry_spacing_years
+    rd = make_root(jump=40.0)                                 # far 40 points above near -> contango, negative carry
+    c = carry_value(rd)
+    sp = expiry_spacing_years(rd)
+    d = rd.dates[10]
+    assert c[d] < 0
+    assert np.isclose(c[d], np.log(rd.closes[1][d] / rd.closes[2][d]) / sp)
+
+
+def test_h024_builder_returns_all_registered_variants():
+    from portfolio.signals import BUILDERS
+    preps = [prepare(make_root(root=r, seed=i, jump=5.0 * (i - 2))) for i, r in enumerate(("ES", "NQ", "RTY", "YM"))]
+    out = BUILDERS["H-024"](preps)
+    assert set(out) == {"xsc_sector", "xsc_global", "xsc_sector_smooth", "xsc_global_smooth"}
+    d = preps[0].dates[100]
+    # 4 equity names, k = 1: largest carry (most backwardated: negative jump) long, most contango short
+    assert out["xsc_sector"]["ES"][d] == 1.0 and out["xsc_sector"]["YM"][d] == -1.0

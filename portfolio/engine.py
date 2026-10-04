@@ -29,6 +29,7 @@ class Prepared:
     held: pd.Series
     closes: dict
     signals: dict           # name -> pd.Series in [-1, 1]
+    rd: RootData | None = None
 
 
 def _trend(r: pd.Series, lookback: int) -> pd.Series:
@@ -43,7 +44,7 @@ def prepare(rd: RootData) -> Prepared:
     price = pd.Series({d: rd.closes[rd.held[d]].get(d, np.nan) for d in rd.dates})
     t126, t252, carry = _trend(r, 126), _trend(r, 252), carry_sign(rd)
     sig = {"trend126": t126, "trend252": t252, "carry": carry, "combo": (t252 + carry) / 2}
-    return Prepared(rd.root, rd.dates, r, sigma, price, rd.held, rd.closes, sig)
+    return Prepared(rd.root, rd.dates, r, sigma, price, rd.held, rd.closes, sig, rd)
 
 
 def simulate(preps: list[Prepared], variant: str, capital: float, slip_ticks: float, fee_side: float,

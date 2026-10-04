@@ -57,3 +57,36 @@ def cross_sectional(scores: dict[str, pd.Series], by_sector: bool = True, frac: 
         short = rk.le(k, axis=0) & ok.to_numpy()[:, None]
         out.loc[:, cols] = long.astype(float) - short.astype(float)
     return {r: out[r].reindex(scores[r].index).fillna(0.0) for r in scores}
+
+
+def expiry_spacing_years(rd) -> float:
+    """Median gap between consecutive contract expiries, from the last date each expired instrument
+    appears in v.0/v.1 (contract calendar, not prices). Falls back to a quarter if unknown."""
+    last = sorted(r[0] for r in rd.expiry_rank.values() if r[0] != pd.Timestamp.max.date())
+    gaps = [(b - a).days for a, b in zip(last, last[1:]) if (b - a).days > 0]
+    return float(np.median(gaps)) / 365.25 if gaps else 0.25
+
+
+def carry_value(rd) -> pd.Series:
+    """Annualised carry log(P_near / P_far) / spacing_years on each date (NaN if unknown)."""
+    sp = expiry_spacing_years(rd)
+    out = pd.Series(np.nan, index=pd.Index(rd.dates))
+    for d in rd.dates:
+        i0, i1 = rd.held.get(d), rd.nxt.get(d)
+        if i1 is None or (isinstance(i1, float) and np.isnan(i1)) or i0 == i1:
+            continue
+        p0, p1 = rd.closes[i0].get(d), rd.closes[i1].get(d)
+        if p0 is None or p1 is None or p0 <= 0 or p1 <= 0:
+            continue
+        near, far = (p0, p1) if rd.expiry_rank[i0] < rd.expiry_rank[i1] else (p1, p0)
+        out[d] = float(np.log(near / far)) / sp
+    return out
+
+
+@register("H-024")
+def h024(preps: list[Prepared]) -> dict:
+    raw = {p.root: carry_value(p.rd) for p in preps}
+    smooth = {r: s.rolling(63, min_periods=40).mean() for r, s in raw.items()}
+    return {"xsc_sector": cross_sectional(raw, by_sector=True), "xsc_global": cross_sectional(raw, by_sector=False),
+            "xsc_sector_smooth": cross_sectional(smooth, by_sector=True),
+            "xsc_global_smooth": cross_sectional(smooth, by_sector=False)}
