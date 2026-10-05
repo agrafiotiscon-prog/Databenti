@@ -417,3 +417,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Closed. Long 6 Treasury futures close day-1 to release-day close, 2010-2025: net -$221k (stress -$366k), per-window t -2.92, drift-neutral t -1.04, placebo p 0.67, 5/16 years. Employment days -4.8 bp (t -3.6), CPI +2.3 bp (t -0.3 after costs).
 - **Why:** The JLL (1998) announcement premium (1979-1993) is gone in 2010-2025; losses are mostly round-trip costs on 1-day holds (random days do as badly). Unlike FOMC (H-044), routine data releases carry no premium in Treasuries now.
 - **Status:** active.
+
+## D-076 — Scheduled-event channel closed except FOMC (2026-10-05)
+- **Decision:** R15.5 closed without new trials: no ECB/BoE/BoJ-day tests. Only FOMC windows are kept (H-044, H-045); routine data releases failed (H-047).
+- **Why:** Brusa, Savor & Wilson (2020 RoF, 'One Central Bank to Rule Them All'): the announcement premium exists for the FOMC only, not for the ECB, BoE or BoJ, globally and domestically. Testing them would spend trials on expected nulls (DSR penalty) for little prior.
+- **Status:** active.

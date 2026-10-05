@@ -88,3 +88,11 @@ the month-end mechanism from angles that are *new predictions*, not re-fits of H
 - `scripts/paper_summary.py`: from `research/paper/ledger.csv`, mark P&L per sleeve with costs, the risk-balanced book
   (combine.py weights from the descriptive history), and compare with the descriptive expectation; ROUTINE step 2b
   needs it on the first firing of each month (first due 2026-11-02).
+
+## R15 outcome (2026-10-05)
+- FOMC windows carry a premium outside equities: Treasuries day-1..day+1 (H-044, confirms) and short USD on the day
+  (H-045, confirms with a caveat). [paper] Hillenbrand 2025 RFS; Mueller, Tahbaz-Salehi & Vedolin 2017 JF.
+- Not worth testing / failed: routine data releases in Treasuries (H-047, JLL 1998 premium gone), CFTC hedgers'
+  liquidity provision (H-046, tradable part ~0), other central banks' meetings ([paper] Brusa, Savor & Wilson 2020 RoF,
+  "One Central Bank to Rule Them All": no premium for ECB/BoE/BoJ) - D-076.
+- Remaining cached-data ideas are thin; forward paper tracking of book v2 is the main evidence now.

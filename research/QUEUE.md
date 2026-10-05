@@ -170,7 +170,8 @@ instruments/data before it may join the paper book. Prefer $0 cached data; credi
 - [x] R15.4 CFTC hedging pressure → H-046 DOES NOT CONFIRM (D-074; net -5.3 bp/position, t -0.73, placebo p 0.26). (Kang, Rouwenhorst & Tang 2020 JF; Basu & Miffre 2013): free COT legacy files cached in
   cache/cftc/ (2009-2025). Pre-register a time-series rule (no cross-sectional ranking: D-054) before looking at P&L.
 - [x] R15.5a H-047 Treasuries on employment/CPI days (JLL 1998): DOES NOT CONFIRM (D-075).
-- [ ] R15.5 More published scheduled-event effects on rates/FX/commodities (e.g. Treasury returns before NFP/CPI, ECB days
+- [x] R15.5 closed (D-076): other central banks carry no announcement premium (Brusa, Savor & Wilson 2020 RoF); no trials spent.
+  Was: More published scheduled-event effects on rates/FX/commodities (e.g. Treasury returns before NFP/CPI, ECB days
   on 6E, EIA inventory days on CL) - literature first, fixed rule from the paper, one trial each.
 
 ## Needs the user

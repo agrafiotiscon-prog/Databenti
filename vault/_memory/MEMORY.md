@@ -107,7 +107,7 @@ tags: [memory, state]
   → [fomc-sleeves-and-book](../results/fomc-sleeves-and-book.md). First forward FOMC window: 2026-10-28 (enter 10-26).
   R15.4 H-046 CFTC hedgers' liquidity provision (KRT 2020, tradable part): does not confirm (t −0.73, D-074;
   `data/cot.py` loader kept). H-047 Treasuries on employment/CPI days (JLL 1998): does not confirm (D-075).
-  Next: R15.5 more scheduled-event papers (fixed rule, one trial each).
+  R15.5 closed (D-076): only FOMC carries an announcement premium (Brusa, Savor & Wilson 2020). Main work = paper tracking.
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $122.4** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $2.5 of credit left. No more data purchases without the user. One year cannot pass G7.
 
