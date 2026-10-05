@@ -154,7 +154,7 @@ instruments/data before it may join the paper book. Prefer $0 cached data; credi
 ## R13 (mechanism tests of the confirmed month-end family; $0 cached data)
 - [x] R13.1 (2026-10-05, D-068: dropped before registration - answer implied by H-030/H-032, parallel ~2 bp decline) H-042 Treasury curve flattener into month-end (DV01-neutral long ZB/short ZT; confirmation UB/TN vs ZF fixed in advance)
 - [x] R13.2 (2026-10-05, D-069: does not confirm, t -1.71) H-043 mid-month (15th) coupon reinvestment, long ZN/ZB (+TN/UB)
-- [ ] R13.3 E-3 scripts/paper_summary.py (monthly paper P&L summary for ROUTINE step 2b; first due 2026-11-02)
+- [x] R13.3 (2026-10-05: scripts/paper_summary.py, book weights fixed 0.76/6.49; tests; replay check OK) E-3 scripts/paper_summary.py (monthly paper P&L summary for ROUTINE step 2b; first due 2026-11-02)
 
 ## Needs the user
 - **(2026-10-04) H-030 confirmation (R9.6):** ~$0.1 of UB/TN daily bars for a pre-registered replication; and/or forward paper tracking. Asked in chat.

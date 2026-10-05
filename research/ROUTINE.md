@@ -12,7 +12,8 @@ is [research-loop](../vault/05-anti-overfitting/research-loop.md); the gates are
 2b. **Forward paper tracking (R9.7, user-approved, D-063):** run `python scripts/paper_track.py --live` first
    (fetches only new daily bars, run cap $0.05; logs trend252 + H-030 targets for every newly closed trading day
    from 2026-10-05 into `research/paper/ledger.csv`). Commit the ledger. No broker, no orders. On the first firing
-   of each month, write a short summary (paper P&L per sleeve vs the descriptive expectation) to `vault/results/`.
+   of each month, run `python scripts/paper_summary.py --month <previous month>` (writes `vault/results/paper-<month>.md`;
+   book weights fixed in advance, trend 0.76 / H-030 6.49) and commit it.
 3. Take the first open item in `QUEUE.md`. Work on it for at most ~40 minutes. If it is bigger,
    split it in `QUEUE.md` and do the first piece.
 4. Code changes need tests. `python -m pytest` and `python tools/vault.py check` must pass before
