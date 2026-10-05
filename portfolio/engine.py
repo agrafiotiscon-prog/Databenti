@@ -75,7 +75,7 @@ def target_contracts(preps: list[Prepared], variant: str, capital: float,
     k = (VOL_TARGET / rv).clip(upper=SCALE_CAP).fillna(1.0)
     out = {}
     for p in preps:
-        pv = (specs or BY_ROOT).get(p.root, BY_ROOT[p.root]).point_value
+        pv = ((specs or {}).get(p.root) or BY_ROOT[p.root]).point_value
         kk = k.reindex(p.dates).to_numpy()
         tgt = np.round(kk * w[p.root].to_numpy() * capital / (pv * p.price.fillna(1.0).to_numpy()))
         out[p.root] = pd.Series(np.nan_to_num(tgt), index=pd.Index(p.dates))
@@ -92,7 +92,7 @@ def simulate(preps: list[Prepared], variant: str, capital: float, slip_ticks: fl
     # 3. per market: integer targets, lagged execution, P&L and costs
     rows = []
     for p in preps:
-        spec = (specs or BY_ROOT).get(p.root, BY_ROOT[p.root])
+        spec = (specs or {}).get(p.root) or BY_ROOT[p.root]
         fee = fee_side.get(p.root, 0.0) if isinstance(fee_side, dict) else fee_side
         pv, cost_c = spec.point_value, slip_ticks * spec.tick_value + fee
         tgt = targets[p.root].to_numpy()
