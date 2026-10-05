@@ -152,8 +152,8 @@ instruments/data before it may join the paper book. Prefer $0 cached data; credi
       vault leaderboard before proposing anything similar to a closed idea). Credit left ~$2.5: no purchases > $0.50 without the user.
 
 ## R13 (mechanism tests of the confirmed month-end family; $0 cached data)
-- [ ] R13.1 H-042 Treasury curve flattener into month-end (DV01-neutral long ZB/short ZT; confirmation UB/TN vs ZF fixed in advance)
-- [ ] R13.2 H-043 mid-month (15th) coupon reinvestment, long ZN/ZB (+TN/UB)
+- [x] R13.1 (2026-10-05, D-068: dropped before registration - answer implied by H-030/H-032, parallel ~2 bp decline) H-042 Treasury curve flattener into month-end (DV01-neutral long ZB/short ZT; confirmation UB/TN vs ZF fixed in advance)
+- [x] R13.2 (2026-10-05, D-069: does not confirm, t -1.71) H-043 mid-month (15th) coupon reinvestment, long ZN/ZB (+TN/UB)
 - [ ] R13.3 E-3 scripts/paper_summary.py (monthly paper P&L summary for ROUTINE step 2b; first due 2026-11-02)
 
 ## Needs the user

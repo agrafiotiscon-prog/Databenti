@@ -382,3 +382,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Not registered: converting H-030/H-032 mean window returns to yield changes with assumed durations (ZT 1.9, ZF 4.2, ZN 6.5, ZB 15, UB 20) gives about 2.1/2.9/2.5/1.8/1.9 bp - a roughly parallel decline, slightly larger in the belly. A DV01-neutral flattener would therefore earn ~0; testing it now would be a test whose answer is already known (contaminated).
 - **Why:** Pre-registration only makes sense for questions whose answer is not already implied by data seen. The finding itself is useful: the month-end flow is general duration buying across the curve, not long-end-specific.
 - **Status:** active.
+
+## D-069 — H-043 mid-month coupon reinvestment: does not confirm (2026-10-05)
+- **Decision:** H-043 (6 Treasury futures, pre-registered): net -$118k, t -1.71, drift-neutral t -1.25, placebo p 0.08 -> DOES NOT CONFIRM, closed. The month-end effect is tied to the index rebalance, not coupon cash.
+- **Why:** Fixed criteria; every market slightly negative around the 15th.
+- **Status:** active.

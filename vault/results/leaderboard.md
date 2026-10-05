@@ -5,7 +5,7 @@ tags: [phase-5, leaderboard, gates]
 ---
 # Hypothesis leaderboard (each evaluated exactly once; gates G1–G11 on out-of-sample data)
 
-Total hypothesis trials logged: **241** (every DSR uses this global count). "Best" = most gates
+Total hypothesis trials logged: **242** (every DSR uses this global count). "Best" = most gates
 passed out of sample; **no hypothesis passes all 11, so none is promoted.**
 
 **Holdout confirmation (D-052):** [H-023](h023-holdout.md) (trend252 portfolio + pre-FOMC sleeve, chosen in hindsight
@@ -37,6 +37,7 @@ and pre-registered in D-050) was run once on the 2025-10..2026-10 holdout: **CON
 | 2a | [H-035](h035-report.md) **month-end rebalancing pressure**: trade against MTD stocks-vs-bonds over the last 3/5 days (ES / 4 indices) | 15 y daily | 6/12 | 400 | +$315,850 on $1M (+2.5%/yr) | 1.25 (daily) | **passes G12 (p 0.047)**, all variants > 0; fails t/DSR, PBO 0.65, concentration, G7 - forward **watch sleeve** (D-065) |
 | 2b | [H-037](h037-report.md) FX month-end hedge rebalancing (FX with US equity MTD, last 3/5 days) | 15 y daily, 6 FX | 5/12 | 672 | +$77,805 | 0.93 (daily) | placebo p 0.057, all variants > 0, but **not confirmed on 6N/6M ([H-040](h040-report.md): t −0.36)** (D-066) |
 | — | [H-041](h041-report.md) trend252 **unchanged on 12 never-used markets** (confirmation) | 15 y daily, 12 new futures | n/a (confirmation) | — | +$440,895 (+3.0%/yr) | Sharpe 0.19 | **does not confirm** (bar 0.25, placebo p 0.27) - positive, weak; corr 0.61 with the 26-market trend book (D-067) |
+| 4n | [H-043](h043-report.md) Treasury futures around the 15th (coupon reinvestment) | 15 y daily, 6 Treasury futures | n/a (fixed) | 1,037 windows | −$118,318 | −1.71 | does not confirm: all markets slightly negative (D-069) |
 | 4l | [H-039](h039-report.md) long USD into quarter-ends | 15 y daily, 6 FX | 1/12 | 180 | −$28,650 | −0.53 | quarter-ends no different from month-ends (placebo p 1.0) |
 | 4m | [H-038](h038-report.md) return seasonality (same-calendar-month sign) | 15 y daily, 26 futures | 0/12 | 2,741 | −7.3%/yr | −1.97 | strongly negative, placebo p 0.97 |
 | 3g | [H-036](h036-report.md) volatility-managed trend (21/63/126-day book vol target) | 15 y daily, 26 futures | 6/12 | 9,767 | +6.2%/yr at 16% vol | 1.34 (daily) | no gain over trend252; placebo p 0.25 |

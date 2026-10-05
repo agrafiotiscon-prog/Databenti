@@ -19,4 +19,4 @@ space:
   variant: [fixed]
 trial_budget: 1
 registered: 2026-10-05
-status: open
+status: closed   # evaluated once 2026-10-05: DOES NOT CONFIRM (D-069)
