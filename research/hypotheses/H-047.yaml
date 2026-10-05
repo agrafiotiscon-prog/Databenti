@@ -1,0 +1,24 @@
+id: H-047
+title: Treasury futures on macro release days (employment report and CPI) - long over the release day
+mechanism: >
+  Jones, Lamont & Lumsdaine (1998 JFE, "Macroeconomic news and bond market volatility"): Treasury bonds earn a large
+  risk premium on employment and PPI release days and zero excess return on other days (1979-1993); announcement
+  volatility does not persist. Payer: holders of duration risk across scheduled news (compensation for announcement
+  risk). Deviation from the paper (fixed now, before results): CPI replaces PPI (no PPI calendar cached; CPI is the
+  main inflation release today). Prior: low - the sample is old and 2010-2025 is entirely post-sample; on ES the
+  same idea failed (H-015, 0/12), but that tested equities.
+direction: follow
+horizon: "1 trading day, ~24 times a year"
+features: [daily_closes_v0, macro_calendar]
+fixed:
+  rule: "long from the close of the trading day before each employment-report or CPI release day (8:30 ET, before the day session) to the release-day close. No free parameters"
+  markets: "ZT, ZF, ZN, ZB, TN (from 2016-01-11), UB; $250,000 notional each, integer contracts >= 1; pooled"
+  calendar: "config/macro_dates.csv (BLS empsit + cpi release dates), 2010-06..2025-09; a day with both counts once"
+  data: "ohlcv-1d v.0/v.1 2010-06-07..2025-09-30 (development only)"
+  costs: "1 tick + $2.26 per contract per side; stress = 2 ticks + fees x1.5"
+  criteria: "CONFIRMS if ALL of: (1) pooled net > 0 at stress costs; (2) per-window t >= 2; (3) drift-neutral t >= 2; (4) random-day placebo p <= 0.05 (same markets, one random trading day per release, >= 2 trading days from any release day, 1,000 draws); (5) additivity: per-window t >= 2 on windows whose exposure day is not inside an H-030 (last 3 days of a month) or H-044 (FOMC day-1..day+1) window. Otherwise DOES NOT CONFIRM. Reported: employment vs CPI, by year, by market"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-05
+status: open
