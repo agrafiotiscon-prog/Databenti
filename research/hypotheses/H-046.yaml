@@ -1,0 +1,27 @@
+id: H-046
+title: Hedgers provide liquidity - long commodities commercials bought last week, short those they sold (tradable part only)
+mechanism: >
+  Kang, Rouwenhorst & Tang (2020 JF, "A Tale of Two Premiums"): short-term position changes are driven by impatient
+  speculators who demand liquidity; commercial hedgers supply it and are paid. Ranking 26 commodities each Tuesday
+  on the prior week's change in hedgers' net long position (scaled by open interest), the half most bought by
+  hedgers beats the half most sold by 0.43% over 20 days (t 4.16; quintiles 0.67%), 1994-2012. About half accrues on
+  days 1-4, BEFORE the CFTC report is public (Friday 15:30 ET), so only days 5-20 are tradable; hedgers buy recent
+  losers, so the signal overlaps with short-term reversal. Payer: speculators' demand for immediacy. Prior: low-moderate
+  (the tradable half is ~0.2%/20 days gross; 2013-2025 is post-sample). Cross-sectional ranks failed twice here
+  (H-024/H-025, D-054) but this is the paper's own design on a commodity-only universe.
+direction: follow
+horizon: "15 trading days, weekly overlapping cohorts"
+features: [cftc_cot_legacy_futures_only, daily_closes_v0]
+fixed:
+  signal: "for COT as-of Tuesday t: dH = [(commercial long - commercial short)_t - (same)_{t-1}] / open interest_{t-1}, legacy futures-only report (cache/cftc/deacotYYYY.zip)"
+  rule: "each Tuesday t, rank the available markets on dH; long the top floor(n/2), short the bottom floor(n/2), equal notional; enter at the close of the 5th trading day after t (after Friday's release, also safe in holiday weeks) and exit at the close of the 20th trading day after t, on each market's own calendar. No free parameters"
+  markets: "18 commodities: CL NG RB HO GC SI HG PL PA ZC ZS ZW KE ZL ZM LE HE GF; $1M notional per market per cohort (integer contracts; rounding negligible)"
+  exclusions: "as-of dates whose report was delayed by government shutdowns: 2013-10-01..2013-10-29 and 2018-12-24..2019-02-26"
+  data: "ohlcv-1d v.0/v.1 2010-06-07..2025-09-30 (development period only); COT 2009-2025"
+  costs: "1 tick + $2.26 per contract per side, every cohort pays its own entry and exit (no netting across cohorts: conservative); stress = 2 ticks + fees x1.5"
+  criteria: "CONFIRMS if ALL of: (1) net > 0 at stress costs; (2) t >= 2 on the daily P&L of the overlapping portfolio; (3) beyond reversal: intercept t >= 2 when its daily P&L is regressed on a benchmark built identically but ranked on minus the market's own Tuesday-to-Tuesday return; (4) placebo p <= 0.05: each week's dH vector replaced by that of a random other week (1,000 draws). Otherwise DOES NOT CONFIRM. Reported, not used to decide: 2010-2012 (paper overlap) vs 2013-2025, by year, by sector, long vs short legs"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-05
+status: open
