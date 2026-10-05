@@ -392,3 +392,18 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** After 242 trials, the only idea confirmed on unseen instruments is H-030 (break-even slippage 5-9 ticks/side, robust). Remaining cheap ideas on cached data are low-prior and each added trial raises the DSR bar for every future test. The routine therefore (1) keeps forward paper tracking as the main evidence stream, (2) adds new hypotheses only with a documented mechanism and a pre-planned confirmation on unseen data, (3) lists the high-value options that need the user: multi-year tick/MBO data for the original order-flow goal (~$140/yr PAYG), or more time for forward tracking.
 - **Why:** Honest research economics: more weak trials on the same data mostly add multiple-testing burden; forward data and genuinely new data are the real sources of new evidence.
 - **Status:** active.
+
+## D-071 — H-044 Treasuries around FOMC: CONFIRMS (2026-10-05)
+- **Decision:** H-044 (long ZT/ZF/ZN/ZB/TN/UB from close F-2 to close F+1, rule fixed from Hillenbrand 2025 RFS) passed all 5 pre-registered criteria: stress net +$207k, t 3.63, drift-neutral t 4.62, placebo p 0.002, t 2.28 without month-end overlap; 11/16 years; stronger after the paper's sample (2018-25 t 3.60). Added as a forward paper sleeve (h044).
+- **Why:** Second mechanism confirmed in the project (after H-030). Fixed rule taken from a paper, one trial, never tested here on rates. Caveats: fat-tailed event P&L, 8 events/yr, correlated with H-045 (0.29).
+- **Status:** active.
+
+## D-072 — H-045 short USD on FOMC days: CONFIRMS with a caveat (2026-10-05)
+- **Decision:** H-045 (long 8 CME FX futures = short USD, close F-1 to close F, rule from Mueller, Tahbaz-Salehi & Vedolin 2017 JF) passed all 4 criteria: stress net +$88k, t 3.44, drift-neutral t 4.08, placebo p 0.000, 12/16 years. Added as forward paper sleeve h045, weaker than H-044.
+- **Why:** Caveat recorded: negative in 2010-2014 (t -0.95), which overlaps the paper's sample; all profit is post-2015 (t 5.09). It may be a regime, not the paper's effect. Treat as lower confidence than H-030/H-044.
+- **Status:** active.
+
+## D-073 — Book v2 = trend252 + H-030 + H-044 + H-045, weights fixed before forward data (2026-10-05)
+- **Decision:** paper_summary.py reports book v2 (trend 0.57, H-030 4.10, H-044 1.84, H-045 3.58 x the sleeve definitions) next to book v1. Weights = last-5-year mean ERC multipliers scaled to 15% vol. Descriptive hindsight: Sharpe 0.96 (~14%/yr at 15% vol), last 5 y Sharpe 0.74. H-035 stays watch-only.
+- **Why:** Fix the weights before any forward FOMC window (first: 2026-10-28) so the forward test cannot be tuned. Answers the user's question about returns when using everything.
+- **Status:** active.

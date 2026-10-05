@@ -23,7 +23,7 @@ tags: [memory, state]
   provisional lock from today − 12 months is enforced by `data/holdout.py`). Broker **not chosen**
   → IBKR fees as the default profile (`config/costs.toml`).
 
-## Current state (2026-10-04, session 6)
+## Current state (2026-10-05, session 6)
 - Phases 0–2 done. **Phase 2 features validated on the first real day** (2024-03-05, ES), incl.
   a visual check ([day-check](../results/day-check-2024-03-05-rth.md)).
 - **Real data** (key works; `DATABENTO_API_KEY` is an environment variable). Spent **≈ $122.4** (see Budget below)
@@ -59,7 +59,7 @@ tags: [memory, state]
   rebalancing: run 1 buggy (dropped 2/3 of months, looked good), fixed re-run 1/12 → closed (D-041/42).
   Lesson: check event coverage first. H-020 vol-managed long: 8/12 gates (most) but placebo p 0.118,
   79 trades → not promoted (D-044). H-021 buy-the-selloff 3/12, placebo p 0.99 (D-046).
-  Total hypothesis trials: 242. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
+  Total hypothesis trials: 244. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
   fills), conservative; queue_l1 mildly optimistic.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
@@ -99,6 +99,13 @@ tags: [memory, state]
   D-068); H-043 mid-month 15th: does not confirm (D-069). R13.3 done: `scripts/paper_summary.py` (monthly,
   ROUTINE 2b; fixed book weights). H-030 cost-robust (break-even
   5-9 ticks/side). D-070: diminishing returns on cached data → paper tracking is the main work; new data needs the user. Asked the user about forward paper tracking (R8.9, cents/day).
+- **R15 (user 2026-10-05: "continue search any concept or strategies"): two published FOMC effects CONFIRMED** (fixed
+  rules from papers, 1 trial each, never tested here on rates/FX): **H-044** long Treasuries F-2→F+1 (Hillenbrand 2025):
+  t 3.63, drift-neutral 4.62, placebo p 0.002, stronger post-2017 (D-071). **H-045** short USD on FOMC day (Mueller et
+  al. 2017): t 3.44, p 0.000, but 2010-14 negative (D-072, lower confidence). Paper sleeves h044/h045 live; **book v2**
+  (trend + H-030 + H-044 + H-045, weights fixed, D-073): descriptive Sharpe 0.96 ≈ 14%/yr at 15% vol, last 5 y 0.74
+  → [fomc-sleeves-and-book](../results/fomc-sleeves-and-book.md). First forward FOMC window: 2026-10-28 (enter 10-26).
+  Next: R15.4 CFTC hedging pressure (COT files cached, $0), R15.5 more scheduled-event papers.
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $122.4** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $2.5 of credit left. No more data purchases without the user. One year cannot pass G7.
 

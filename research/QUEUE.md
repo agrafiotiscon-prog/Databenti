@@ -163,6 +163,15 @@ instruments/data before it may join the paper book. Prefer $0 cached data; credi
 - [ ] R14.3 Candidate (needs ~$0.3 data, ask first): H-030 mechanism on Eurodollar/SOFR? No - index extension is a
       coupon-bond effect. Better: Treasury month-end on the spent holdout year is NOT allowed (spent); forward months only.
 
+## R15 (2026-10-05, user: "continue search any concept or strategies"): published FOMC effects on rates/FX
+- [x] R15.1 H-044 Treasuries around FOMC (Hillenbrand 2025): CONFIRMS (D-071) → vault/results/h044-report.md
+- [x] R15.2 H-045 short USD on FOMC days (Mueller et al. 2017): CONFIRMS with caveat (D-072) → h045-report.md
+- [x] R15.3 paper_track sleeves h044/h045, FOMC calendar to 2027, book v2 weights fixed (D-073) → fomc-sleeves-and-book.md
+- [ ] R15.4 CFTC hedging pressure (Kang, Rouwenhorst & Tang 2020 JF; Basu & Miffre 2013): free COT legacy files cached in
+  cache/cftc/ (2009-2025). Pre-register a time-series rule (no cross-sectional ranking: D-054) before looking at P&L.
+- [ ] R15.5 More published scheduled-event effects on rates/FX/commodities (e.g. Treasury returns before NFP/CPI, ECB days
+  on 6E, EIA inventory days on CL) - literature first, fixed rule from the paper, one trial each.
+
 ## Needs the user
 - **(2026-10-05) Highest-value next step is new data:** multi-year ES tick/MBO data for the original order-flow goal
   (~$140/yr PAYG or a subscription); the cached 238 days cannot pass G7. Until then the routine runs paper tracking.

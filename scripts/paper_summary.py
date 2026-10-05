@@ -26,6 +26,9 @@ from data.universe import BY_ROOT                           # noqa: E402
 
 FEE_SIDE = 2.26
 BOOK_WEIGHTS = {"trend252": 0.76, "h030": 6.49}             # fixed in advance (D-063 / combined-book note)
+# book v2 (D-073, fixed 2026-10-05 before any forward FOMC window): last-5-year mean ERC multipliers of the
+# 4-sleeve combination (vault/results/fomc-sleeves-and-book.md), scaled from 8.9% to 15% vol
+BOOK_WEIGHTS_V2 = {"trend252": 0.57, "h030": 4.10, "h044": 1.84, "h045": 3.58}
 
 
 def daily_pnl(ledger: pd.DataFrame) -> pd.DataFrame:
@@ -52,8 +55,14 @@ def summarize(ledger: pd.DataFrame, month: str | None) -> tuple[pd.DataFrame, pd
     if month:
         d = d[d["month"] <= month]
     by_sleeve = d.groupby(["month", "sleeve"])[["gross", "costs", "net"]].sum().round(0)
-    book = sum(w * d[d["sleeve"] == s].groupby("month")["net"].sum() for s, w in BOOK_WEIGHTS.items())
-    return by_sleeve, book.round(0) if isinstance(book, pd.Series) else pd.Series(dtype=float)
+    return by_sleeve, _book(d, BOOK_WEIGHTS), _book(d, BOOK_WEIGHTS_V2)
+
+
+def _book(d: pd.DataFrame, weights: dict) -> pd.Series:
+    months = sorted(d["month"].unique())
+    book = sum(w * d[d["sleeve"] == s].groupby("month")["net"].sum().reindex(months, fill_value=0.0)
+               for s, w in weights.items())
+    return book.round(0) if isinstance(book, pd.Series) else pd.Series(dtype=float)
 
 
 def main(argv=None) -> int:
@@ -67,7 +76,7 @@ def main(argv=None) -> int:
         print("no ledger yet")
         return 0
     led = pd.read_csv(a.ledger)
-    by_sleeve, book = summarize(led, a.month)
+    by_sleeve, book, book2 = summarize(led, a.month)
     month = a.month or (max(by_sleeve.index.get_level_values(0)) if len(by_sleeve) else date.today().strftime("%Y-%m"))
     cum = book.cumsum()
     lines = ["---", "type: result", f"date: {date.today().isoformat()}", "tags: [paper-tracking, forward]", "---",
@@ -77,7 +86,8 @@ def main(argv=None) -> int:
              "(vault/results/combined-trend-h030-descriptive.md).", "",
              "## By month and sleeve ($)", md(by_sleeve) if len(by_sleeve) else "none yet", "",
              "## Book by month ($, cumulative)", md(pd.DataFrame({"net": book, "cumulative": cum})) if len(book) else "none yet",
-             ""]
+             "", "## Book v2 by month ($, cumulative): trend 0.57 + H-030 4.10 + H-044 1.84 + H-045 3.58 (D-073)",
+             md(pd.DataFrame({"net": book2, "cumulative": book2.cumsum()})) if len(book2) else "none yet", ""]
     a.out_dir.mkdir(parents=True, exist_ok=True)
     out = a.out_dir / f"paper-{month}.md"
     out.write_text("\n".join(lines) + "\n")

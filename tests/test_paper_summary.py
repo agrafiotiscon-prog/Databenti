@@ -23,5 +23,6 @@ def test_book_uses_fixed_weights():
         ["2026-10-05", "h030", "ZN", 1, 100.0, 1], ["2026-10-06", "h030", "ZN", 1, 101.0, 1],
         ["2026-10-05", "trend252", "ES", 1, 5000.0, 3], ["2026-10-06", "trend252", "ES", 1, 5010.0, 3],
     ], columns=["asof", "sleeve", "root", "target", "close", "instrument_id"])
-    _, book = summarize(led, None)
+    _, book, book2 = summarize(led, None)
     assert np.isclose(book["2026-10"], 6.49 * 1000 + 0.76 * 500)
+    assert np.isclose(book2["2026-10"], 4.10 * 1000 + 0.57 * 500)     # v2: sleeves without rows count as 0

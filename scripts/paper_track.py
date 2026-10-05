@@ -9,6 +9,10 @@ Sleeves (rules fixed in advance, nothing is tuned here):
                from the close 3 trading days before month-end to the month-end close
   * h035_watch - H-035 rule "5|es" (not confirmed, 6/12 gates, placebo p 0.047; D-065): ES $1M notional over the last
                5 days of the month, side = -sign(ES - ZN month-to-date at entry)
+  * h044     - H-044 (confirmed 2026-10-05): long ZT/ZF/ZN/ZB ($250k each) from the close 2 trading days before a
+               scheduled FOMC announcement to the close of the day after it (TN/UB of the test are not in the universe)
+  * h045     - H-045 (confirmed 2026-10-05): long 6E/6J/6B/6A/6C/6S ($125k each, = short USD) from the close of the
+               day before a scheduled FOMC announcement to the announcement-day close (6N/6M not in the universe)
 For each as-of date the ledger gets one row per sleeve and market: the target contracts decided at that
 close (to be traded at the next close) and the close itself, so P&L can be marked later from the ledger alone.
 Running it forward needs fresh daily bars (a few cents/day of data) - only with the user's OK (R8.9/R9.6).
@@ -36,6 +40,38 @@ CAPITAL = 1_000_000.0
 H030_MARKETS, H030_K, H030_NOTIONAL = ("ZT", "ZF", "ZN", "ZB"), 3, 250_000.0
 H035_K, H035_NOTIONAL = 5, 1_000_000.0   # watch sleeve (D-065): pre-registered H-035 rule 5|es, not confirmed
 COLS = ["asof", "sleeve", "root", "target", "close", "instrument_id"]
+H044_MARKETS, H044_NOTIONAL = ("ZT", "ZF", "ZN", "ZB"), 250_000.0
+H045_MARKETS, H045_NOTIONAL = ("6E", "6J", "6B", "6A", "6C", "6S"), 125_000.0
+
+
+def fomc_dates() -> list[date]:
+    df = pd.read_csv(ROOT / "config" / "fomc_dates.csv", comment="#")
+    return [date.fromisoformat(x) for x in df["date"]]
+
+
+def days_until(dates: list, asof: date, f: date) -> int:
+    """Trading days in (asof, f]: from the known calendar, extended with US business days (federal holidays
+    excluded) beyond its end - in forward use the next days are not in the data yet."""
+    known = [d for d in dates if asof < d <= f]
+    last = max([asof] + [d for d in dates if d <= f])
+    if last >= f:
+        return len(known)
+    from pandas.tseries.holiday import USFederalHolidayCalendar
+    hol = USFederalHolidayCalendar().holidays(last, f).date.tolist()
+    return len(known) + int(np.busday_count(last + pd.Timedelta(days=1), f + pd.Timedelta(days=1), holidays=hol))
+
+
+def fomc_long(dates: list, asof: date, before: int, after: int, fomc: list | None = None) -> int:
+    """+1 if the position decided at asof's close is inside an FOMC window that is entered at the close `before`
+    trading days before the announcement day F and exited at the close `after` days after it."""
+    for f in fomc if fomc is not None else fomc_dates():
+        if f >= asof:
+            n = days_until(dates, asof, f)
+            if n <= before:
+                return 1 if n >= 1 or after >= 1 else 0
+        elif after >= 1 and (asof - f).days <= 10 and asof in dates and f in dates and 0 < dates.index(asof) - dates.index(f) < after:
+            return 1
+    return 0
 
 
 def h030_target(dates: list, asof: date, k: int = H030_K) -> int:
@@ -90,6 +126,19 @@ def snapshot(rds: dict, asof: date) -> pd.DataFrame:
         n = max(1, int(round(H030_NOTIONAL / (px * BY_ROOT[r].point_value))))
         # the full calendar of the month is needed to know month-end; use the uncut dates (exchange calendar)
         rows.append([asof, "h030", r, n * h030_target(rds[r].dates, asof), px, int(held)])
+    fomc = fomc_dates()
+    for sleeve, roots, notional, before, after in (("h044", H044_MARKETS, H044_NOTIONAL, 2, 1),
+                                                    ("h045", H045_MARKETS, H045_NOTIONAL, 1, 0)):
+        for r in roots:
+            if r not in rds:
+                continue
+            rd = cut(rds[r], asof)
+            if not rd.dates or rd.dates[-1] != asof:
+                continue
+            held = rd.held[asof]
+            px = float(rd.closes[held][asof])
+            n = max(1, int(round(notional / (px * BY_ROOT[r].point_value))))
+            rows.append([asof, sleeve, r, n * fomc_long(rd.dates, asof, before, after, fomc), px, int(held)])
     es = cut(rds["ES"], asof)
     if es.dates and es.dates[-1] == asof:
         held = es.held[asof]

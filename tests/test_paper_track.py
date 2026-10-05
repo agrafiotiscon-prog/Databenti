@@ -28,7 +28,7 @@ def test_snapshot_targets_match_full_history_targets(tmp_path):
     append(ledger, snapshot(rds, rds["ES"].dates[331]))             # re-run replaces, not duplicates
     assert len(pd.read_csv(ledger)) == 2 * len(snap)
     m = mark(ledger)
-    assert set(m["sleeve"]) <= {"trend252", "h030", "h035_watch"} and len(m) == len(snap)
+    assert set(m["sleeve"]) <= {"trend252", "h030", "h035_watch", "h044", "h045"} and len(m) == len(snap)
 
 
 def test_h035_side_window_and_sign():
@@ -40,3 +40,29 @@ def test_h035_side_window_and_sign():
     assert all(f == 0 for f in flags[:-6]) and flags[-1] == 0
     window = flags[-6:-1]
     assert len(set(window)) == 1 and window[0] in (-1, 1)        # one side for the whole window
+
+
+def test_fomc_long_matches_the_backtest_windows():
+    from scripts.paper_track import fomc_long
+    from scripts.run_fomc_xasset import windows
+    from research.daily_eval import Outright
+    rd = make_root(root="ZN", seed=3)
+    dates = rd.dates
+    fomc = [dates[100], dates[160], dates[161 + 40]]
+    m = Outright(rd, 1000, 15.625)
+    for before, after in ((2, 1), (1, 0)):
+        held = set()
+        for s, e, _ in windows(m, fomc, before, after):
+            held |= {d for d in dates if s <= d < e}             # decision closes with a position
+        flags = {d for d in dates[90:220] if fomc_long(dates, d, before, after, fomc)}
+        assert flags == {d for d in held if dates[90] <= d < dates[220]}
+
+
+def test_fomc_long_forward_uses_business_days_beyond_the_data():
+    from scripts.paper_track import fomc_long
+    dates = [d.date() for d in pd.bdate_range("2026-10-01", "2026-10-23")]
+    f = date(2026, 10, 28)                                        # Wednesday, after the data ends (Fri 23rd)
+    assert [fomc_long(dates, d, 2, 1, [f]) for d in dates[-3:]] == [0, 0, 0]
+    ext = dates + [date(2026, 10, 26)]                            # Monday = F-2 -> enter
+    assert fomc_long(ext, date(2026, 10, 26), 2, 1, [f]) == 1
+    assert fomc_long(ext, date(2026, 10, 26), 1, 0, [f]) == 0     # H-045 enters on Tuesday F-1
