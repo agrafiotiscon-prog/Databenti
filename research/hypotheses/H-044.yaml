@@ -1,0 +1,27 @@
+id: H-044
+title: Treasury futures around FOMC meetings - long the 3-day window (day before, day of, day after the announcement)
+mechanism: >
+  Hillenbrand (2025 RFS, "The Fed and the Secular Decline in Interest Rates") finds that essentially the whole
+  1989-2017 decline in long-term US Treasury yields happened in 3-day windows around scheduled FOMC meetings,
+  driven by lower expected short-rate paths communicated by the Fed (dot plot, guidance). If the Fed's
+  communication systematically pulls long-run rate expectations down (or a term premium for FOMC risk is paid
+  around meetings), long Treasury futures over that window earn more than on other 3-day windows. Payer:
+  holders of duration risk across the announcement / the drift of expectations. Prior: low-moderate - the paper's
+  sample is a secular bond bull market; 2018-2025 (post-sample, includes the 2022 hiking cycle) is a genuine
+  out-of-sample test. Never tested in this project on rates (FOMC dates were used only on equity index futures:
+  H-007, H-027).
+direction: follow
+horizon: "3 trading days, 8 times a year"
+features: [daily_closes_v0, fomc_calendar]
+fixed:
+  rule: "long from the close 2 trading days before the scheduled FOMC announcement day to the close of the trading day after it (exposed to day-1, day 0, day+1 returns: the paper's 3-day window). No free parameters (rule taken from the paper)"
+  markets: "ZT, ZF, ZN, ZB, TN (from its 2016-01-11 listing), UB; $250,000 notional each, integer contracts >= 1; pooled"
+  calendar: "config/fomc_dates.csv (scheduled statements only), 2010-06..2025-09"
+  data: "ohlcv-1d v.0/v.1 2010-06-07..2025-09-30 (development period only; the spent holdout stays locked)"
+  costs: "1 tick + $2.26 per contract per side; roll inside a window pays 2 sides; stress = 2 ticks + fees x1.5"
+  criteria: "CONFIRMS if ALL of: (1) pooled net > 0 at stress costs; (2) per-window t >= 2 on pooled window P&L; (3) drift-neutral t >= 2 (window return - the market's mean 3-day return, pooled); (4) random-window placebo p <= 0.05 (same markets, same 3-day long, one random window per FOMC meeting anchored on a trading day >= 5 trading days from any FOMC day, 1,000 draws); (5) additivity to H-030: per-window t >= 2 also on the windows that do NOT overlap an H-030 window (last 3 trading days of a month). Otherwise DOES NOT CONFIRM. Reported, not used to decide: per market, by year, 2010-2017 (paper overlap) vs 2018-2025 (post-sample)"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-05
+status: open

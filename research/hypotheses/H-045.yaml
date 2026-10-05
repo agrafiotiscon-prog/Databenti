@@ -1,0 +1,24 @@
+id: H-045
+title: Short the US dollar on FOMC announcement days (long CME FX futures vs USD)
+mechanism: >
+  Mueller, Tahbaz-Salehi & Vedolin (2017 JF, "Exchange Rates and Monetary Policy Uncertainty"): a strategy short
+  the USD and long other currencies earns significantly larger excess returns on scheduled FOMC announcement
+  days, more so for high interest-rate currencies; interpreted as compensation to constrained intermediaries for
+  monetary-policy uncertainty. Payer: global demand for dollar hedging intermediated by constrained dealers.
+  Prior: low-moderate - paper sample ends ~2014; 2015-2025 is post-sample. Never tested in this project
+  (H-037/H-039/H-040 used month-/quarter-ends, not FOMC).
+direction: follow
+horizon: "1 trading day, 8 times a year"
+features: [daily_closes_v0, fomc_calendar]
+fixed:
+  rule: "long each CME FX future (all quoted USD per foreign unit, so long = short USD) from the close of the trading day before the scheduled FOMC announcement day to the close of the announcement day (the announcement at 14:00 ET is before the daily close). No free parameters"
+  markets: "6E, 6J, 6B, 6A, 6C, 6S, 6N, 6M; $125,000 notional each, integer contracts >= 1; pooled (6N/6M were used only in H-040)"
+  calendar: "config/fomc_dates.csv (scheduled statements only), 2010-06..2025-09"
+  data: "ohlcv-1d v.0/v.1 2010-06-07..2025-09-30 (development period only)"
+  costs: "1 tick + $2.26 per contract per side; stress = 2 ticks + fees x1.5"
+  criteria: "CONFIRMS if ALL of: (1) pooled net > 0 at stress costs; (2) per-event t >= 2 on pooled event P&L; (3) drift-neutral t >= 2 (event-day return - the market's mean daily return, pooled); (4) random-day placebo p <= 0.05 (same markets, one random trading day per FOMC meeting >= 5 trading days from any FOMC day, 1,000 draws). Otherwise DOES NOT CONFIRM. Reported, not used to decide: per currency (high- vs low-rate), by year, 2010-2014 vs 2015-2025"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-05
+status: open
