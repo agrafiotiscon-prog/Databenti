@@ -53,3 +53,4 @@
 - 2026-10-04 R10 parallel: H-034 3/12 (drift), H-035 6/12 placebo p 0.047 -> watch sleeve in paper_track, H-036 6/12 no gain (D-065).
 - 2026-10-05 R11: H-037 5/12 -> H-040 (6N/6M, $0.16) DOES NOT CONFIRM; H-038 0/12; H-039 1/12 (D-066).
 - 2026-10-05 R12.1 H-041 trend252 on 12 unseen markets ($0.61 data): DOES NOT CONFIRM, +3.0%/yr Sharpe 0.19, placebo p 0.27 (D-067).
+- 2026-10-05 R12.2: R13 ideas written (H-042 curve flattener into month-end, H-043 mid-month coupon reinvestment, E-3 paper summary).

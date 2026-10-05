@@ -65,3 +65,26 @@ Code can be written and tested on cached data at $0; running it forward needs a 
   variants would be snooping. Confirmation must come from forward data.
 - VIX futures volatility risk premium: CFE data is not on GLBX.MDP3 (not in our dataset).
 - More equity calendar effects: repeatedly explained by drift (G12).
+
+## R13 (written 2026-10-05, after R9-R12)
+Evidence so far: the only idea confirmed on unseen instruments is the Treasury month-end long (H-030/H-032). Equity
+calendar effects reduce to drift; FX month-end (H-037) did not confirm; trend is weakly positive (H-041). So R13 tests
+the month-end mechanism from angles that are *new predictions*, not re-fits of H-030.
+
+### H-042 Treasury curve flattener into month-end (mechanism test)
+- **Mechanism:** index duration extension buys duration, i.e. mostly the long end [inferred from H-030: the effect
+  scales with duration, ZT 4 bp → ZB 27 bp]. A duration-neutral long ZB / short ZT (or long UB / short ZF) position
+  over the same 3 days should then earn without outright rate exposure. A pass would show the effect is about
+  *duration demand*, not a general bond rally - and give a sleeve uncorrelated with rate direction.
+- **Test:** DV01-neutral spread (contract ratio from duration proxies fixed in advance), same window as H-030; confirmation
+  pair (UB/TN vs ZF) fixed in the registry; placebo = random windows. $0 (data cached).
+### H-043 Mid-month coupon reinvestment in Treasury futures
+- **Mechanism:** Treasury coupons and principal are paid on the 15th and the last day of the month; index funds and
+  holders reinvest the cash, which is a scheduled buyer around the 15th too [inferred; practitioner lore, no
+  peer-reviewed futures study found - low prior]. H-030 covers month-end; the 15th is a separate, unseen date.
+- **Test:** long ZN/ZB (+ TN/UB, all already cached) from 2 trading days before to the first trading day on/after the
+  15th; placebo vs random mid-month windows; coverage of 15ths that are holidays/weekends. $0.
+### E-3 Monthly paper-tracking summary
+- `scripts/paper_summary.py`: from `research/paper/ledger.csv`, mark P&L per sleeve with costs, the risk-balanced book
+  (combine.py weights from the descriptive history), and compare with the descriptive expectation; ROUTINE step 2b
+  needs it on the first firing of each month (first due 2026-11-02).

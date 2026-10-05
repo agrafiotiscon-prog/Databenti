@@ -95,7 +95,8 @@ tags: [memory, state]
   → R10 run in parallel: H-034 turn-of-month 3/12 (drift), **H-035 rebalancing pressure 6/12, placebo
   p 0.047 → forward watch sleeve** (paper_track `h035_watch`), H-036 vol-managed trend no gain (D-065). R11: H-037 FX month-end 5/12 → NOT confirmed on 6N/6M
   (H-040); H-038 seasonality 0/12; H-039 quarter-end USD 1/12 (D-066). R12: H-041 trend252 on 12 unseen markets: +3.0%/yr, Sharpe 0.19,
-  placebo p 0.27 → does not confirm (weak positive; corr 0.61 with the 26-market book; D-067). Next: R12.2 ideas. Asked the user about forward paper tracking (R8.9, cents/day).
+  placebo p 0.27 → does not confirm (weak positive; corr 0.61 with the 26-market book; D-067). R12.2 → R13 queued (H-042 curve flattener into
+  month-end, H-043 mid-month coupon reinvestment, E-3 paper summary). Asked the user about forward paper tracking (R8.9, cents/day).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $122.4** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $2.5 of credit left. No more data purchases without the user. One year cannot pass G7.
 

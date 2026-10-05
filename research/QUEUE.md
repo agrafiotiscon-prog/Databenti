@@ -148,8 +148,13 @@ instruments/data before it may join the paper book. Prefer $0 cached data; credi
 
 ## R12
 - [x] R12.1 (2026-10-05, D-067: DOES NOT CONFIRM, Sharpe 0.19, placebo p 0.27; positive but weak) H-041 trend252 unchanged on 12 never-used markets.
-- [ ] R12.2 Next ideas: write 3 mechanism-first ideas (prefer forced flows in rates, the only confirmed family; check the
+- [x] R12.2 (2026-10-05: vault/04-backtesting/next-ideas-r9.md section R13) Next ideas: write 3 mechanism-first ideas (prefer forced flows in rates, the only confirmed family; check the
       vault leaderboard before proposing anything similar to a closed idea). Credit left ~$2.5: no purchases > $0.50 without the user.
+
+## R13 (mechanism tests of the confirmed month-end family; $0 cached data)
+- [ ] R13.1 H-042 Treasury curve flattener into month-end (DV01-neutral long ZB/short ZT; confirmation UB/TN vs ZF fixed in advance)
+- [ ] R13.2 H-043 mid-month (15th) coupon reinvestment, long ZN/ZB (+TN/UB)
+- [ ] R13.3 E-3 scripts/paper_summary.py (monthly paper P&L summary for ROUTINE step 2b; first due 2026-11-02)
 
 ## Needs the user
 - **(2026-10-04) H-030 confirmation (R9.6):** ~$0.1 of UB/TN daily bars for a pre-registered replication; and/or forward paper tracking. Asked in chat.
