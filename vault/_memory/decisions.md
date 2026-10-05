@@ -407,3 +407,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** paper_summary.py reports book v2 (trend 0.57, H-030 4.10, H-044 1.84, H-045 3.58 x the sleeve definitions) next to book v1. Weights = last-5-year mean ERC multipliers scaled to 15% vol. Descriptive hindsight: Sharpe 0.96 (~14%/yr at 15% vol), last 5 y Sharpe 0.74. H-035 stays watch-only.
 - **Why:** Fix the weights before any forward FOMC window (first: 2026-10-28) so the forward test cannot be tuned. Answers the user's question about returns when using everything.
 - **Status:** active.
+
+## D-074 — H-046 hedgers' liquidity provision (CFTC COT): does not confirm (2026-10-05)
+- **Decision:** Closed. Tradable version (enter day 5 after the COT date, after release; exit day 20) on 18 commodities 2010-2025: net -5.3 bp per cohort position, daily t -0.73, alpha vs reversal t 0.10 (corr 0.42 with reversal), placebo p 0.26, 6/16 years. Fails all 4 criteria.
+- **Why:** Consistent with the paper's own split: about half the effect is before the report is public, and the remainder has decayed post-2012 or is reversal. COT positioning adds nothing tradable on daily data here.
+- **Status:** active.

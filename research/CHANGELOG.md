@@ -58,3 +58,4 @@
 - 2026-10-05 R13.3: scripts/paper_summary.py (monthly forward paper P&L per sleeve + fixed-weight book; ROUTINE 2b updated); tests.
 - 2026-10-05 R14.1 H-030 cost sensitivity (break-even 5-9 ticks/side); D-070 diminishing returns on cached data.
 - 2026-10-05 R15: H-044 Treasuries around FOMC CONFIRMS (t 3.63, drift-neutral 4.62, placebo p 0.002; D-071); H-045 short USD on FOMC days CONFIRMS with caveat (t 3.44, p 0.000, 2010-14 negative; D-072); paper sleeves h044/h045 + FOMC calendar to 2027 + book v2 (descriptive Sharpe 0.96; D-073); CFTC COT 2009-2025 cached for R15.4. $0.
+- 2026-10-05 R15.4: H-046 hedgers' liquidity provision (CFTC COT legacy, 18 commodities, enter day 5 after the as-of date): DOES NOT CONFIRM (net -5.3 bp/position, daily t -0.73, alpha vs reversal t 0.10, placebo p 0.26; D-074). data/cot.py + tests. $0.

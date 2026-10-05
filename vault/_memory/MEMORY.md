@@ -59,7 +59,7 @@ tags: [memory, state]
   rebalancing: run 1 buggy (dropped 2/3 of months, looked good), fixed re-run 1/12 → closed (D-041/42).
   Lesson: check event coverage first. H-020 vol-managed long: 8/12 gates (most) but placebo p 0.118,
   79 trades → not promoted (D-044). H-021 buy-the-selloff 3/12, placebo p 0.99 (D-046).
-  Total hypothesis trials: 244. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
+  Total hypothesis trials: 245. R3.5 fill calibration (D-047): trade_through ≈ L3 FIFO (49 vs 52 maker
   fills), conservative; queue_l1 mildly optimistic.
 - Data cached: 238 RTH trade days 2024-11..2025-09; ES hourly bars 2010-06..2025-09 (both ranks).
   Holdout frozen at 2025-10-03. Next: H-007 confirmation needs the user (holdout unlock /
@@ -105,7 +105,8 @@ tags: [memory, state]
   al. 2017): t 3.44, p 0.000, but 2010-14 negative (D-072, lower confidence). Paper sleeves h044/h045 live; **book v2**
   (trend + H-030 + H-044 + H-045, weights fixed, D-073): descriptive Sharpe 0.96 ≈ 14%/yr at 15% vol, last 5 y 0.74
   → [fomc-sleeves-and-book](../results/fomc-sleeves-and-book.md). First forward FOMC window: 2026-10-28 (enter 10-26).
-  Next: R15.4 CFTC hedging pressure (COT files cached, $0), R15.5 more scheduled-event papers.
+  R15.4 H-046 CFTC hedgers' liquidity provision (KRT 2020, tradable part): does not confirm (t −0.73, D-074;
+  `data/cot.py` loader kept). Next: R15.5 more scheduled-event papers (fixed rule, one trial each).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $122.4** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $2.5 of credit left. No more data purchases without the user. One year cannot pass G7.
 
