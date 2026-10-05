@@ -52,3 +52,4 @@
 - 2026-10-04 H-033 short after month-end (TN/UB): does not confirm (D-064). R9.8 micros: $100k book +5.6%/yr last 5 y. R10 queued (user: continue until expectations exceeded).
 - 2026-10-04 R10 parallel: H-034 3/12 (drift), H-035 6/12 placebo p 0.047 -> watch sleeve in paper_track, H-036 6/12 no gain (D-065).
 - 2026-10-05 R11: H-037 5/12 -> H-040 (6N/6M, $0.16) DOES NOT CONFIRM; H-038 0/12; H-039 1/12 (D-066).
+- 2026-10-05 R12.1 H-041 trend252 on 12 unseen markets ($0.61 data): DOES NOT CONFIRM, +3.0%/yr Sharpe 0.19, placebo p 0.27 (D-067).

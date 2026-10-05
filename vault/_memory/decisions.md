@@ -372,3 +372,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-037 FX month-end hedge rebalancing (5/12, placebo p 0.057) was tested once on never-used 6N/6M (H-040, $0.16 data): DOES NOT CONFIRM (t -0.36, placebo p 0.23); not added. H-038 return seasonality 0/12 and H-039 quarter-end USD 1/12 closed. The confirmed set stays: trend252 + H-030 (+ H-035 as forward watch).
 - **Why:** Pre-registered confirmation on unseen instruments is the bar for a new sleeve; H-037 failed it. H-038/H-039 failed their own gates and placebos.
 - **Status:** active.
+
+## D-067 — H-041: trend252 weakly positive on 12 unseen markets, does not confirm; universe not extended (2026-10-05)
+- **Decision:** H-041 (pre-registered, $0.61 data): trend252 unchanged on TN, UB, 6N, 6M, KE, ZL, ZM, GF, PL, PA, EMD, NKD: +3.0%/yr, Sharpe 0.19, stress net +$184k, placebo p 0.27 -> DOES NOT CONFIRM. Correlation 0.61 with the 26-market trend book. The book stays trend252 (26) + H-030; trend is treated as a modest, positive-but-weak sleeve; the strongest evidence remains H-030.
+- **Why:** Fixed criteria; the out-of-sample trend premium is real in sign but too small to meet the bar, and adding markets mostly adds the same factor.
+- **Status:** active.

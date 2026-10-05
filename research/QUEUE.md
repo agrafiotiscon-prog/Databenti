@@ -146,6 +146,11 @@ instruments/data before it may join the paper book. Prefer $0 cached data; credi
 - [x] R11.2 (D-066: 0/12) H-038 return seasonality, time-series (Keloharju, Linnainmaa & Nyberg 2016)
 - [x] R11.3 (D-066: 1/12) H-039 quarter-end USD funding squeeze (Du, Tepper & Verdelhan 2018)
 
+## R12
+- [x] R12.1 (2026-10-05, D-067: DOES NOT CONFIRM, Sharpe 0.19, placebo p 0.27; positive but weak) H-041 trend252 unchanged on 12 never-used markets.
+- [ ] R12.2 Next ideas: write 3 mechanism-first ideas (prefer forced flows in rates, the only confirmed family; check the
+      vault leaderboard before proposing anything similar to a closed idea). Credit left ~$2.5: no purchases > $0.50 without the user.
+
 ## Needs the user
 - **(2026-10-04) H-030 confirmation (R9.6):** ~$0.1 of UB/TN daily bars for a pre-registered replication; and/or forward paper tracking. Asked in chat.
 - **(2026-10-04) Forward paper tracking of the confirmed trend252 book (R8.9):** a few cents/day of daily bars;
