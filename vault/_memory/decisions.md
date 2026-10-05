@@ -387,3 +387,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-043 (6 Treasury futures, pre-registered): net -$118k, t -1.71, drift-neutral t -1.25, placebo p 0.08 -> DOES NOT CONFIRM, closed. The month-end effect is tied to the index rebalance, not coupon cash.
 - **Why:** Fixed criteria; every market slightly negative around the 15th.
 - **Status:** active.
+
+## D-070 — Research on cached data at diminishing returns; routine favours forward evidence over low-prior trials (2026-10-05)
+- **Decision:** After 242 trials, the only idea confirmed on unseen instruments is H-030 (break-even slippage 5-9 ticks/side, robust). Remaining cheap ideas on cached data are low-prior and each added trial raises the DSR bar for every future test. The routine therefore (1) keeps forward paper tracking as the main evidence stream, (2) adds new hypotheses only with a documented mechanism and a pre-planned confirmation on unseen data, (3) lists the high-value options that need the user: multi-year tick/MBO data for the original order-flow goal (~$140/yr PAYG), or more time for forward tracking.
+- **Why:** Honest research economics: more weak trials on the same data mostly add multiple-testing burden; forward data and genuinely new data are the real sources of new evidence.
+- **Status:** active.

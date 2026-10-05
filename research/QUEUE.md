@@ -156,7 +156,16 @@ instruments/data before it may join the paper book. Prefer $0 cached data; credi
 - [x] R13.2 (2026-10-05, D-069: does not confirm, t -1.71) H-043 mid-month (15th) coupon reinvestment, long ZN/ZB (+TN/UB)
 - [x] R13.3 (2026-10-05: scripts/paper_summary.py, book weights fixed 0.76/6.49; tests; replay check OK) E-3 scripts/paper_summary.py (monthly paper P&L summary for ROUTINE step 2b; first due 2026-11-02)
 
+## R14 (2026-10-05, D-070: diminishing returns on cached data)
+- [x] R14.1 (2026-10-05) H-030 cost sensitivity: break-even slippage 5-9 ticks/side (descriptive; h030-report).
+- [ ] R14.2 Standing: paper tracking (ROUTINE 2b) and the monthly summary are the main work; between them, only
+      hypotheses with a documented mechanism AND a confirmation on unseen data planned in the registry.
+- [ ] R14.3 Candidate (needs ~$0.3 data, ask first): H-030 mechanism on Eurodollar/SOFR? No - index extension is a
+      coupon-bond effect. Better: Treasury month-end on the spent holdout year is NOT allowed (spent); forward months only.
+
 ## Needs the user
+- **(2026-10-05) Highest-value next step is new data:** multi-year ES tick/MBO data for the original order-flow goal
+  (~$140/yr PAYG or a subscription); the cached 238 days cannot pass G7. Until then the routine runs paper tracking.
 - **(2026-10-04) H-030 confirmation (R9.6):** ~$0.1 of UB/TN daily bars for a pre-registered replication; and/or forward paper tracking. Asked in chat.
 - **(2026-10-04) Forward paper tracking of the confirmed trend252 book (R8.9):** a few cents/day of daily bars;
   ~$3.4 credit left. Asked in chat.

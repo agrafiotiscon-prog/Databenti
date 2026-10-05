@@ -56,3 +56,4 @@
 - 2026-10-05 R12.2: R13 ideas written (H-042 curve flattener into month-end, H-043 mid-month coupon reinvestment, E-3 paper summary).
 - 2026-10-05 R13: H-042 dropped before registration (D-068: answer implied, parallel ~2bp decline); H-043 15th coupon reinvestment does not confirm (D-069).
 - 2026-10-05 R13.3: scripts/paper_summary.py (monthly forward paper P&L per sleeve + fixed-weight book; ROUTINE 2b updated); tests.
+- 2026-10-05 R14.1 H-030 cost sensitivity (break-even 5-9 ticks/side); D-070 diminishing returns on cached data.

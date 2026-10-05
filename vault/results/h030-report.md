@@ -112,3 +112,17 @@ lose by construction; G11). Not re-defined after the fact.
 **Status: strongest candidate so far; needs independent confirmation** - forward data (paper tracking) or a
 pre-registered replication on Treasury futures not used here (UB ultra bond, TN ultra 10-year; ~$0.1 of data,
 needs the user's OK).
+
+## Cost sensitivity (2026-10-05, descriptive; rule pre|3, $250k per market, 2010-2025)
+Net $ per 3-day window per market by slippage (ticks per side, plus $2.26 fees):
+
+| slip | ZT | ZF | ZN | ZB | TN | UB | all 6, total $k |
+|---|---|---|---|---|---|---|---|
+| 0 | 76 | 272 | 387 | 713 | 540 | 937 | 502 |
+| 1 (assumed) | 60 | 241 | 323 | 592 | 477 | 830 | 432 |
+| 2 | 44 | 209 | 260 | 472 | 414 | 722 | 363 |
+| 4 | 12 | 146 | 134 | 230 | 288 | 508 | 223 |
+| 6 | −20 | 83 | 8 | −11 | 162 | 293 | 84 |
+
+Break-even slippage per side: ZT 4.8, ZN 6.1, ZB 5.9, ZF 8.6, TN 8.6, UB 8.7 ticks - far above a realistic 0.5-1 tick for
+Treasury futures near the close. The sleeve is not a cost artefact; ZT is the thinnest margin (smallest duration).
