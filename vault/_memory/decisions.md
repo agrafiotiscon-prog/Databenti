@@ -367,3 +367,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-034 turn-of-month: 3/12, placebo p 0.88 (equity drift), closed. H-035 month-end rebalancing pressure: 6/12, placebo p 0.047, OOS +2.5%/yr, all variants > 0; not promoted; rule 5|es added to forward paper tracking as a watch sleeve (not in the book). H-036 vol-managed trend: 6/12, no Sharpe gain over trend252, closed.
 - **Why:** Pre-registered gates. H-035 has a documented mechanical payer and passes the placebo but not significance/stability; no unseen equity market exists for a confirmation, so forward data is the test.
 - **Status:** active.
+
+## D-066 — R11: H-037 not confirmed by H-040; H-038 and H-039 closed (2026-10-05)
+- **Decision:** H-037 FX month-end hedge rebalancing (5/12, placebo p 0.057) was tested once on never-used 6N/6M (H-040, $0.16 data): DOES NOT CONFIRM (t -0.36, placebo p 0.23); not added. H-038 return seasonality 0/12 and H-039 quarter-end USD 1/12 closed. The confirmed set stays: trend252 + H-030 (+ H-035 as forward watch).
+- **Why:** Pre-registered confirmation on unseen instruments is the bar for a new sleeve; H-037 failed it. H-038/H-039 failed their own gates and placebos.
+- **Status:** active.

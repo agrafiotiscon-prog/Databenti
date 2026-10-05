@@ -142,9 +142,9 @@ instruments/data before it may join the paper book. Prefer $0 cached data; credi
       of a confirmed rule; no new trial unless registered as a separate sizing rule).
 
 ## R11 (user: "OK move on"; run in parallel)
-- [ ] R11.1 H-037 FX month-end hedge rebalancing (Melvin & Prins 2015)
-- [ ] R11.2 H-038 return seasonality, time-series (Keloharju, Linnainmaa & Nyberg 2016)
-- [ ] R11.3 H-039 quarter-end USD funding squeeze (Du, Tepper & Verdelhan 2018)
+- [x] R11.1 (D-066: 5/12, not confirmed by H-040 on 6N/6M) H-037 FX month-end hedge rebalancing (Melvin & Prins 2015)
+- [x] R11.2 (D-066: 0/12) H-038 return seasonality, time-series (Keloharju, Linnainmaa & Nyberg 2016)
+- [x] R11.3 (D-066: 1/12) H-039 quarter-end USD funding squeeze (Du, Tepper & Verdelhan 2018)
 
 ## Needs the user
 - **(2026-10-04) H-030 confirmation (R9.6):** ~$0.1 of UB/TN daily bars for a pre-registered replication; and/or forward paper tracking. Asked in chat.
