@@ -108,6 +108,7 @@ tags: [memory, state]
   R15.4 H-046 CFTC hedgers' liquidity provision (KRT 2020, tradable part): does not confirm (t −0.73, D-074;
   `data/cot.py` loader kept). H-047 Treasuries on employment/CPI days (JLL 1998): does not confirm (D-075).
   R15.5 closed (D-076): only FOMC carries an announcement premium (Brusa, Savor & Wilson 2020). Main work = paper tracking.
+  Book v2 on $100k last 5 y (honest rounding, FX micros, H-044 as 1 ZN): +7.1%/yr, Sharpe 0.63 (~7.8% with micro trend).
 - **Budget (D-019/D-048):** $125 credit approved; code cap $123; **spent ≈ $122.4** (+ ≤ $0.15 possible
   partial charges from 3 interrupted streams) → ≈ $2.5 of credit left. No more data purchases without the user. One year cannot pass G7.
 

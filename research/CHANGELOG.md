@@ -61,3 +61,4 @@
 - 2026-10-05 R15.4: H-046 hedgers' liquidity provision (CFTC COT legacy, 18 commodities, enter day 5 after the as-of date): DOES NOT CONFIRM (net -5.3 bp/position, daily t -0.73, alpha vs reversal t 0.10, placebo p 0.26; D-074). data/cot.py + tests. $0.
 - 2026-10-05 R15.5a: H-047 Treasuries on employment/CPI release days (Jones, Lamont & Lumsdaine 1998): DOES NOT CONFIRM (net -$221k, t -2.92, drift-neutral -1.04, placebo p 0.67; D-075). run_fomc_xasset.py generalised. $0.
 - 2026-10-05 R15.5: closed without trials (D-076) - other central banks carry no announcement premium (Brusa, Savor & Wilson 2020 RoF). Paper tracker: no new closed day. $0.
+- 2026-10-05 routine: book v2 on $100k last 5 y (descriptive): +7.1%/yr, Sharpe 0.63; H-044 needs 1 ZN per window at this size. $0.
