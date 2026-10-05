@@ -1,8 +1,9 @@
 """FOMC-window confirmations on rates and FX (single evaluation each, fixed rules from the literature):
   H-044: long ZT/ZF/ZN/ZB/TN/UB over the 3-day window day-1..day+1 around the FOMC announcement (Hillenbrand 2025)
   H-045: long 8 CME FX futures (= short USD) on the FOMC announcement day (Mueller, Tahbaz-Salehi & Vedolin 2017)
+  H-047: long the 6 Treasury futures over employment-report and CPI release days (Jones, Lamont & Lumsdaine 1998)
 
-  python scripts/run_fomc_xasset.py --hypothesis H-044|H-045 [--coverage-only] [--draws 1000]
+  python scripts/run_fomc_xasset.py --hypothesis H-044|H-045|H-047 [--coverage-only] [--draws 1000]
 """
 from __future__ import annotations
 
@@ -32,14 +33,26 @@ EXTRA = {"TN": Spec("TN", "rates", 1000, 1 / 64), "UB": Spec("UB", "rates", 1000
 FIRST = {"TN": date(2016, 1, 11)}           # earlier TN bars are a different, illiquid product (see run_h032)
 # hypothesis -> (markets, reference calendar market, bars before the announcement day, bars after, notional)
 CONF = {"H-044": (["ZT", "ZF", "ZN", "ZB", "TN", "UB"], "ZN", 2, 1, 250_000.0),
-        "H-045": (["6E", "6J", "6B", "6A", "6C", "6S", "6N", "6M"], "6E", 1, 0, 125_000.0)}
-PAPER_END = {"H-044": 2017, "H-045": 2014}
-GAP = 5                                      # placebo anchors at least this many trading days from any FOMC day
+        "H-045": (["6E", "6J", "6B", "6A", "6C", "6S", "6N", "6M"], "6E", 1, 0, 125_000.0),
+        "H-047": (["ZT", "ZF", "ZN", "ZB", "TN", "UB"], "ZN", 1, 0, 250_000.0)}
+PAPER_END = {"H-044": 2017, "H-045": 2014, "H-047": 2017}    # H-047: paper ends 1993, so this is just a halves split
+GAPS = {"H-044": 5, "H-045": 5, "H-047": 2}  # placebo anchors at least this many trading days from any event day
+GAP = 5
 
 
 def fomc_dates() -> list[date]:
     df = pd.read_csv(ROOT / "config" / "fomc_dates.csv", comment="#")
     return [date.fromisoformat(s) for s in df["date"]]
+
+
+def macro_dates() -> pd.DataFrame:
+    df = pd.read_csv(ROOT / "config" / "macro_dates.csv", comment="#")
+    df["date"] = [date.fromisoformat(x) for x in df["date"]]
+    return df
+
+
+def event_dates(hyp: str) -> list[date]:
+    return sorted(set(macro_dates()["date"])) if hyp == "H-047" else fomc_dates()
 
 
 def windows(m: Outright, anchors, pre: int, post: int) -> list[tuple]:
@@ -77,8 +90,10 @@ def main(argv=None) -> int:
     ap.add_argument("--coverage-only", action="store_true")
     ap.add_argument("--draws", type=int, default=1000)
     a = ap.parse_args(argv)
+    global GAP
     HYP = a.hypothesis
     roots, ref, PRE, POST, NOTIONAL = CONF[HYP]
+    GAP = GAPS[HYP]
     hyp = registry.load(HYP)
     if not a.coverage_only and (hyp.status != "open" or trials.count(hypothesis=HYP) >= hyp.trial_budget):
         raise SystemExit(f"{HYP}: closed or already evaluated (single evaluation).")
@@ -93,7 +108,8 @@ def main(argv=None) -> int:
         rd = build(r, v0, v1)
         holdout_check(rd.dates)
         M[r] = Outright(rd, spec.point_value, spec.tick_value)
-    fomc = [d for d in fomc_dates() if M[ref].dates[0] <= d <= M[ref].dates[-1]]
+    fomc = [d for d in event_dates(HYP) if M[ref].dates[0] <= d <= M[ref].dates[-1]]
+    fed = [d for d in fomc_dates() if M[ref].dates[0] <= d <= M[ref].dates[-1]]
     for r, m in M.items():
         ev = [d for d in fomc if m.dates[0] <= d <= m.dates[-1]]
         cov.append({"market": r, "first": m.dates[0], "last": m.dates[-1], "fomc_in_range": len(ev),
@@ -118,6 +134,9 @@ def main(argv=None) -> int:
         net, _ = window_pnl(m, w, NOTIONAL, 1.0, fee)
         allL = pd.Series(m.r).rolling(L).sum().dropna().to_numpy()
         me = month_end_days(m)
+        if HYP == "H-047":                    # also exclude H-044 exposure days (FOMC day-1..day+1)
+            me |= {m.dates[j] for f in fed if f in m.pos_i for j in range(m.pos_i[f] - 1, m.pos_i[f] + 2)
+                   if 0 <= j < len(m.dates)}
         for s, e, _ in w:
             i0, i1 = m.pos_i[s], m.pos_i[e]
             ret = float(np.nansum(m.r[i0 + 1:i1 + 1]))
@@ -142,10 +161,12 @@ def main(argv=None) -> int:
             "placebo_p_le_0.05": p <= 0.05}
     if HYP == "H-044":
         crit["t_no_month_end_ge_2"] = t_nome >= 2
+    if HYP == "H-047":
+        crit["t_no_h030_h044_overlap_ge_2"] = t_nome >= 2
     verdict = "CONFIRMS" if all(crit.values()) else "DOES NOT CONFIRM"
     W["year"] = [d.year for d in W["fomc"]]
-    W["period"] = np.where(W["year"] <= PAPER_END[HYP], f"<= {PAPER_END[HYP]} (paper overlap)",
-                           f"> {PAPER_END[HYP]} (post-sample)")
+    lab = ("", "") if HYP == "H-047" else (" (paper overlap)", " (post-sample)")
+    W["period"] = np.where(W["year"] <= PAPER_END[HYP], f"<= {PAPER_END[HYP]}{lab[0]}", f"> {PAPER_END[HYP]}{lab[1]}")
     per = W.groupby("market").agg(windows=("pnl", "size"), net=("pnl", "sum"), mean_bp=("ret_bp", "mean"),
                                   win_rate=("pnl", lambda s: (s > 0).mean())).round(2)
     yrs = W.groupby("year")["pnl"].sum().round(0)
@@ -159,7 +180,17 @@ def main(argv=None) -> int:
     trials.append({"family": HYP, "hypothesis": HYP, "params": {"variant": "fixed"},
                    "data": f"{'/'.join(roots)} ohlcv-1d v.0/v.1 2010-06..2025-09, FOMC window -{PRE}..+{POST}",
                    "fill_mode": "closes, 1 tick + fees per side", "results": res})
-    title = {"H-044": "Treasury futures, long day-1..day+1 around FOMC", "H-045": "FX futures, short USD on FOMC days"}[HYP]
+    title = {"H-044": "Treasury futures, long day-1..day+1 around FOMC", "H-045": "FX futures, short USD on FOMC days",
+             "H-047": "Treasury futures, long on employment/CPI release days"}[HYP]
+    extra = []
+    if HYP == "H-047":
+        md_ = macro_dates()
+        types = md_.groupby("date")["type"].apply(lambda s: "+".join(sorted(set(s))))
+        W["release"] = W["fomc"].map(types)
+        bytype = W.groupby("release").agg(windows=("pnl", "size"), net=("pnl", "sum"), mean_bp=("ret_bp", "mean"),
+                                          t=("pnl", tstat)).round(2)
+        extra = ["## By release type", md(bytype), ""]
+        print(bytype.to_string())
     out = ROOT / "vault" / "results" / f"{HYP.lower().replace('-', '')}-report.md"
     out.write_text("\n".join([
         "---", "type: result", f"date: {date.today().isoformat()}", f"tags: [R15, {HYP}, fomc, confirmation]", "---",
@@ -169,7 +200,7 @@ def main(argv=None) -> int:
         "## Coverage (before P&L)", md(cov, index=False), "",
         "## Result", "```", "\n".join(f"{k}: {v}" for k, v in res.items()), "```", "",
         "## Paper overlap vs post-sample", md(period), "",
-        "## Per market", md(per), "", "## By year (pooled $)", md(yrs.to_frame("net")), ""]) + "\n")
+        "## Per market", md(per), "", "## By year (pooled $)", md(yrs.to_frame("net")), "", *extra]) + "\n")
     print(res); print(period.to_string()); print(per.to_string()); print(yrs.to_string()); print("saved", out)
     return 0
 

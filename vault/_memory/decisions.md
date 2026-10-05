@@ -412,3 +412,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** Closed. Tradable version (enter day 5 after the COT date, after release; exit day 20) on 18 commodities 2010-2025: net -5.3 bp per cohort position, daily t -0.73, alpha vs reversal t 0.10 (corr 0.42 with reversal), placebo p 0.26, 6/16 years. Fails all 4 criteria.
 - **Why:** Consistent with the paper's own split: about half the effect is before the report is public, and the remainder has decayed post-2012 or is reversal. COT positioning adds nothing tradable on daily data here.
 - **Status:** active.
+
+## D-075 — H-047 Treasuries on employment/CPI release days: does not confirm (2026-10-05)
+- **Decision:** Closed. Long 6 Treasury futures close day-1 to release-day close, 2010-2025: net -$221k (stress -$366k), per-window t -2.92, drift-neutral t -1.04, placebo p 0.67, 5/16 years. Employment days -4.8 bp (t -3.6), CPI +2.3 bp (t -0.3 after costs).
+- **Why:** The JLL (1998) announcement premium (1979-1993) is gone in 2010-2025; losses are mostly round-trip costs on 1-day holds (random days do as badly). Unlike FOMC (H-044), routine data releases carry no premium in Treasuries now.
+- **Status:** active.
