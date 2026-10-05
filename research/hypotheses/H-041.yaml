@@ -1,0 +1,22 @@
+id: H-041
+title: Out-of-sample confirmation of the trend252 rule on 12 CME markets never used for trend - standalone portfolio, unchanged rule
+mechanism: >
+  trend252 (12-month time-series momentum, Moskowitz, Ooi & Pedersen 2012) was selected in hindsight on the
+  26-market universe (H-022) and passed the single holdout year weakly (H-023, D-052). A rule that captures a real,
+  pervasive premium must also earn in markets that played no part in choosing it. TN, UB, 6N and 6M were downloaded
+  only for month-end windows (H-032/H-033/H-040), never for trend; KE, ZL, ZM, GF, PL, PA, EMD and NKD were never
+  downloaded. If it confirms, the wider universe also diversifies the book (trend Sharpe grows with breadth).
+direction: both
+horizon: "weeks to months"
+features: [daily_closes_v0_v1]
+fixed:
+  markets: "TN (from its 2016 listing), UB, 6N, 6M, KE, ZL, ZM, GF, PL, PA, EMD, NKD (specs in scripts/run_h041.py; quoted units checked against prices before any P&L)"
+  rule: "portfolio/engine.simulate variant trend252, unchanged (15%/sqrt(N) inverse-vol, book scaled to 15% trailing 252-day vol capped 2.5x, next-day-close execution, rolls pay both legs); capital $1M; integer contracts"
+  period: "ohlcv-1d v.0/v.1 2010-06-07..2025-09-30; P&L counted from 2011-06-01 (after the 252-day warm-up); development period only"
+  costs: "1 tick + $2.26 per contract side; stress 2 ticks + fees x1.5"
+  criteria: "CONFIRMS if ALL of: (1) net > 0 at stress costs; (2) annualised Sharpe >= 0.25 (trend252 on the original 26 markets: 0.41 in hindsight, 0.89 on the holdout); (3) placebo p <= 0.05 with each market's signal circularly shifted by an independent random offset >= 63 days (300 draws). Otherwise DOES NOT CONFIRM. Reported (not used to decide): by year, by market, correlation with trend252 on the 26 markets, and the 38-market book descriptively"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-05
+status: open
