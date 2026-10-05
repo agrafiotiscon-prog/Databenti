@@ -377,3 +377,8 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Decision:** H-041 (pre-registered, $0.61 data): trend252 unchanged on TN, UB, 6N, 6M, KE, ZL, ZM, GF, PL, PA, EMD, NKD: +3.0%/yr, Sharpe 0.19, stress net +$184k, placebo p 0.27 -> DOES NOT CONFIRM. Correlation 0.61 with the 26-market trend book. The book stays trend252 (26) + H-030; trend is treated as a modest, positive-but-weak sleeve; the strongest evidence remains H-030.
 - **Why:** Fixed criteria; the out-of-sample trend premium is real in sign but too small to meet the bar, and adding markets mostly adds the same factor.
 - **Status:** active.
+
+## D-068 — H-042 curve flattener dropped before registration (answer implied by H-030/H-032); month-end effect is a ~2 bp parallel yield decline (2026-10-05)
+- **Decision:** Not registered: converting H-030/H-032 mean window returns to yield changes with assumed durations (ZT 1.9, ZF 4.2, ZN 6.5, ZB 15, UB 20) gives about 2.1/2.9/2.5/1.8/1.9 bp - a roughly parallel decline, slightly larger in the belly. A DV01-neutral flattener would therefore earn ~0; testing it now would be a test whose answer is already known (contaminated).
+- **Why:** Pre-registration only makes sense for questions whose answer is not already implied by data seen. The finding itself is useful: the month-end flow is general duration buying across the curve, not long-end-specific.
+- **Status:** active.

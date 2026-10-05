@@ -1,0 +1,22 @@
+id: H-043
+title: Mid-month coupon reinvestment - long Treasury futures over the 3 trading days around the 15th (coupon/principal payment date)
+mechanism: >
+  US Treasury notes and bonds pay coupons (and mature) on the 15th and the last day of the month. Index funds and
+  other holders reinvest the cash, a scheduled, price-insensitive buyer around the 15th [inferred from market
+  practice; no peer-reviewed futures study found - low prior]. H-030/H-032 covered month-end; the 15th has never
+  been looked at in this project, so this is a clean test. Payer: none in the strict sense - a liquidity-demand
+  premium for absorbing reinvestment flow.
+direction: follow
+horizon: "3 trading days, monthly"
+features: [daily_closes_v0, month_calendar]
+fixed:
+  window: "T = first trading day on or after the 15th of each month (each contract's own calendar); long from the close of T-2 to the close of T+1 (exposed to days T-1, T, T+1)"
+  markets: "ZT, ZF, ZN, ZB, TN (from its 2016 listing), UB; $250,000 notional each, integer contracts >= 1; pooled"
+  data: "ohlcv-1d v.0/v.1 2010-06-07..2025-09-30 (cached; development period only)"
+  costs: "1 tick + $2.26 per contract per side; roll inside a window pays 2 sides; stress = 2 ticks + fees x1.5"
+  criteria: "CONFIRMS if ALL of: (1) pooled net > 0 at stress costs; (2) per-window t >= 2 on pooled window P&L; (3) drift-neutral t >= 2 for (window return - the market's mean 3-day return); (4) placebo p <= 0.05 (same 3-day long on random trading dates >= 4 days away from the 15th-anchor and >= 4 days away from month-end, one per month, 1,000 draws). Otherwise DOES NOT CONFIRM. Reported: per market, by year"
+space:
+  variant: [fixed]
+trial_budget: 1
+registered: 2026-10-05
+status: open
