@@ -66,3 +66,19 @@ def test_fomc_long_forward_uses_business_days_beyond_the_data():
     ext = dates + [date(2026, 10, 26)]                            # Monday = F-2 -> enter
     assert fomc_long(ext, date(2026, 10, 26), 2, 1, [f]) == 1
     assert fomc_long(ext, date(2026, 10, 26), 1, 0, [f]) == 0     # H-045 enters on Tuesday F-1
+
+
+def test_available_end_caps_and_caches():
+    from types import SimpleNamespace
+    import scripts.paper_track as pt
+    calls = []
+
+    class Meta:
+        def get_dataset_range(self, dataset):
+            calls.append(dataset)
+            return {"schema": {"ohlcv-1d": {"end": "2026-10-05T00:00:00.000000000Z"}}}
+    pt._avail.clear()
+    dl = SimpleNamespace(client=SimpleNamespace(metadata=Meta()), dataset="GLBX.MDP3")
+    assert pt.available_end(dl) == date(2026, 10, 5) and pt.available_end(dl) == date(2026, 10, 5)
+    assert len(calls) == 1
+    pt._avail.clear()

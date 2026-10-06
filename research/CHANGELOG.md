@@ -62,3 +62,4 @@
 - 2026-10-05 R15.5a: H-047 Treasuries on employment/CPI release days (Jones, Lamont & Lumsdaine 1998): DOES NOT CONFIRM (net -$221k, t -2.92, drift-neutral -1.04, placebo p 0.67; D-075). run_fomc_xasset.py generalised. $0.
 - 2026-10-05 R15.5: closed without trials (D-076) - other central banks carry no announcement premium (Brusa, Savor & Wilson 2020 RoF). Paper tracker: no new closed day. $0.
 - 2026-10-05 routine: book v2 on $100k last 5 y (descriptive): +7.1%/yr, Sharpe 0.63; H-044 needs 1 ZN per window at this size. $0.
+- 2026-10-06 routine: paper_track fetch capped at the published ohlcv-1d end (metadata.get_dataset_range; bars lag ~1 day) - a run before publication made 52 failing calls (10+ min); now 7 s and no calls. First live day (10-05) logs once its bar is published. $0.

@@ -184,6 +184,21 @@ MAX_FETCH_USD = 0.05                  # per run, all symbols together (user-appr
 _spent = [0.0]
 
 
+_avail: list = []
+
+
+def available_end(dl) -> date:
+    """Last date (exclusive) for which GLBX ohlcv-1d bars are published (one metadata call per run, free)."""
+    if not _avail:
+        try:
+            r = dl.client.metadata.get_dataset_range(dataset=dl.dataset)
+            _avail.append(date.fromisoformat(r["schema"]["ohlcv-1d"]["end"][:10]))
+        except Exception as e:                      # unknown: fall back to no cap (the fetch itself will refuse)
+            print(f"  [live] dataset range unavailable ({type(e).__name__})")
+            _avail.append(date.max)
+    return _avail[0]
+
+
 def live_bars(dl, sym: str, today: date):
     """Development file + spent-holdout file (warm-up only, D-063) + forward files fetched since LIVE_START.
     Fetches [last fetched end, today) once per day when missing (cost-guarded)."""
@@ -196,6 +211,7 @@ def live_bars(dl, sym: str, today: date):
         parts.append(load_bars(hold))
     fwd = sorted(folder.glob("fwd_*.dbn.zst"))
     start = max([date.fromisoformat(f.stem.split(".")[0].split("_")[2]) for f in fwd], default=LIVE_START)
+    today = min(today, available_end(dl))          # daily bars are published with a lag: never ask past it
     if today > start:
         iso = lambda d: datetime.combine(d, datetime.min.time(), tzinfo=timezone.utc).isoformat()   # noqa: E731
         req = Request(dl.dataset, "ohlcv-1d", sym, "continuous", iso(start), iso(today))
