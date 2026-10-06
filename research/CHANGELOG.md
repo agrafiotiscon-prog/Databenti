@@ -63,3 +63,4 @@
 - 2026-10-05 R15.5: closed without trials (D-076) - other central banks carry no announcement premium (Brusa, Savor & Wilson 2020 RoF). Paper tracker: no new closed day. $0.
 - 2026-10-05 routine: book v2 on $100k last 5 y (descriptive): +7.1%/yr, Sharpe 0.63; H-044 needs 1 ZN per window at this size. $0.
 - 2026-10-06 routine: paper_track fetch capped at the published ohlcv-1d end (metadata.get_dataset_range; bars lag ~1 day) - a run before publication made 52 failing calls (10+ min); now 7 s and no calls. First live day (10-05) logs once its bar is published. $0.
+- 2026-10-06 routine 08:15: first forward paper-tracking day logged (asof 2026-10-05, 41 rows: trend252 20/26 markets non-zero, h030/h044/h045/h035_watch flat as expected). Data $0.00 (52 daily bars). research/paper/ledger.csv committed.
