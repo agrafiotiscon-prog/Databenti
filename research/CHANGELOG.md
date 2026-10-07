@@ -64,3 +64,4 @@
 - 2026-10-05 routine: book v2 on $100k last 5 y (descriptive): +7.1%/yr, Sharpe 0.63; H-044 needs 1 ZN per window at this size. $0.
 - 2026-10-06 routine: paper_track fetch capped at the published ohlcv-1d end (metadata.get_dataset_range; bars lag ~1 day) - a run before publication made 52 failing calls (10+ min); now 7 s and no calls. First live day (10-05) logs once its bar is published. $0.
 - 2026-10-06 routine 08:15: first forward paper-tracking day logged (asof 2026-10-05, 41 rows: trend252 20/26 markets non-zero, h030/h044/h045/h035_watch flat as expected). Data $0.00 (52 daily bars). research/paper/ledger.csv committed.
+- 2026-10-07 routine 08:15: paper day 2 logged (asof 2026-10-06); first forward mark: trend252 +$4,615 gross (1-day, $1M sleeve definition), event sleeves flat. $0.00.
