@@ -49,16 +49,37 @@ def fomc_dates() -> list[date]:
     return [date.fromisoformat(x) for x in df["date"]]
 
 
+def future_days(last: date, end: date) -> list[date]:
+    """Weekdays in (last, end] that will have a GLBX daily bar: the bars are per UTC day, so in 2010-2025 every
+    weekday has one (US holidays included) except Good Friday and the observed Christmas / New Year's Day
+    (a Saturday New Year's Day is not moved to Friday 31 December, which trades). Used where forward
+    decisions need days that are not in the data yet, so they see the same calendar as the backtests."""
+    from pandas.tseries.holiday import (AbstractHolidayCalendar, GoodFriday, Holiday, nearest_workday,
+                                        sunday_to_monday)
+
+    class NoBar(AbstractHolidayCalendar):
+        rules = [GoodFriday, Holiday("Christmas", month=12, day=25, observance=nearest_workday),
+                 Holiday("New Year", month=1, day=1, observance=sunday_to_monday)]
+    if end <= last:
+        return []
+    skip = set(NoBar().holidays(last, end).date)
+    return [d.date() for d in pd.bdate_range(last + pd.Timedelta(days=1), end) if d.date() not in skip]
+
+
 def days_until(dates: list, asof: date, f: date) -> int:
-    """Trading days in (asof, f]: from the known calendar, extended with US business days (federal holidays
-    excluded) beyond its end - in forward use the next days are not in the data yet."""
+    """Trading days in (asof, f]: from the known calendar, extended with future_days beyond its end - in
+    forward use the next days are not in the data yet."""
     known = [d for d in dates if asof < d <= f]
     last = max([asof] + [d for d in dates if d <= f])
-    if last >= f:
-        return len(known)
-    from pandas.tseries.holiday import USFederalHolidayCalendar
-    hol = USFederalHolidayCalendar().holidays(last, f).date.tolist()
-    return len(known) + int(np.busday_count(last + pd.Timedelta(days=1), f + pd.Timedelta(days=1), holidays=hol))
+    return len(known) + len(future_days(last, f))
+
+
+def month_days(dates: list, asof: date) -> list[date]:
+    """Trading days of asof's month: the known dates, plus future_days when the data ends inside the month
+    (forward use: the month-end is not in the data yet)."""
+    month = [d for d in dates if (d.year, d.month) == (asof.year, asof.month)]
+    end = (pd.Timestamp(asof) + pd.offsets.MonthEnd(0)).date()
+    return month + future_days(max(dates), end)
 
 
 def fomc_long(dates: list, asof: date, before: int, after: int, fomc: list | None = None) -> int:
@@ -77,9 +98,9 @@ def fomc_long(dates: list, asof: date, before: int, after: int, fomc: list | Non
 def h030_target(dates: list, asof: date, k: int = H030_K) -> int:
     """+1 if the position decided at `asof`'s close must be long: i.e. asof is one of the k trading days
     before month-end (enter at the close k days before month-end, hold through the month-end close).
-    Month-end = last trading date of asof's month in `dates` (needs the month's calendar: in forward use the
-    CME holiday calendar, which is known in advance)."""
-    month = [d for d in dates if (d.year, d.month) == (asof.year, asof.month)]
+    Month-end = last trading date of asof's month (month_days: the data, extended with future_days in forward
+    use - the data then ends at asof, which is not the month-end)."""
+    month = month_days(dates, asof)
     if asof not in month:
         return 0
     i = month.index(asof)
@@ -90,7 +111,7 @@ def h035_side(rds: dict, asof: date, k: int = H035_K) -> int:
     """H-035 rule 5|es: during the last k decision closes before month-end, side = -sign(ES - ZN log return from
     the previous month-end close to the entry close E = k trading days before month-end); 0 otherwise."""
     es_dates = rds["ES"].dates
-    month = [d for d in es_dates if (d.year, d.month) == (asof.year, asof.month)]
+    month = month_days(es_dates, asof)
     if asof not in month or not (len(month) - 1 - k <= month.index(asof) < len(month) - 1):
         return 0
     entry = month[len(month) - 1 - k]
@@ -124,7 +145,7 @@ def snapshot(rds: dict, asof: date) -> pd.DataFrame:
         held = rd.held[asof]
         px = float(rd.closes[held][asof])
         n = max(1, int(round(H030_NOTIONAL / (px * BY_ROOT[r].point_value))))
-        # the full calendar of the month is needed to know month-end; use the uncut dates (exchange calendar)
+        # month-end needs the month's whole calendar: uncut dates (replay) or future_days (forward, see month_days)
         rows.append([asof, "h030", r, n * h030_target(rds[r].dates, asof), px, int(held)])
     fomc = fomc_dates()
     for sleeve, roots, notional, before, after in (("h044", H044_MARKETS, H044_NOTIONAL, 2, 1),

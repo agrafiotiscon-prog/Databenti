@@ -14,6 +14,38 @@ def test_h030_target_is_long_for_the_k_closes_before_month_end():
     assert flags[-4:] == [1, 1, 1, 0] and sum(flags) == 3      # decided at closes T-3, T-2, T-1; flat at T
 
 
+def test_future_days_follows_the_daily_bar_calendar():
+    from scripts.paper_track import future_days
+    days = set(future_days(date(2021, 12, 1), date(2022, 1, 5)))
+    assert date(2021, 12, 24) not in days and date(2021, 12, 31) in days     # observed Christmas; 31 Dec trades
+    assert date(2024, 3, 29) not in future_days(date(2024, 3, 1), date(2024, 3, 31))   # Good Friday
+    assert date(2026, 10, 12) in future_days(date(2026, 10, 9), date(2026, 10, 30))    # Columbus Day has a bar
+    assert future_days(date(2026, 10, 30), date(2026, 10, 30)) == []
+
+
+def test_h030_target_forward_equals_replay_when_the_data_ends_early():
+    # live: the data ends at (or a few days after) asof, never at the month-end (bug found 2026-10-11: the last
+    # downloaded day was taken as the month-end, so h030 went long three weeks early)
+    from scripts.paper_track import future_days
+    dates = future_days(date(2024, 2, 29), date(2024, 4, 30))               # March 2024 ends on Thu 28 (Good Friday)
+    full = [h030_target(dates, d) for d in dates]
+    for lag in (0, 2):
+        assert [h030_target(dates[:i + 1 + lag], d) for i, d in enumerate(dates)] == full
+    assert [d for d, f in zip(dates, full) if f and d.month == 3] == [date(2024, 3, 25), date(2024, 3, 26),
+                                                                      date(2024, 3, 27)]
+    october = [d.date() for d in pd.bdate_range("2026-10-01", "2026-10-09")]
+    assert [h030_target(october, d) for d in october] == [0] * len(october)
+
+
+def test_h035_side_is_flat_mid_month_when_the_data_ends_early():
+    from scripts.paper_track import cut, h035_side
+    rds = {r: make_root(root=r, seed=i, drift=d) for i, (r, d) in enumerate((("ES", 0.004), ("ZN", -0.001)))}
+    dates = rds["ES"].dates
+    month = [d for d in dates if (d.year, d.month) == (dates[200].year, dates[200].month)]
+    short = {r: cut(rd, month[5]) for r, rd in rds.items()}                 # data ends on the 6th trading day
+    assert [h035_side(short, d) for d in month[:6]] == [0] * 6
+
+
 def test_snapshot_targets_match_full_history_targets(tmp_path):
     rds = {r: make_root(root=r, seed=i, drift=0.001 * (i - 2)) for i, r in enumerate(("ES", "ZT", "ZF", "ZN", "ZB"))}
     asof = rds["ES"].dates[330]
