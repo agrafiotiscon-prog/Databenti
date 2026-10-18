@@ -203,6 +203,17 @@ def mark(ledger: Path) -> pd.DataFrame:
 LIVE_START = date(2026, 10, 5)        # first forward trading day (D-063); earlier data is signal warm-up only
 MAX_FETCH_USD = 0.05                  # per run, all symbols together (user-approved forward tracking, R9.7)
 _spent = [0.0]
+_failed: dict = {}                    # symbol -> start of the fetch that failed this run
+
+
+def loggable(days: list, failed: dict) -> list:
+    """Days that are safe to log. A failed fetch leaves that symbol without bars from its fetch start on, and a
+    logged day is never revisited, so those days wait for the next run (2026-10-18: 6A/6S/HE/HG were silently
+    missing from 10-14..10-16)."""
+    if not failed:
+        return days
+    hold = min(failed.values())
+    return [d for d in days if d < hold]
 
 
 _avail: list = []
@@ -246,6 +257,7 @@ def live_bars(dl, sym: str, today: date):
             dl._download([(req, path)])
         except Exception as e:                      # no new data yet (weekend/holiday) or fetch failure: keep going
             print(f"  [live] {sym}: no fetch ({type(e).__name__}: {str(e)[:80]})")
+            _failed[sym] = start
         fwd = sorted(folder.glob("fwd_*.dbn.zst"))
     for f in fwd:
         try:
@@ -272,6 +284,11 @@ def main(argv=None) -> int:
         cal = sorted(set().union(*[rd.dates for rd in rds.values()]))
         done = set(pd.to_datetime(pd.read_csv(a.ledger)["asof"]).dt.date) if a.ledger.exists() else set()
         days = [d for d in cal if d >= LIVE_START and d < today and d not in done]
+        held_back = [d for d in days if d not in loggable(days, _failed)]
+        if held_back:
+            print(f"live: fetch failed for {sorted(_failed)}; not logging {held_back[0]}..{held_back[-1]} "
+                  f"({len(held_back)} days) until a later run fetches them")
+            days = loggable(days, _failed)
         if not days:
             print("live: no new closed trading day since the last ledger entry")
             return 0

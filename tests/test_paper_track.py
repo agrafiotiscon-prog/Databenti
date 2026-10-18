@@ -100,6 +100,14 @@ def test_fomc_long_forward_uses_business_days_beyond_the_data():
     assert fomc_long(ext, date(2026, 10, 26), 1, 0, [f]) == 0     # H-045 enters on Tuesday F-1
 
 
+def test_loggable_holds_back_days_from_the_earliest_failed_fetch():
+    from scripts.paper_track import loggable
+    days = [date(2026, 10, 13), date(2026, 10, 14), date(2026, 10, 15), date(2026, 10, 16)]
+    assert loggable(days, {}) == days
+    assert loggable(days, {"6A.v.0": date(2026, 10, 14), "HG.v.1": date(2026, 10, 15)}) == [date(2026, 10, 13)]
+    assert loggable(days, {"ES.v.0": date(2026, 10, 13)}) == []
+
+
 def test_available_end_caps_and_caches():
     from types import SimpleNamespace
     import scripts.paper_track as pt
