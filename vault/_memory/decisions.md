@@ -428,3 +428,9 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Why:** In live mode the data ends at the last published bar, so the last downloaded day was taken as October's month-end: h030 went long Treasuries and h035_watch short ES three weeks early (decided 10-07 and 10-08). Replay tests could not catch it because historical months are complete. The wrong rows would have booked h030 +2,922 and h035_watch -1,988 gross; neither is a position the pre-registered rules take, so they are removed, not kept. The rule definitions are unchanged (no tuning); the outcome was known when fixing, which is why the full diff is recorded here.
 - **Alternatives:** Keep the wrong rows as a forward record (rejected: they are not the pre-registered strategy); use the federal holiday calendar (rejected: Columbus/Veterans/MLK etc. have bars in the backtest data)
 - **Status:** active.
+
+## D-078 — paper_track holds back days after a failed fetch (2026-10-18) (2026-10-18)
+- **Decision:** In live mode paper_track records every symbol whose fetch raised (504, timeout, run cap) and logs only days before the earliest failed fetch start; held-back days are logged by a later run once every fetch succeeds. The incomplete 10-14..10-16 rows (35 of 41: 6A, 6S, HE, HG missing) were discarded uncommitted and re-logged complete.
+- **Why:** A logged day is never revisited (done-set), so one transient fetch failure silently and permanently dropped markets from the forward record, the same class of bug as H-019's coverage loss (D-042). The re-run proved it: HE.v.0 got a 504 and the days were held back, the next run filled them.
+- **Alternatives:** Log a day only if every root has a bar on it (rejected: products have different holidays, e.g. grains on Juneteenth, which would stall the ledger); backfill missing rows later (rejected: more moving parts than not logging them).
+- **Status:** active.
