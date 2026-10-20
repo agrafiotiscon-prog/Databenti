@@ -37,7 +37,9 @@ tags: [memory, state]
   modify-into-market aggressor fills (any F away from the resting price, 1.27%) are recorded; side-N share ≈ 0.002% (negligible); native
   iceberg refill = same-order `M` in the fill's event (mostly 1-lot clips).
   Calibration (D-018): synthetic icebergs ≈ chance → experimental; spoof label is descriptive only.
-- **Hourly research routine** active (D-017, `trig_01SxDd7cr6pA7egPMDYvJNAH`, :15 UTC): it
+- **Hourly research routine STOPPED by the user on 2026-10-20** (D-079): trigger `trig_01SxDd7cr6pA7egPMDYvJNAH`
+  is disabled, not deleted, so it can be re-enabled. Forward paper tracking stopped with it (ledger complete to 10-16;
+  run `scripts/paper_track.py --live` by hand to catch up). When it was active (D-017, :15 UTC) it
   follows `research/ROUTINE.md` and works through `research/QUEUE.md`. Budget per D-019
   (cap $120 total); keeps a strategy only if it passes G1–G11.
 

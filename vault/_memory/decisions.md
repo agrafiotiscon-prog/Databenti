@@ -434,3 +434,9 @@ Add entries with `python tools/vault.py decide "title" --decision ... --why ...`
 - **Why:** A logged day is never revisited (done-set), so one transient fetch failure silently and permanently dropped markets from the forward record, the same class of bug as H-019's coverage loss (D-042). The re-run proved it: HE.v.0 got a 504 and the days were held back, the next run filled them.
 - **Alternatives:** Log a day only if every root has a bar on it (rejected: products have different holidays, e.g. grains on Juneteenth, which would stall the ledger); backfill missing rows later (rejected: more moving parts than not logging them).
 - **Status:** active.
+
+## D-079 — Research routine stopped by the user (2026-10-20) (2026-10-20)
+- **Decision:** Hourly trigger trig_01SxDd7cr6pA7egPMDYvJNAH disabled (enabled=false, not deleted) at the user's request; forward paper tracking stops with it. Ledger complete to 2026-10-16 (41 rows/day); 10-19 not yet published when stopped.
+- **Why:** User: 'stop the routine'. Disabling keeps the run history and lets the user re-enable it; no other scheduled tasks are active.
+- **Alternatives:** Delete the trigger (rejected: irreversible, loses run history; the user said stop, not delete).
+- **Status:** active.

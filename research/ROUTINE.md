@@ -1,5 +1,7 @@
 # Research routine protocol (read this first on every firing)
 
+> **Stopped by the user on 2026-10-20 (D-079).** The trigger is disabled; nothing fires. Re-enable it only on the user's request.
+
 A scheduled routine (`trig_01SxDd7cr6pA7egPMDYvJNAH`) fires into this session every hour at :15 UTC (decision D-017; the user asked for 30 min, the platform minimum is 1 hour). Each firing does
 **one bounded unit of work** from [QUEUE.md](QUEUE.md), logs it, commits and pushes. The design
 is [research-loop](../vault/05-anti-overfitting/research-loop.md); the gates are in
